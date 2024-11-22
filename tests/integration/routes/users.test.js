@@ -78,99 +78,6 @@ describe("/api/users", () => {
       await user.save();
     });
 
-    describe("POST /", () => {
-      beforeEach(() => {
-        name = "abc";
-        email = "goldkick7@gmail.com";
-        password = "Aa123456";
-      });
-      const exec = async () => {
-        return await request(server)
-          .post("/api/users")
-          .set("accept-language", "en")
-          .send({ name, email, password });
-      };
-      it("Should return 201 if all ok", async () => {
-        const res = await exec();
-        expect(res.status).toBe(201);
-        const valUser = await User.findOne({ email: email });
-        expect(valUser).toBeDefined();
-      });
-      it("Should send a 400 error if client is already logged in", async () => {
-        const res = await request(server)
-          .post("/api/users")
-          .set("x-auth-token", new User().generateAuthToken())
-          .send(name, email, password);
-        expect(res.status).toBe(400);
-      });
-      it("Should return 400 if missing required data", async () => {
-        name = undefined;
-        let res = await exec();
-        expect(res.status).toBe(400);
-        name = "abc";
-        email = undefined;
-        res = await exec();
-        expect(res.status).toBe(400);
-        email = "a@b.ca";
-        password = undefined;
-        res = await exec();
-        expect(res.status).toBe(400);
-      });
-      it("Should return 400 if name is not between 3 and 30 characters", async () => {
-        const nameCases = ["12", Array(32).join("a")];
-        for (const nameCase of nameCases) {
-          name = nameCase;
-          const res = await exec();
-          expect(res.status).toBe(400);
-        }
-      });
-      it(`Should return 400 if email is above 320 characters or not an email`, async () => {
-        const emailCases = [
-          `${Array(30).join("a")}@${Array(189).join("a")}.ca`,
-          "123",
-          "a@c",
-          12345,
-          [1, 2, 3, 4, 5],
-          true,
-          false,
-        ];
-        for (const emailCase of emailCases) {
-          email = emailCase;
-          const res = await exec();
-          expect(res.status).toBe(400);
-        }
-      });
-      it(`Should return 400 if password does not respect its conditions`, async () => {
-        const passwordCases = [
-          "Aa12345",
-          `Aa${Array(1024).join("a")}`,
-          "aa123456",
-          "AA123456",
-          "  ",
-          "Ö",
-          12345678,
-          [1, 2, 3, 4, 5, 6, 7, 8],
-          true,
-          false,
-        ];
-        for (const passwordCase of passwordCases) {
-          password = passwordCase;
-          const res = await exec();
-          expect(res.status).toBe(400);
-        }
-      });
-      it("Should return 400 if email is already registered", async () => {
-        user = new User({
-          name: "user",
-          email: "goldkick7@gmail.com",
-          password: "Aa123456",
-        });
-        await user.save();
-        const res = await exec();
-        expect(res.status).toBe(400);
-      });
-    });
-
     describe("PUT /me", () => {
       beforeEach(async () => {
         password = "Aa123456";
@@ -561,6 +468,45 @@ describe("/api/users", () => {
         const res = await exec();
         expect(res.status).toBe(404);
       });
+    });
+  });
+
+  describe("/oauth", () => {
+    beforeEach(() => {
+      token = config.get("user_jwt_id");
+    });
+    describe("POST /oauth", () => {
+      const exec = async () => {
+        return await request(server)
+          .post("/api/users/oauth")
+          .set("x-auth-token", token);
+      };
+      it("Should return 200 if all is ok", async () => {
+        const res = await exec();
+        expect(res.status).toBe(200);
+      });
+      it("Should return 400 if token is not provided", async () => {
+        const res = await request(server).post("/api/users/oauth");
+        expect(res.status).toBe(400);
+      });
+      it("Should return 400 if token is not a jwt", async () => {
+        token = "wrongToken";
+        const res = await exec();
+        expect(res.status).toBe(400);
+      });
+      it("Should return 400 if token was tempered with", async () => {
+        token = jwt.sign(
+          {
+            _id: new mongoose.Types.ObjectId().toHexString(),
+            isSupplier: true,
+            isAdmin: true,
+          },
+          "wrongPrivateKey"
+        );
+        const res = await exec();
+        expect(res.status).toBe(400);
+      });
+
     });
   });
 

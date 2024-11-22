@@ -6,6 +6,8 @@ const joiPassword = Joi.extend(joiPasswordExtendCore);
 const { allUnitsType, distanceUnitsType } = require("./../data/units");
 const mongoose = require("mongoose");
 
+
+// Change according to new oauth implementation
 const userSchema = new mongoose.Schema({
   name: {
     type: String,
