@@ -1,8 +1,10 @@
 const Joi = require("joi");
 const mongoose = require("mongoose");
-const { tags } = require("../data/tags");
 const { allUnitsType } = require("../data/units");
+const categories = require("../data/data");
 
+
+// Refactoring because an item may have multiple brands
 const itemSchema = new mongoose.Schema({
   name: {
     fr: {
@@ -47,12 +49,8 @@ const itemSchema = new mongoose.Schema({
     quantity: Number,
   },
   description: {
-    type: String,
-  },
-  brand: {
-    type: String,
-    minlength: 1,
-    maxlength: 250,
+    en: String,
+    fr: String
   },
   suppliers: [
     new mongoose.Schema({
@@ -62,6 +60,11 @@ const itemSchema = new mongoose.Schema({
         maxLength: 50,
       },
       pricing: {
+        brand: {
+          type: String,
+          minlength: 1,
+          maxlength: 250,
+        },
         normal: {
           type: Number,
           default: -1.0,
@@ -104,10 +107,10 @@ const itemSchema = new mongoose.Schema({
       },
     }),
   ],
-  tags: [
+  categories: [
     {
       type: String,
-      enum: tags,
+      enum: categories,
     },
   ],
   image: {
@@ -116,7 +119,9 @@ const itemSchema = new mongoose.Schema({
   },
 });
 
-function valItemCreate(item) {
+
+
+function valItemCreate(item: any) {
   const schema = Joi.object({
     adminAddPassword: Joi.string().required(),
     name: Joi.object({
@@ -153,12 +158,11 @@ function valItemCreate(item) {
     }).required(),
     description: Joi.string(),
     brand: Joi.string().min(3).max(250).required(),
-    tags: Joi.array().items(Joi.string().valid(...tags)),
     image: Joi.binary().required(),
   });
   return schema.validate(item);
 }
-function valItemModif(item) {
+function valItemModif(item:any) {
   const schema = Joi.object({
     adminUpdatePassword: Joi.string().required(),
     name: Joi.object({
@@ -191,12 +195,11 @@ function valItemModif(item) {
     }),
     description: Joi.string(),
     brand: Joi.string().min(3).max(250),
-    tags: Joi.array().items(Joi.string().valid(...tags)),
     image: Joi.binary(),
   });
   return schema.validate(item);
 }
-function valItemDelete(item) {
+function valItemDelete(item:any) {
   const schema = Joi.object({
     adminDeletePassword: Joi.string().required(),
   });
@@ -204,7 +207,5 @@ function valItemDelete(item) {
 }
 
 const Item = mongoose.model("Item", itemSchema);
-exports.Item = Item;
-exports.valItemCreate = valItemCreate;
-exports.valItemModif = valItemModif;
-exports.valItemDelete = valItemDelete;
+export default Item
+export { valItemCreate, valItemModif, valItemDelete };

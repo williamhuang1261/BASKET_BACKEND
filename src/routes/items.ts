@@ -184,4 +184,4 @@ router.delete('/:id', isLoggedIn, isAdmin, async (req, res) => {
   return res.status(200).send('Deletion successful');
 });
 
-module.exports = router;
+export default router;

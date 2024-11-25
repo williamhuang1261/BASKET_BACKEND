@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const Joi = require("joi");
+const supplierItemsSchema = require("./supplierItems");
 
 // TODO Add suppliers in MONGODB
 
@@ -15,70 +16,20 @@ const supplierSchema = new mongoose.Schema({
     type: Buffer,
     required: true,
   },
-  locations: [
-    {
+  locations: {
+    type: Map,
+    of: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Location",
     },
-  ],
-  items: [
-    new mongoose.Schema({
-      item: {
-        code: {
-          type: String,
-          required: true,
-        },
-        id: {
-          type: mongoose.Schema.Types.ObjectId,
-          required: true,
-        },
-      },
-      pricing: {
-        normal: {
-          type: Number,
-          default: -1.0,
-        },
-        method: {
-          type: String,
-          enum: ["unit", "weight_lb", "weight_kg", "weight_100g"],
-        },
-        limited: [
-          new mongoose.Schema({
-            typeOfRebate: {
-              type: String,
-              enum: ['buyXgetYatC',"buyXgetYforC", "C"],
-            },
-            //#Bought (Always a number)
-            X: Number,
-            //#With rebate (Always a number)
-            Y: Number,
-            //Cost
-            C: Number,
-            // Pricing format of C value
-            rebatePricing: {
-              type: String,
-              enum: ["unit", "weight_lb", "weight_kg", "weight_100g"],
-            },
-            start: {
-              type: Date,
-              required: true,
-            },
-            end: {
-              type: Date,
-              required: true,
-            },
-            onlyMembers: {
-              type: Boolean,
-              required: true
-            }
-          }),
-        ],
-      },
-    }),
-  ],
+  },
+  items: {
+    type: Map,
+    of: supplierItemsSchema,
+  },
 });
 
-function valSupAdd(user) {
+function valSupAdd(user:any) {
   const schema = Joi.object({
     supplierName: Joi.string().min(3).max(50).required(),
     adminAddPassword: Joi.string().required(),
@@ -87,14 +38,14 @@ function valSupAdd(user) {
   return schema.validate(user);
 }
 
-function valSupGet(user) {
+function valSupGet(user:any) {
   const schema = Joi.object({
     supplierName: Joi.string().required(),
   });
   return schema.validate(user);
 }
 
-function valSupPut(user) {
+function valSupPut(user:any) {
   const schema = Joi.object({
     adminUpdatePassword: Joi.string(),
     supplierUpdatePassword: Joi.string(),
@@ -105,14 +56,14 @@ function valSupPut(user) {
   return schema.validate(user);
 }
 
-function valSupDel(user) {
+function valSupDel(user:any) {
   const schema = Joi.object({
     adminDeletePassword: Joi.string().required(),
   });
   return schema.validate(user);
 }
 
-function valSupAddItem(user) {
+function valSupAddItem(user:any) {
   const schema = Joi.object({
     supplierAddPassword: Joi.string(),
     adminAddPassword: Joi.string(),
@@ -125,27 +76,24 @@ function valSupAddItem(user) {
         .required(),
       limited: Joi.object({
         typeOfRebate: Joi.string()
-          .valid('buyXgetYatC', "buyXgetYforC", "C")
+          .valid("buyXgetYatC", "buyXgetYforC", "C")
           .required(),
         X: Joi.number().integer(),
         Y: Joi.number().integer(),
         C: Joi.number().required(),
-        rebatePricing: Joi.string().valid(
-          "unit",
-          "weight_lb",
-          "weight_kg",
-          "weight_100g"
-        ).required(),
+        rebatePricing: Joi.string()
+          .valid("unit", "weight_lb", "weight_kg", "weight_100g")
+          .required(),
         start: Joi.date().required(),
         end: Joi.date().required(),
-        onlyMembers: Joi.boolean().required()
+        onlyMembers: Joi.boolean().required(),
       }),
     }).required(),
   });
   return schema.validate(user);
 }
 
-function valSupPutItem(user) {
+function valSupPutItem(user:any) {
   const schema = Joi.object({
     supplierUpdatePassword: Joi.string(),
     adminUpdatePassword: Joi.string(),
@@ -161,27 +109,24 @@ function valSupPutItem(user) {
       ),
       limited: Joi.object({
         typeOfRebate: Joi.string()
-          .valid('buyXgetYatC', "buyXgetYforC", "C")
+          .valid("buyXgetYatC", "buyXgetYforC", "C")
           .required(),
         X: Joi.number().integer(),
         Y: Joi.number().integer(),
         C: Joi.number().required(),
-        rebatePricing: Joi.string().valid(
-          "unit",
-          "weight_lb",
-          "weight_kg",
-          "weight_100g"
-        ).required(),
+        rebatePricing: Joi.string()
+          .valid("unit", "weight_lb", "weight_kg", "weight_100g")
+          .required(),
         start: Joi.date().required(),
         end: Joi.date().required(),
-        onlyMembers: Joi.boolean().required()
+        onlyMembers: Joi.boolean().required(),
       }),
     }),
   });
   return schema.validate(user);
 }
 
-function valSupDelItem(user) {
+function valSupDelItem(user:any) {
   const schema = Joi.object({
     supplierDeletePassword: Joi.string(),
     adminDeletePassword: Joi.string(),
@@ -191,7 +136,7 @@ function valSupDelItem(user) {
   return schema.validate(user);
 }
 
-function valSupDelItemPrice(user) {
+function valSupDelItemPrice(user:any) {
   const schema = Joi.object({
     supplierDeletePassword: Joi.string(),
     adminDeletePassword: Joi.string(),
@@ -203,14 +148,6 @@ function valSupDelItemPrice(user) {
 }
 
 const Supplier = mongoose.model("Supplier", supplierSchema);
-exports.Supplier = Supplier;
 
-exports.valSupAdd = valSupAdd;
-exports.valSupGet = valSupGet;
-exports.valSupPut = valSupPut;
-exports.valSupDel = valSupDel;
-
-exports.valSupAddItem = valSupAddItem;
-exports.valSupPutItem = valSupPutItem;
-exports.valSupDelItem = valSupDelItem;
-exports.valSupDelItemPrice = valSupDelItemPrice;
+export default Supplier;
+export {valSupAdd, valSupGet, valSupPut, valSupDel, valSupAddItem, valSupPutItem, valSupDelItem, valSupDelItemPrice};

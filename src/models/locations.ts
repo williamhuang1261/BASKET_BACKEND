@@ -15,6 +15,7 @@ const locationSchema = new mongoose.Schema({
     type: {
       type: String,
       enum: ['Point'],
+      default: 'Point'
     },
     coordinates: {
       type: [Number],
@@ -28,14 +29,14 @@ const locationSchema = new mongoose.Schema({
 
 const Location = mongoose.model('Location', locationSchema);
 
-function valUserLocCreate(location){
+function valUserLocCreate(location: any){
   const schema = Joi.object({
     newAddress: Joi.string().required()
   });
   return schema.validate(location);
 }
 
-function valLocCreate(location){
+function valLocCreate(location: any){
   const schema = Joi.object({
     supplierName: Joi.string(),
     adminAddPassword: Joi.string(),
@@ -48,6 +49,5 @@ function valLocCreate(location){
   return schema.validate(location);
 }
 
-exports.Location = Location;
-exports.valUserLocCreate = valUserLocCreate;
-exports.valLocCreate = valLocCreate;
+export default Location
+export  { valUserLocCreate, valLocCreate}

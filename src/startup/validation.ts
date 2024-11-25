@@ -1,5 +1,7 @@
 const Joi = require('joi');
 
-module.exports = function() {
+const validation = () => {
   Joi.objectId = require('joi-objectid')(Joi);
 }
+
+export default validation;

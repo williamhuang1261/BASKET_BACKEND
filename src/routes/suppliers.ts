@@ -627,4 +627,4 @@ router.delete('/locations/me/:id', isLoggedIn, isSupplier, async (req, res) => {
   return res.status(200).send('The location was deleted');
 });
 
-module.exports = router
+export default router
