@@ -29,4 +29,4 @@ const tags = [
   "Pet Supplies"
 ];
 
-exports.tags = tags;
+export default tags

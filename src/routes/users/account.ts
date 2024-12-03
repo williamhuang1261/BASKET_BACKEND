@@ -1,5 +1,6 @@
 import express, { Response } from "express";
-import { UserRequest } from "../../interface/RequestsProps";
+import { UserRequest } from "../../interface/UserRequestProps";
+import User from "../../models/users";
 
 const router = express.Router();
 
@@ -24,7 +25,7 @@ const router = express.Router();
  *   }
  * }
  */
-router.post("/", async (req: UserRequest, res: Response) => {
+router.post("/oauth", async (req: UserRequest, res: Response) => {
   const user = req.user!;
   return res.status(200).send({
     message: "User is logged in",
@@ -38,6 +39,37 @@ router.post("/", async (req: UserRequest, res: Response) => {
       filters: user.filters,
     },
   });
+});
+
+/**
+ * @route DELETE /api/users/me
+ * @desc Delete the authenticated user's account
+ * @param {UserRequest} req - Request with authenticated user object
+ * @param {Response} res - Standard express response object
+ * @returns {Promise<Response>} - Response with success/failure message
+ * @example
+ * // Success Response
+ * {
+ *   "message": "Deletion successful"
+ *   "status": 200
+ * }
+ * 
+ * // Error Response
+ * {
+ *   "message": "Deletion failed"
+ *   "status": 500
+ * }
+ */
+router.delete('/me', async (req: UserRequest, res: Response) => {
+  const user = req.user!;
+
+  // Deleting user
+  try {
+    await user.deleteOne();
+    return res.status(200).send("Deletion successful");
+  } catch {
+    return res.status(500).send('Deletion failed')
+  }
 });
 
 export default router;

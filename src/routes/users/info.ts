@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 import express, { Response } from "express";
-import { UserRequest } from "../../interface/RequestsProps";
+import { UserRequest } from "../../interface/UserRequestProps";
 import userBasicInfoModifVal from "../../validation/users/userBasicInfoModifVal";
 import userLocationModifVal from "../../validation/users/userLocationModifVal";
 import userPreferencesModifVal from "../../validation/users/userPreferencesModifVal";
@@ -28,8 +28,8 @@ const router = express.Router();
  *   "message": "User updated"
  *   "status": 200
  * }
- * 
- * 
+ *
+ *
  * @throws {400} - If body is invalid
  * @throws {500} - If error saving user
  */
@@ -74,10 +74,10 @@ router.put("/basic/me", async (req: UserRequest, res: Response) => {
  *   "message": "Location updated"
  *   "status": 200
  * }
- * 
+ *
  * @throws {400} - If body is invalid
  * @throws {500} - If error saving user
- * 
+ *
  */
 router.put("/location/me", async (req: UserRequest, res: Response) => {
   const user = req.user!;
@@ -118,7 +118,7 @@ router.put("/location/me", async (req: UserRequest, res: Response) => {
  *   "message": "Membership updated"
  *   "status": 200
  * }
- * 
+ *
  * @throws {400} - If body is invalid or membership array contains invalid IDs
  * @throws {500} - If error saving user
  */
@@ -165,7 +165,7 @@ router.post("/membership/me", async (req: UserRequest, res: Response) => {
  *   "message": "Membership updated"
  *   "status": 200
  * }
- * 
+ *
  * @throws {400} - If body is invalid or membership array contains invalid IDs
  * @throws {500} - If error saving user
  */
@@ -212,7 +212,7 @@ router.delete("/membership/me", async (req: UserRequest, res: Response) => {
  *   "message": "Preferences updated"
  *   "status": 200
  * }
- * 
+ *
  * @throws {400} - If body is invalid
  * @throws {500} - If error saving user
  */
@@ -262,7 +262,7 @@ router.put("/preferences/me", async (req: UserRequest, res: Response) => {
  *   "message": "Items added and updated"
  *   "status": 200
  * }
- * 
+ *
  * @throws {400} - If body is invalid
  * @throws {500} - If error saving user
  */
@@ -312,7 +312,7 @@ router.post("/items/me", async (req: UserRequest, res: Response) => {
  *   "message": "Items updated"
  *   "status": 200
  * }
- * 
+ *
  * @throws {400} - If body is invalid
  * @throws {500} - If error saving user
  */
@@ -356,7 +356,7 @@ router.put("/items/me", async (req: UserRequest, res: Response) => {
  *   "message": "Items deleted"
  *   "status": 200
  * }
- * 
+ *
  * @throws {400} - If body is invalid
  * @throws {500} - If error saving user
  */
@@ -408,7 +408,7 @@ router.delete("/items/me", async (req: UserRequest, res: Response) => {
  *   "message": "Filters added and updated"
  *   "status": 200
  * }
- * 
+ *
  * @throws {400} - If body is invalid
  * @throws {500} - If error saving user
  */
@@ -497,7 +497,7 @@ router.post("/filters/me", async (req: UserRequest, res: Response) => {
  *   "message": "Filters deleted"
  *   "status": 200
  * }
- * 
+ *
  * @throws {400} - If body is invalid
  * @throws {500} - If error saving user
  */
