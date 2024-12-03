@@ -74,8 +74,9 @@ const userSchema = new mongoose.Schema<UserProps>({
   // Membership info
   membership: {
     required: true,
-    type: [String],
-    default: [],
+    type: Map,
+    of: Boolean,
+    default: new Map(),
   },
 
   // Preferences info
@@ -98,19 +99,23 @@ const userSchema = new mongoose.Schema<UserProps>({
   },
 
   // Items info
-  items: [
-    {
-      id: mongoose.Schema.Types.ObjectId,
-      select: {
-        method: {
-          type: String,
-          enum: ["weight", "unit"],
-        },
-        units: Array.from(allUnitsType),
-        quantity: Number,
+  items: {
+    type: Map,
+    of: {
+      method: {
+        type: String,
+        enum: ["weight", "unit"],
+      },
+      units: {
+        type: String,
+        enum: Array.from(allUnitsType),
+      },
+      quantity: {
+        type: Number,
       },
     },
-  ],
+    default: new Map(),
+  },
 
   // Filters info
   filters: {
@@ -127,18 +132,22 @@ const userSchema = new mongoose.Schema<UserProps>({
         },
       },
       categories: {
-        type: [String],
-        enum: Array.from(categories),
-        default: [],
+        type: Map,
+        of: Boolean,
+        default: new Map(),
       },
       stores: {
-        type: [mongoose.Types.ObjectId],
-        required: true,
-        default: [],
+        type: Map,
+        of: Boolean,
+        default: new Map(),
       },
     },
     basketFilters: {
-      filteredStores: [mongoose.Types.ObjectId],
+      filteredStores: {
+        type: Map,
+        of: Boolean,
+        default: new Map(),
+      },
       maxStores: {
         type: Number,
         default: null,
@@ -148,7 +157,4 @@ const userSchema = new mongoose.Schema<UserProps>({
 });
 
 const User = mongoose.model<UserProps>("User", userSchema);
-
-const user = new User();
-
 export default User;

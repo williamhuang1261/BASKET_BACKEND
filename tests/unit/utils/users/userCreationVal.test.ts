@@ -15,24 +15,24 @@ describe('userCreationValidation', () => {
       isSupplier: false,
       isAdmin: false
     },
-    membership: ['basic'],
+    membership: new Map([['basic', true]]),
     preferences: {
       weightUnits: 'kg',
       distUnits: 'km',
       language: 'en'
     },
-    items: [],
+    items: new Map(),
     filters: {
       searchFilters: {
         distance: {
           amount: 10,
           units: 'km'
         },
-        categories: [],
-        stores: []
+        categories: new Map(),
+        stores: new Map()
       },
       basketFilters: {
-        filteredStores: [],
+        filteredStores: new Map(),
         maxStores: null
       }
     }
@@ -89,7 +89,7 @@ describe('userCreationValidation', () => {
   it('should allow empty membership array', () => {
     const userWithEmptyMembership = {
       ...validUser,
-      membership: []
+      membership: new Map()
     };
     const res = userCreationValidation(userWithEmptyMembership);
     expect(res.error).toBeUndefined();
@@ -174,24 +174,24 @@ describe('userCreationValidation', () => {
         isSupplier: false,
         isAdmin: false
       },
-      membership: [],
+      membership: new Map(),
       preferences: {
         weightUnits: 'kg',
         distUnits: 'km',
         language: 'en'
       },
-      items: [],
+      items: new Map(),
       filters: {
         searchFilters: {
           distance: {
             amount: 10,
             units: 'km'
           },
-          categories: [],
-          stores: []
+          categories: new Map(),
+          stores: new Map()
         },
         basketFilters: {
-          filteredStores: [],
+          filteredStores: new Map(),
           maxStores: null
         }
       }

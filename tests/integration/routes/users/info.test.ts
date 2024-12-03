@@ -205,7 +205,7 @@ describe("/users/info", () => {
       const user = await User.findOne({ uid: uid });
       expect(user).toBeDefined();
       if (user) {
-        expect(user.membership.length).toBe(2);
+        expect(user.membership.size).toBe(2);
       }
     });
     it("Should return 401 if token is not provided", async () => {
@@ -243,12 +243,12 @@ describe("/users/info", () => {
     beforeEach(async () => {
       values = {
         membership: [
-          new mongoose.Types.ObjectId(),
-          new mongoose.Types.ObjectId(),
+          new mongoose.Types.ObjectId().toString(),
+          new mongoose.Types.ObjectId().toString(),
         ],
       };
       const user = new User(mockUser);
-      user.membership = values.membership;
+      user.membership = new Map([[values.membership[0], true], [values.membership[1], true]]);
       await user.save();
     });
     const exec = async () => {
@@ -264,7 +264,7 @@ describe("/users/info", () => {
       const user = await User.findOne({ uid: uid });
       expect(user).toBeDefined();
       if (user) {
-        expect(user.membership.length).toBe(0);
+        expect(user.membership.size).toBe(0);
       }
     });
     it("Should return 401 if token is not provided", async () => {
@@ -370,276 +370,276 @@ describe("/users/info", () => {
     });
   });
 
-  describe('POST /items/me', () => {
-    let values:any;
+  describe("POST /items/me", () => {
+    let values: any;
     beforeEach(async () => {
       const user = new User(mockUser);
-      user.items = [
-        {
-          id: new mongoose.Types.ObjectId(),
-          select: {
-            method: 'weight',
-            units: 'kg',
+      user.items = new Map([
+        [
+          new mongoose.Types.ObjectId().toString(),
+          {
+            method: "weight",
+            units: "kg",
             quantity: 10,
-          }
-        },
-        {
-          id: new mongoose.Types.ObjectId(),
-          select: {
-            method: 'unit',
-            units: 'unit',
+          },
+        ],
+        [
+          new mongoose.Types.ObjectId().toString(),
+          {
+            method: "unit",
+            units: "unit",
             quantity: 5,
-          }
-        }
-      ]
+          },
+        ],
+      ]);
       await user.save();
-
+      const keysArr = Array.from(user.items.keys());
       values = {
         items: [
           {
-            id: user.items[0].id,
+            id: keysArr[0],
             select: {
-              method: 'weight',
-              units: 'kg',
+              method: "weight",
+              units: "kg",
               quantity: 10,
-            }
+            },
           },
           {
-            id: new mongoose.Types.ObjectId(),
+            id: new mongoose.Types.ObjectId().toString(),
             select: {
-              method: 'unit',
-              units: 'unit',
+              method: "unit",
+              units: "unit",
               quantity: 15,
-            }
-          }
-        ]
-      }
+            },
+          },
+        ],
+      };
     });
     const exec = async () => {
       return await request(server)
-        .post('/users/info/items/me')
-        .set('x-auth-token', token)
+        .post("/users/info/items/me")
+        .set("x-auth-token", token)
         .send(values);
-    }
-    it('Should return 200 if user is updated', async () => {
+    };
+    it("Should return 200 if user is updated", async () => {
       const res = await exec();
       expect(res.status).toBe(200);
 
-      const user = await User.findOne({uid: uid});
+      const user = await User.findOne({ uid: uid });
       expect(user).toBeDefined();
       if (user) {
-        expect(user.items.length).toBe(3);
+        expect(user.items.size).toBe(3);
       }
     });
-    it('Should return 400 when no items are provided', async () => {
+    it("Should return 400 when no items are provided", async () => {
       values = {};
       let res = await exec();
       expect(res.status).toBe(400);
     });
-    it('Should return 401 if token is not provided', async () => {
+    it("Should return 401 if token is not provided", async () => {
       const res = await request(server)
-        .post('/users/info/items/me')
+        .post("/users/info/items/me")
         .send(values);
       expect(res.status).toBe(401);
     });
-    it('Should return 401 if token is not valie', async () => {
-      token = 'invalid_token';
+    it("Should return 401 if token is not valie", async () => {
+      token = "invalid_token";
       const res = await exec();
       expect(res.status).toBe(401);
     });
-    it('Should return 400 if key is not valid', async () => {
+    it("Should return 400 if key is not valid", async () => {
       values = {
-        invalid_key: 'invalid_value'
-      }
+        invalid_key: "invalid_value",
+      };
       const res = await exec();
       expect(res.status).toBe(400);
     });
-    it('Should return 400 if value in not valid', async () => {
-      values.items = 'invalid_items';
+    it("Should return 400 if value in not valid", async () => {
+      values.items = "invalid_items";
       let res = await exec();
       expect(res.status).toBe(400);
     });
-    it('Should return 500 if an error occured during the update', async () => {
-      jest.spyOn(User.prototype, 'save').mockRejectedValue(new Error());
+    it("Should return 500 if an error occured during the update", async () => {
+      jest.spyOn(User.prototype, "save").mockRejectedValue(new Error());
       const res = await exec();
       expect(res.status).toBe(500);
     });
   });
 
-  describe('PUT /items/me', () => {
+  describe("PUT /items/me", () => {
     let values: any;
     beforeEach(async () => {
       const user = new User(mockUser);
-      user.items = [
-        {
-          id: new mongoose.Types.ObjectId(),
-          select: {
-            method: 'weight',
-            units: 'kg',
+      user.items = new Map([
+        [
+          new mongoose.Types.ObjectId().toString(),
+          {
+            method: "weight",
+            units: "kg",
             quantity: 10,
-          }
-        },
-        {
-          id: new mongoose.Types.ObjectId(),
-          select: {
-            method: 'unit',
-            units: 'unit',
+          },
+        ],
+        [
+          new mongoose.Types.ObjectId().toString(),
+          {
+            method: "unit",
+            units: "unit",
             quantity: 5,
-          }
-        }
-      ]
+          },
+        ],
+      ]);
       await user.save();
-
+      const keysArr = Array.from(user.items.keys());
       values = {
         items: [
           {
-            id: user.items[0].id,
+            id: keysArr[0],
             select: {
-              method: 'weight',
-              units: 'kg',
+              method: "weight",
+              units: "kg",
               quantity: 10,
-            }
+            },
           },
           {
-            id: new mongoose.Types.ObjectId(),
+            id: new mongoose.Types.ObjectId().toString(),
             select: {
-              method: 'unit',
-              units: 'unit',
+              method: "unit",
+              units: "unit",
               quantity: 5,
-            }
-          }
-        ]
-      }
+            },
+          },
+        ],
+      };
     });
     const exec = async () => {
       return await request(server)
-        .put('/users/info/items/me')
-        .set('x-auth-token', token)
+        .put("/users/info/items/me")
+        .set("x-auth-token", token)
         .send(values);
-    }
-    it('Should return 200 if user is updated', async () => {
+    };
+    it("Should return 200 if user is updated", async () => {
       const res = await exec();
       expect(res.status).toBe(200);
 
-
-      const user = await User.findOne({uid: uid});
+      const user = await User.findOne({ uid: uid });
       expect(user).toBeDefined();
       if (user) {
-        expect(user.items.length).toBe(2);
+        expect(user.items.size).toBe(2);
       }
     });
-    it('Should return 400 when no items are provided', async () => {
+    it("Should return 400 when no items are provided", async () => {
       values = {};
       let res = await exec();
       expect(res.status).toBe(400);
     });
-    it('Should return 401 if token is not provided', async () => {
+    it("Should return 401 if token is not provided", async () => {
       const res = await request(server)
-        .put('/users/info/items/me')
+        .put("/users/info/items/me")
         .send(values);
       expect(res.status).toBe(401);
     });
-    it('Should return 401 if token is not valid', async () => {
-      token = 'invalid_token';
+    it("Should return 401 if token is not valid", async () => {
+      token = "invalid_token";
       const res = await exec();
       expect(res.status).toBe(401);
     });
-    it('Should return 400 if key is not valid', async () => {
+    it("Should return 400 if key is not valid", async () => {
       values = {
-        invalid_key: 'invalid_value'
-      }
+        invalid_key: "invalid_value",
+      };
       const res = await exec();
       expect(res.status).toBe(400);
     });
-    it('Should return 400 if value in not valid', async () => {
-      values.items = 'invalid_items';
+    it("Should return 400 if value in not valid", async () => {
+      values.items = "invalid_items";
       let res = await exec();
       expect(res.status).toBe(400);
     });
-    it('Should return 500 if an error occured during the update', async () => {
-      jest.spyOn(User.prototype, 'save').mockRejectedValue(new Error());
+    it("Should return 500 if an error occured during the update", async () => {
+      jest.spyOn(User.prototype, "save").mockRejectedValue(new Error());
       const res = await exec();
       expect(res.status).toBe(500);
     });
   });
 
-  describe('DELETE /items/me', () => {
+  describe("DELETE /items/me", () => {
     let values: any;
     beforeEach(async () => {
       const user = new User(mockUser);
-      user.items = [
-        {
-          id: new mongoose.Types.ObjectId(),
-          select: {
-            method: 'weight',
-            units: 'kg',
+      user.items = new Map([
+        [
+          new mongoose.Types.ObjectId().toString(),
+          {
+            method: "weight",
+            units: "kg",
             quantity: 10,
-          }
-        },
-        {
-          id: new mongoose.Types.ObjectId(),
-          select: {
-            method: 'unit',
-            units: 'unit',
+          },
+        ],
+        [
+          new mongoose.Types.ObjectId().toString(),
+          {
+            method: "unit",
+            units: "unit",
             quantity: 5,
-          }
-        }
-      ]
+          },
+        ],
+      ]);
       await user.save();
+      const keysArr = Array.from(user.items.keys());
       values = {
-        items: [user.items[0].id, user.items[1].id]
-      }
+        items: [keysArr[0], keysArr[1]],
+      };
     });
     const exec = async () => {
       return await request(server)
-        .delete('/users/info/items/me')
-        .set('x-auth-token', token)
+        .delete("/users/info/items/me")
+        .set("x-auth-token", token)
         .send(values);
-    }
-    it('Should return 200 if user is updated', async () => {
+    };
+    it("Should return 200 if user is updated", async () => {
       const res = await exec();
       expect(res.status).toBe(200);
 
-      const user = await User.findOne({uid: uid});
+      const user = await User.findOne({ uid: uid });
       expect(user).toBeDefined();
       if (user) {
-        expect(user.items.length).toBe(0);
+        expect(user.items.size).toBe(0);
       }
     });
-    it('Should return 400 when no items are provided', async () => {
+    it("Should return 400 when no items are provided", async () => {
       values = {};
       let res = await exec();
       expect(res.status).toBe(400);
 
-      values = {items: []};
+      values = { items: [] };
       res = await exec();
       expect(res.status).toBe(200);
     });
-    it('Should return 401 if token is not provided', async () => {
+    it("Should return 401 if token is not provided", async () => {
       const res = await request(server)
-        .delete('/users/info/items/me')
+        .delete("/users/info/items/me")
         .send(values);
       expect(res.status).toBe(401);
     });
-    it('Should return 401 if token is not valie', async () => {
-      token = 'invalid_token';
+    it("Should return 401 if token is not valie", async () => {
+      token = "invalid_token";
       const res = await exec();
       expect(res.status).toBe(401);
     });
-    it('Should return 400 if key is not valid', async () => {
+    it("Should return 400 if key is not valid", async () => {
       values = {
-        invalid_key: 'invalid_value'
-      }
+        invalid_key: "invalid_value",
+      };
       const res = await exec();
       expect(res.status).toBe(400);
     });
-    it('Should return 400 if value in not valid', async () => {
-      values.items = 'invalid_items';
+    it("Should return 400 if value in not valid", async () => {
+      values.items = "invalid_items";
       let res = await exec();
       expect(res.status).toBe(400);
     });
-    it('Should return 500 if an error occured during the update', async () => {
-      jest.spyOn(User.prototype, 'save').mockRejectedValue(new Error());
+    it("Should return 500 if an error occured during the update", async () => {
+      jest.spyOn(User.prototype, "save").mockRejectedValue(new Error());
       const res = await exec();
       expect(res.status).toBe(500);
     });
@@ -649,10 +649,14 @@ describe("/users/info", () => {
     let values: any;
     beforeEach(async () => {
       const user = new User(mockUser);
-      user.filters.searchFilters.categories = ["Dairy"];
-      user.filters.searchFilters.stores = [new mongoose.Types.ObjectId()];
-      user.filters.basketFilters.filteredStores = [new mongoose.Types.ObjectId()];
-      await user.save()
+      user.filters.searchFilters.categories = new Map([["Dairy", true]]);
+      user.filters.searchFilters.stores = new Map([
+        [new mongoose.Types.ObjectId().toString(), true],
+      ]);
+      user.filters.basketFilters.filteredStores = new Map([
+        [new mongoose.Types.ObjectId().toString(), true],
+      ]);
+      await user.save();
       values = {
         searchFilters: {
           distance: {
@@ -667,7 +671,6 @@ describe("/users/info", () => {
           maxStores: 5,
         },
       };
-      
     });
     const exec = async () => {
       return await request(server)
@@ -679,14 +682,18 @@ describe("/users/info", () => {
       const res = await exec();
       expect(res.status).toBe(200);
 
-      const user = await User.findOne({ uid: uid})
+      const user = await User.findOne({ uid: uid });
       expect(user).toBeDefined();
       if (user) {
-        expect(user.filters.searchFilters.distance.amount).toBe(values.searchFilters.distance.amount);
-        expect(user.filters.searchFilters.distance.units).toBe(values.searchFilters.distance.units);
-        expect(user.filters.searchFilters.categories.length).toBe(2);
-        expect(user.filters.searchFilters.stores.length).toBe(2);
-        expect(user.filters.basketFilters.filteredStores.length).toBe(2);
+        expect(user.filters.searchFilters.distance.amount).toBe(
+          values.searchFilters.distance.amount
+        );
+        expect(user.filters.searchFilters.distance.units).toBe(
+          values.searchFilters.distance.units
+        );
+        expect(user.filters.searchFilters.categories.size).toBe(2);
+        expect(user.filters.searchFilters.stores.size).toBe(2);
+        expect(user.filters.basketFilters.filteredStores.size).toBe(2);
         expect(user.filters.basketFilters.maxStores).toBe(5);
       }
     });
@@ -695,24 +702,26 @@ describe("/users/info", () => {
       const res = await exec();
       expect(res.status).toBe(200);
     });
-    it('Should return 200 and have no duplicates in the data', async () => {
-      const user = await User.findOne({uid: uid});
+    it("Should return 200 and have no duplicates in the data", async () => {
+      const user = await User.findOne({ uid: uid });
       if (user) {
-        user.filters.searchFilters.categories = ["Produce"];
-        user.filters.searchFilters.stores = [values.searchFilters.stores[0]];
-        user.filters.basketFilters.filteredStores = [values.basketFilters.filteredStores[0]];
+        user.filters.searchFilters.categories = new Map([["Produce", true]]);
+        user.filters.searchFilters.stores = new Map([[values.searchFilters.stores[0], true]]);
+        user.filters.basketFilters.filteredStores = new Map([[
+          values.basketFilters.filteredStores[0], true
+        ]]);
         await user.save();
       }
       const res = await exec();
       expect(res.status).toBe(200);
 
-      const updatedUser = await User.findOne({uid: uid});
+      const updatedUser = await User.findOne({ uid: uid });
       expect(updatedUser).toBeDefined();
 
       if (updatedUser) {
-        expect(updatedUser.filters.searchFilters.categories.length).toBe(1);
-        expect(updatedUser.filters.searchFilters.stores.length).toBe(1);
-        expect(updatedUser.filters.basketFilters.filteredStores.length).toBe(1);
+        expect(updatedUser.filters.searchFilters.categories.size).toBe(1);
+        expect(updatedUser.filters.searchFilters.stores.size).toBe(1);
+        expect(updatedUser.filters.basketFilters.filteredStores.size).toBe(1);
       }
     });
     it("Should return 401 if token is not provided", async () => {
@@ -776,14 +785,14 @@ describe("/users/info", () => {
     beforeEach(async () => {
       values = {
         categories: ["Produce"],
-        stores: [new mongoose.Types.ObjectId()],
-        filteredStores: [new mongoose.Types.ObjectId()],
+        stores: [new mongoose.Types.ObjectId().toString()],
+        filteredStores: [new mongoose.Types.ObjectId().toString()],
         maxStores: null,
       };
       const user = new User(mockUser);
-      user.filters.searchFilters.categories = values.categories;
-      user.filters.searchFilters.stores = values.stores;
-      user.filters.basketFilters.filteredStores = values.filteredStores;
+      user.filters.searchFilters.categories.set(values.categories[0], true);
+      user.filters.searchFilters.stores.set(values.stores[0], true);
+      user.filters.basketFilters.filteredStores.set(values.filteredStores[0], true);
       user.filters.basketFilters.maxStores = values.maxStores;
       await user.save();
     });
@@ -797,12 +806,12 @@ describe("/users/info", () => {
       const res = await exec();
       expect(res.status).toBe(200);
 
-      const user = await User.findOne({ uid: uid});
+      const user = await User.findOne({ uid: uid });
       expect(user).toBeDefined();
       if (user) {
-        expect(user.filters.searchFilters.categories.length).toBe(0);
-        expect(user.filters.searchFilters.stores.length).toBe(0);
-        expect(user.filters.basketFilters.filteredStores.length).toBe(0);
+        expect(user.filters.searchFilters.categories.size).toBe(0);
+        expect(user.filters.searchFilters.stores.size).toBe(0);
+        expect(user.filters.basketFilters.filteredStores.size).toBe(0);
         expect(user.filters.basketFilters.maxStores).toBeNull();
       }
     });

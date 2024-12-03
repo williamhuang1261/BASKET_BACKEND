@@ -1,5 +1,9 @@
 import mongoose from "mongoose";
-import { weightUnitsType, distanceUnitsType, allUnitsType } from "../data/units";
+import {
+  weightUnitsType,
+  distanceUnitsType,
+  allUnitsType,
+} from "../data/units";
 import categories from "../data/data";
 
 interface Location {
@@ -39,12 +43,9 @@ interface Preferences {
 
 type AllUnits = typeof allUnitsType extends Set<infer T> ? T : never;
 interface Item {
-  id: mongoose.Types.ObjectId;
-  select: {
-    method: "weight" | "unit";
-    units: AllUnits;
-    quantity: number;
-  };
+  method: "weight" | "unit";
+  units: AllUnits;
+  quantity: number;
 }
 
 type Categories = typeof categories extends Set<infer T> ? T : never;
@@ -53,12 +54,12 @@ interface SearchFilters {
     amount: number;
     units: DistanceUnit;
   };
-  categories: Categories[];
-  stores: mongoose.Types.ObjectId[];
+  categories: Map<string, true>;
+  stores: Map<string, true>;
 }
 
 interface BasketFilters {
-  filteredStores: mongoose.Types.ObjectId[];
+  filteredStores: Map<string, true>;
   maxStores: number | null;
 }
 
@@ -75,9 +76,9 @@ interface UserProps {
   account: Account;
   supplierInfo?: SupplierInfo;
   adminInfo?: AdminInfo;
-  membership: string[];
+  membership: Map<string, true>;
   preferences: Preferences;
-  items: Item[];
+  items: Map<string, Item>;
   filters: Filters;
 }
 

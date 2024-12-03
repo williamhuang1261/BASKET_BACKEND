@@ -136,7 +136,8 @@ router.post("/membership/me", async (req: UserRequest, res: Response) => {
 
   // Modifying user -- Using set to avoid duplicates
   for (const mem of membership) {
-    if (!user.membership.includes(mem)) user.membership.push(mem);
+    if (!user.membership.has(mem))
+      user.membership.set(mem, true);
   }
 
   // Saving to DB
@@ -177,13 +178,15 @@ router.delete("/membership/me", async (req: UserRequest, res: Response) => {
   if (!membership || !Array.isArray(membership))
     return res.status(400).send("Membership is required");
   for (const mem of membership) {
-    if (!mongoose.Types.ObjectId.isValid(mem))
+    if (typeof mem !== 'string')
       return res.status(400).send("Membership must be an array of strings");
   }
 
   // Modifying user
-  user.membership = user.membership.filter((mem) => !membership.includes(mem));
-
+  for (const mem of membership) {
+    user.membership.delete(mem);
+  }
+  
   // Saving to DB
   try {
     await user.save();
@@ -276,7 +279,9 @@ router.post("/items/me", async (req: UserRequest, res: Response) => {
   // Modifying user
   const { items } = req.body;
   for (const item of items) {
-    if (!user.items.find((i) => item.id == i.id)) user.items.push(item);
+    if (!user.items.has(item.id))
+      user.items.set(item.id, item.select);
+      
   }
 
   // Saving to DB
@@ -326,8 +331,8 @@ router.put("/items/me", async (req: UserRequest, res: Response) => {
   // Modifying user
   const { items } = req.body;
   for (const item of items) {
-    const index = user.items.findIndex((i) => item.id == i.id);
-    if (index >= 0) user.items[index].select = item.select;
+    if (user.items.has(item.id))
+      user.items.set(item.id, item.select);
   }
 
   // Saving to DB
@@ -369,7 +374,9 @@ router.delete("/items/me", async (req: UserRequest, res: Response) => {
 
   // Modifying user
   const { items } = req.body;
-  user.items = user.items.filter((i) => !items.includes(i.id.toString()));
+  for (const item of items) {
+    user.items.delete(item);
+  }
 
   // Saving to DB
   try {
@@ -434,19 +441,15 @@ router.post("/filters/me", async (req: UserRequest, res: Response) => {
     // Adjusting preferred categories
     if (categories) {
       for (const cat of categories) {
-        if (!user.filters.searchFilters.categories.includes(cat))
-          user.filters.searchFilters.categories.push(cat);
+        if (!user.filters.searchFilters.categories.has(cat))
+          user.filters.searchFilters.categories.set(cat, true);
       }
     }
     // Adjusting preferred stores
     if (stores) {
       for (const store of stores) {
-        if (
-          !user.filters.searchFilters.stores.find(
-            (s) => store.toString() == s.toString()
-          )
-        )
-          user.filters.searchFilters.stores.push(store);
+        if (!user.filters.searchFilters.stores.has(store))
+          user.filters.searchFilters.stores.set(store, true);
       }
     }
   }
@@ -456,12 +459,8 @@ router.post("/filters/me", async (req: UserRequest, res: Response) => {
     // Adjusting filtered stores
     if (filteredStores) {
       for (const store of filteredStores) {
-        if (
-          !user.filters.basketFilters.filteredStores.find(
-            (s) => store.toString() == s.toString()
-          )
-        )
-          user.filters.basketFilters.filteredStores.push(store);
+        if (!user.filters.basketFilters.filteredStores.has(store))
+          user.filters.basketFilters.filteredStores.set(store, true);
       }
     }
     // Adjusting max stores
@@ -511,22 +510,19 @@ router.delete("/filters/me", async (req: UserRequest, res: Response) => {
   // Modifying user
   const { categories, stores, filteredStores, maxStores } = req.body;
   if (categories) {
-    user.filters.searchFilters.categories =
-      user.filters.searchFilters.categories.filter(
-        (cat) => !categories.includes(cat)
-      );
+    for (const cat of categories) {
+      user.filters.searchFilters.categories.delete(cat);
+    }
   }
   if (stores) {
-    user.filters.searchFilters.stores =
-      user.filters.searchFilters.stores.filter(
-        (store) => !stores.includes(store.toString())
-      );
+    for (const store of stores) {
+      user.filters.searchFilters.stores.delete(store);
+    }
   }
   if (filteredStores) {
-    user.filters.basketFilters.filteredStores =
-      user.filters.basketFilters.filteredStores.filter(
-        (store) => !filteredStores.includes(store.toString())
-      );
+    for (const store of filteredStores) {
+      user.filters.basketFilters.filteredStores.delete(store);
+    }
   }
   if (maxStores) {
     user.filters.basketFilters.maxStores = null;

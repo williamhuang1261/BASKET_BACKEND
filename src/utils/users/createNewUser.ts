@@ -18,14 +18,14 @@ const createNewUser = async (decoded: DecodedIdToken) => {
       isSupplier: false,
       isAdmin: false,
     },
-    membership: [],
+    membership: new Map(),
     preferences: {
       // TODO Adjust according to country
       weightUnits: "kg",
       distUnits: "km",
       language: "en",
     },
-    items: [],
+    items: new Map(),
     filters: {
       searchFilters: {
         // Adjust according to country
@@ -33,11 +33,11 @@ const createNewUser = async (decoded: DecodedIdToken) => {
           amount: 10,
           units: "km",
         },
-        categories: [],
-        stores: [],
+        categories: new Map(),
+        stores: new Map(),
       },
       basketFilters: {
-        filteredStores: [],
+        filteredStores: new Map(),
         // @ts-ignore
         maxStores: null,
       },

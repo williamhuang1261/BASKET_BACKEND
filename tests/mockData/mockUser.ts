@@ -3,7 +3,7 @@ import UserProps from "../../src/interface/UserProps";
 import config from "config";
 
 const mockUser: UserProps = {
-  uid: config.get('uid'),
+  uid: config.get("uid"),
   name: "John Doe",
   email: "john.doe@example.com",
   location: {
@@ -16,33 +16,33 @@ const mockUser: UserProps = {
     isSupplier: false,
     isAdmin: false,
   },
-  membership: ["Membership1", "Membership2"],
+  membership: new Map([["Membership1", true], ["Membership2", true]]),
   preferences: {
     weightUnits: "kg",
     distUnits: "km",
     language: "en",
   },
-  items: [
-    {
-      id: new mongoose.Types.ObjectId(),
-      select: {
+  items: new Map([
+    [
+      new mongoose.Types.ObjectId().toString(),
+      {
         method: "weight",
         units: "kg",
         quantity: 1,
       },
-    },
-  ],
+    ],
+  ]),
   filters: {
     searchFilters: {
       distance: {
         amount: 10,
         units: "km",
       },
-      categories: [],
-      stores: [],
+      categories: new Map(),
+      stores: new Map(),
     },
     basketFilters: {
-      filteredStores: [],
+      filteredStores: new Map(),
       maxStores: null,
     },
   },

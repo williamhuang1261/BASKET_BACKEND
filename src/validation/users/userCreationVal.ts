@@ -13,8 +13,8 @@ import {
  *
  * The user data should have the following structure:
  * - uid: string (required)
- * - name: string (optional)
- * - email: string (optional, must be a valid email)
+ * - name: string (optional, 3-32 chars)
+ * - email: string (optional, 3-256 chars, must be valid email)
  * - location: object (required)
  *   - country: string (must be "Canada" or "USA")
  *   - type: string (optional, must be "Point")
@@ -34,29 +34,24 @@ import {
  *   - adminUpdate: string (required)
  *   - adminGet: string (required)
  *   - adminDelete: string (required)
- * - membership: array of strings (required)
+ * - membership: Map<string, true> (required)
  * - preferences: object (required)
  *   - weightUnits: string (required, must be one of the valid weight units)
  *   - distUnits: string (required, must be one of the valid distance units)
  *   - language: string (required, must be "en" or "fr")
- * - items: array of objects (required)
- *   - id: string (required)
- *   - ref: object (required)
- *     - standard: string (required, must be "PLU", "UPC", or "EAN")
- *     - code: string (required)
- *   - select: object (required)
- *     - method: string (required, must be "weight" or "unit")
- *     - units: string (required, must be one of the valid units)
- *     - quantity: number (required)
+ * - items: Map<string, object> (required)
+ *   - method: string (required, must be "weight" or "unit")
+ *   - units: string (required, must be one of the valid units)
+ *   - quantity: number (required)
  * - filters: object (required)
  *   - searchFilters: object (required)
  *     - distance: object (required)
  *       - amount: number (required)
  *       - units: string (required, must be one of the valid distance units)
- *     - categories: array of strings (required)
- *     - stores: array of strings (required)
+ *     - categories: Map<string, true> (required)
+ *     - stores: Map<string, true> (required)
  *   - basketFilters: object (required)
- *     - filteredStores: array of strings (required)
+ *     - filteredStores: Map<string, true> (required)
  *     - maxStores: number (required, can be null)
  */
 
@@ -99,18 +94,11 @@ const userCreationValidation = (user: any) => {
   });
 
   const itemSchema = Joi.object({
-    id: Joi.string().required(),
-    ref: Joi.object({
-      standard: Joi.string().valid("PLU", "UPC", "EAN").required(),
-      code: Joi.string().required(),
-    }).required(),
-    select: Joi.object({
-      method: Joi.string().valid("weight", "unit").required(),
-      units: Joi.string()
-        .valid(...Array.from(allUnitsType))
-        .required(),
-      quantity: Joi.number().required(),
-    }).required(),
+    method: Joi.string().valid("weight", "unit").required(),
+    units: Joi.string()
+      .valid(...Array.from(allUnitsType))
+      .required(),
+    quantity: Joi.number().required(),
   });
 
   const searchFiltersSchema = Joi.object({
@@ -120,12 +108,21 @@ const userCreationValidation = (user: any) => {
         .valid(...Array.from(distanceUnitsType))
         .required(),
     }).required(),
-    categories: Joi.array().items(Joi.string()).required(),
-    stores: Joi.array().items(Joi.string()).required(),
+    categories: Joi.object().pattern(
+      Joi.string(),
+      Joi.boolean().valid(true)
+    ).required(),
+    stores: Joi.object().pattern(
+      Joi.string(),
+      Joi.boolean().valid(true)
+    ).required(),
   });
 
   const basketFiltersSchema = Joi.object({
-    filteredStores: Joi.array().items(Joi.string()).required(),
+    filteredStores: Joi.object().pattern(
+      Joi.string(),
+      Joi.boolean().valid(true)
+    ).required(),
     maxStores: Joi.number().allow(null).required(),
   });
 
@@ -136,15 +133,21 @@ const userCreationValidation = (user: any) => {
 
   const userCreationVal = Joi.object({
     uid: Joi.string().required(),
-    name: Joi.string().optional(),
-    email: Joi.string().email().optional(),
+    name: Joi.string().min(3).max(32).optional(),
+    email: Joi.string().min(3).max(256).email().optional(),
     location: locationSchema.required(),
     account: accountSchema.required(),
     supplierInfo: supplierInfoSchema.optional(),
     adminInfo: adminInfoSchema.optional(),
-    membership: Joi.array().items(Joi.string()).required(),
+    membership: Joi.object().pattern(
+      Joi.string(),
+      Joi.boolean().valid(true)
+    ).required(),
     preferences: preferencesSchema.required(),
-    items: Joi.array().items(itemSchema).required(),
+    items: Joi.object().pattern(
+      Joi.string(),
+      itemSchema
+    ).required(),
     filters: filtersSchema.required(),
   });
 
