@@ -1,26 +1,33 @@
 import { NextFunction, Response } from "express";
-import User from "../models/users.js";
-import { getAuth } from "firebase-admin/auth";
-import { UserRequest } from "../interface/RequestsProps.js";
+import { UserRequest } from "../interface/RequestsProps";
+import User from "../models/users";
+import getAuthFirebase from "../utils/users/getAuthFirebase";
+import createNewUser from "../utils/users/createNewUser";
 
-const isLoggedIn = async (req: UserRequest, res: Response, next: NextFunction) => {
+const isLoggedIn = async (
+  req: UserRequest,
+  res: Response,
+  next: NextFunction
+) => {
+
   //Validating existence of token
-  const idToken = req.header('x-auth-token');
-  if(!idToken)
-    return res.status(401).send('User is not properly logged in');
+  const idToken = req.header("x-auth-token");
+  if (!idToken) return res.status(401).send("User is not properly logged in");
 
   //Validating token
-  try{
-    const decoded = await getAuth().verifyIdToken(idToken);
-    const user = await User.findOne({uid: decoded.uid});
-    if(!user)
-      return res.status(400).send('This user does not exist')
-    req.user = user
-    next();
+  const decoded = await getAuthFirebase(idToken);
+  if (!decoded) return res.status(401).send("Tampered/Invalid token");
+
+  // Finding user in database
+  let user = await User.findOne({ uid: decoded.uid });
+  if (!user) {
+    // Creating new User
+    const newUser = await createNewUser(decoded);
+    if (!newUser) return res.status(500).send("Error creating new user");
+    user = newUser;
   }
-  catch(ex){
-    return res.status(400).send('Invalid token.');
-  }
-}
+  req.user = await user;
+  next();
+};
 
 export default isLoggedIn;

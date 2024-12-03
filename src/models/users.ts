@@ -1,10 +1,12 @@
-import { allUnitsType, distanceUnitsType } from "../data/units.js";
+import {
+  allUnitsType,
+  distanceUnitsType,
+  weightUnitsType,
+} from "../data/units";
 import mongoose from "mongoose";
-import categories from "../data/data.js";
+import categories from "../data/data";
 import UserProps from "../interface/UserProps.js";
 
-//TODO Change according to new oauth implementation
-// TODO Total refactoring of user schema
 const userSchema = new mongoose.Schema<UserProps>({
   // TODO Create an MongoDB index for uid
   uid: {
@@ -12,40 +14,48 @@ const userSchema = new mongoose.Schema<UserProps>({
     required: true,
     unique: true,
   },
-  name: String,
-  email: String,
-  location: {
-    required: true,
-    type: {
-      country: {
-        type: String,
-        required: true,
-        default: "Canada",
-        enum: ["Canada", "USA"],
-      },
-      type: {
-        type: String,
-        enum: ["Point"],
-      },
-      coordinates: {
-        type: [Number],
-        index: "2dsphere",
-      },
-      formattedAddress: String,
-    },
+  // Basic info
+  name: {
+    type: String,
+    maxlength: 32,
+    minlength: 3,
   },
-  account: {
-    type: {
-      isSupplier: {
-        type: Boolean,
-        default: false,
-      },
-      isAdmin: {
-        type: Boolean,
-        default: false,
-      },
+  email: {
+    type: String,
+    maxlength: 256,
+    minlength: 3,
+  },
+
+  // Location info
+  location: {
+    country: {
+      type: String,
+      default: "Canada",
+      enum: ["Canada", "USA"],
+      required: true,
     },
-    required: true,
+    type: {
+      type: String,
+      enum: ["Point"],
+      default: "Point",
+    },
+    coordinates: {
+      type: [Number],
+      index: "2dsphere",
+    },
+    formattedAddress: String,
+  },
+
+  // Account info
+  account: {
+    isSupplier: {
+      type: Boolean,
+      default: false,
+    },
+    isAdmin: {
+      type: Boolean,
+      default: false,
+    },
   },
   supplierInfo: {
     supplier: String,
@@ -60,79 +70,85 @@ const userSchema = new mongoose.Schema<UserProps>({
     adminGet: String,
     adminDelete: String,
   },
+
+  // Membership info
   membership: {
+    required: true,
     type: [String],
-    required: true,
+    default: [],
   },
+
+  // Preferences info
   preferences: {
-    type: {
-      weightUnits: String,
-      distUnits: String,
-      language: {
-        type: String,
-        enum: ["en", "fr"],
+    weightUnits: {
+      type: String,
+      enum: Array.from(weightUnitsType),
+      default: "kg",
+    },
+    distUnits: {
+      type: String,
+      enum: Array.from(distanceUnitsType),
+      default: "km",
+    },
+    language: {
+      type: String,
+      enum: ["en", "fr"],
+      default: "en",
+    },
+  },
+
+  // Items info
+  items: [
+    {
+      id: mongoose.Schema.Types.ObjectId,
+      select: {
+        method: {
+          type: String,
+          enum: ["weight", "unit"],
+        },
+        units: Array.from(allUnitsType),
+        quantity: Number,
       },
     },
-    required: true,
-  },
-  items: {
-    required: true,
-    type: [
-      {
-        id: mongoose.Schema.Types.ObjectId,
-        ref: {
-          standard: {
-            type: String,
-            enum: ["PLU", "UPC", "EAN"],
-          },
-          code: String,
-        },
-        select: {
-          method: {
-            type: String,
-            enum: ["weight", "unit"],
-          },
-          units: allUnitsType,
-          quantity: Number,
-        },
-      },
-    ],
-  },
+  ],
+
+  // Filters info
   filters: {
-    type: {
-      searchFilters: {
-        required: true,
-        distance: {
-          required: true,
-          amount: Number,
-          units: distanceUnitsType,
+    searchFilters: {
+      distance: {
+        amount: {
+          type: Number,
+          default: 10,
         },
-        categories: {
-          type: [String],
-          required: true,
-          enum: categories,
-        },
-        stores: {
-          type: [String],
-          required: true,
+        units: {
+          type: String,
+          enum: Array.from(distanceUnitsType),
+          default: "km",
         },
       },
-      basketFilters: {
+      categories: {
+        type: [String],
+        enum: Array.from(categories),
+        default: [],
+      },
+      stores: {
+        type: [mongoose.Types.ObjectId],
         required: true,
-        filteredStores: {
-          type: [String],
-          required: true,
-        },
-        maxStores: {
-          type: Number,
-          required: true,
-        },
+        default: [],
       },
     },
-    required: true,
+    basketFilters: {
+      filteredStores: [mongoose.Types.ObjectId],
+      maxStores: {
+        type: Number,
+        default: null,
+      },
+    },
   },
 });
 
 const User = mongoose.model<UserProps>("User", userSchema);
+
+const user = new User();
 
 export default User;

@@ -1,8 +1,11 @@
 import { Request } from "express";
 import UserProps from "./UserProps.js";
+import mongoose from "mongoose";
 
 interface UserRequest extends Request {
-  user?: UserProps | null;
+  user?: mongoose.Document<unknown, {}, UserProps> & UserProps & {
+    _id: mongoose.Types.ObjectId;
+} | null;
 }
 
 export { UserRequest }

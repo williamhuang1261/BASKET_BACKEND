@@ -2,13 +2,13 @@ import express, { Application } from "express";
 import config from "config";
 import fs from "fs";
 import https, { ServerOptions } from "https";
-import keyVerif from "./startup/config.js";
-import dbConnection from "./startup/db.js";
-import initFirebase from "./startup/initFirebase.js";
-import logging from "./startup/logging.js";
-import routes from "./startup/routes.js";
+import keyVerif from "./startup/config";
+import dbConnection from "./startup/db";
+import initFirebase from "./startup/initFirebase";
+import logging from "./startup/logging";
+import routes from "./startup/routes";
 import { Server } from "http";
-import validation from "./startup/validation.js";
+import validation from "./startup/validation";
 
 const app: Application = express();
 
@@ -22,7 +22,6 @@ initFirebase();
 const port: string | number = process.env.PORT || 3001;
 const host: string = config.get("server_host");
 
-// MAJORTODO: Implement TypeScript
 const options: ServerOptions = {
   key: fs.readFileSync("./config/SSL_perms/thebasket.test.key"),
   cert: fs.readFileSync("./config/SSL_perms/thebasket.test.crt"),

@@ -1,4 +1,6 @@
-import User from "../models/users.js";
+import mongoose from "mongoose";
+import { weightUnitsType, distanceUnitsType, allUnitsType } from "../data/units";
+import categories from "../data/data";
 
 interface Location {
   country: "Canada" | "USA";
@@ -13,51 +15,51 @@ interface Account {
 }
 
 interface SupplierInfo {
-  supplier?: string;
-  supplierAdd?: string;
-  supplierUpdate?: string;
-  supplierGet?: string;
-  supplierDelete?: string;
+  supplier: string;
+  supplierAdd: string;
+  supplierUpdate: string;
+  supplierGet: string;
+  supplierDelete: string;
 }
 
 interface AdminInfo {
-  adminAdd?: string;
-  adminUpdate?: string;
-  adminGet?: string;
-  adminDelete?: string;
+  adminAdd: string;
+  adminUpdate: string;
+  adminGet: string;
+  adminDelete: string;
 }
 
+type WeightUnit = typeof weightUnitsType extends Set<infer T> ? T : never;
+type DistanceUnit = typeof distanceUnitsType extends Set<infer T> ? T : never;
 interface Preferences {
-  weightUnits?: string;
-  distUnits?: string;
-  language?: "en" | "fr";
+  weightUnits: WeightUnit;
+  distUnits: DistanceUnit;
+  language: "en" | "fr";
 }
 
+type AllUnits = typeof allUnitsType extends Set<infer T> ? T : never;
 interface Item {
-  id: string; // Assuming mongoose.Schema.Types.ObjectId is represented as string
-  ref: {
-    standard: "PLU" | "UPC" | "EAN";
-    code?: string;
-  };
+  id: mongoose.Types.ObjectId;
   select: {
     method: "weight" | "unit";
-    units?: string; // Assuming allUnitsType is represented as string
-    quantity?: number;
+    units: AllUnits;
+    quantity: number;
   };
 }
 
+type Categories = typeof categories extends Set<infer T> ? T : never;
 interface SearchFilters {
   distance: {
-    amount?: number;
-    units?: string; // Assuming distanceUnitsType is represented as string
+    amount: number;
+    units: DistanceUnit;
   };
-  categories: string[];
-  stores: string[];
+  categories: Categories[];
+  stores: mongoose.Types.ObjectId[];
 }
 
 interface BasketFilters {
-  filteredStores: string[];
-  maxStores?: number;
+  filteredStores: mongoose.Types.ObjectId[];
+  maxStores: number | null;
 }
 
 interface Filters {

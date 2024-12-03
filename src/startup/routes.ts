@@ -1,20 +1,16 @@
 import express, { Application } from "express";
-import users from "../routes/users.js";
-import logIn from "../routes/login.js";
-import search from "../routes/search.js";
-import items from "../routes/items.js";
-import suppliers from "../routes/suppliers.js";
-import confirmations from "../routes/confirmations.js";
-import error from "../middleware/error.js";
+import users_router from '../routes/users/users_routes'
+// import search from "../routes/search";
+// import items from "../routes/items";
+// import suppliers from "../routes/suppliers";
+import error from "../middleware/error";
 
 const routes = (app: Application) => {
   app.use(express.json());
-  app.use("/api/users", users);
-  app.use("/api/login", logIn);
-  app.use("/api/confirmations", confirmations);
-  app.use("/api/items", items);
-  app.use("/api/suppliers", suppliers);
-  app.use("/api/search", search);
+  app.use("/users", users_router);
+  // app.use("/items", items);
+  // app.use("/suppliers", suppliers);
+  // app.use("/search", search);
   app.use(error);
 };
 

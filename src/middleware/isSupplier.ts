@@ -1,5 +1,5 @@
 import { NextFunction, Response } from "express";
-import { UserRequest } from "../interface/RequestsProps.js";
+import { UserRequest } from "../interface/RequestsProps";
 
 const isSupplier = (req: UserRequest, res:Response, next: NextFunction) => {
   // Testing if the user is a supplier
