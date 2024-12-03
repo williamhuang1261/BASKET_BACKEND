@@ -16,7 +16,7 @@ import createNewUser from "../utils/users/createNewUser";
  * @example
  * // Success case: moves to next middleware
  * next()
- * 
+ *
  * // Error cases
  * res.status(401).send("User is not properly logged in")
  * res.status(401).send("Tampered/Invalid token")
@@ -41,6 +41,8 @@ const isLoggedIn = async (
     // Creating new User
     const newUser = await createNewUser(decoded);
     if (!newUser) return res.status(500).send("Error creating new user");
+
+    // Setting user
     user = newUser;
   }
   req.user = await user;

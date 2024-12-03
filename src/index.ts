@@ -1,3 +1,8 @@
+/**
+ * @fileoverview Main application entry point that sets up the Express server with HTTPS support
+ * @module index
+ */
+
 import express, { Application } from "express";
 import config from "config";
 import fs from "fs";
@@ -10,8 +15,10 @@ import routes from "./startup/routes";
 import { Server } from "http";
 import validation from "./startup/validation";
 
+/** Express application instance */
 const app: Application = express();
 
+/** Initialize application components */
 logging();
 routes(app);
 keyVerif();
@@ -19,13 +26,17 @@ dbConnection();
 validation();
 initFirebase();
 
+/** Server configuration */
 const port: string | number = process.env.PORT || 3001;
 const host: string = config.get("server_host");
 
+/** HTTPS server options */
 const options: ServerOptions = {
   key: fs.readFileSync("./config/SSL_perms/thebasket.test.key"),
   cert: fs.readFileSync("./config/SSL_perms/thebasket.test.crt"),
 };
+
+/** Server instance that will be either HTTP or HTTPS based on environment */
 let server: https.Server | Server;
 
 if (process.env.NODE_ENV == "test") {
@@ -50,4 +61,5 @@ if (process.env.NODE_ENV == "test") {
   );
 }
 
+/** Export server instance for testing purposes */
 export default server;

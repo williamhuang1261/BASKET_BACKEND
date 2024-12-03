@@ -1,6 +1,11 @@
 import winston from "winston";
 import "express-async-errors";
 
+/**
+ * @description Configures Winston logger with file and console transports
+ * @example
+ * logging();
+ */
 const logging = () => {
   winston.exceptions.handle(
     new winston.transports.Console({ 
