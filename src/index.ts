@@ -13,7 +13,6 @@ import initFirebase from "./startup/initFirebase";
 import logging from "./startup/logging";
 import routes from "./startup/routes";
 import { Server } from "http";
-import validation from "./startup/validation";
 
 /** Express application instance */
 const app: Application = express();
@@ -23,7 +22,6 @@ logging();
 routes(app);
 keyVerif();
 dbConnection();
-validation();
 initFirebase();
 
 /** Server configuration */

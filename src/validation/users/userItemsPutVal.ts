@@ -24,7 +24,7 @@ const userItemsPutVal = (body:any) => {
           quantity: Joi.number().required().min(0)
         }).required()
       })
-    ).min(1).required()
+    ).min(1).max(16).required()
   });
   return schema.validate(body);
 }

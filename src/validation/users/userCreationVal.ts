@@ -10,7 +10,7 @@ import {
  *
  * @param {any} user - The user data to validate.
  * @returns {Joi.ValidationResult} The result of the validation.
- *
+ * @example
  * The user data should have the following structure:
  * - uid: string (required)
  * - name: string (optional, 3-32 chars)
@@ -54,7 +54,6 @@ import {
  *     - filteredStores: Map<string, true> (required)
  *     - maxStores: number (required, can be null)
  */
-
 const userCreationValidation = (user: any) => {
   const locationSchema = Joi.object({
     country: Joi.string().valid("Canada", "USA").required(),

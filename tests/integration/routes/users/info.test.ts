@@ -5,6 +5,7 @@ import config from "config";
 import request from "supertest";
 import mongoose from "mongoose";
 import mockUser from "../../../mockData/mockUser";
+import categories from "../../../../src/data/data";
 
 describe("/users/info", () => {
   const uid: string = config.get("uid");
@@ -187,8 +188,8 @@ describe("/users/info", () => {
     beforeEach(() => {
       values = {
         membership: [
-          new mongoose.Types.ObjectId(),
-          new mongoose.Types.ObjectId(),
+          new mongoose.Types.ObjectId().toString(),
+          new mongoose.Types.ObjectId().toString(),
         ],
       };
     });
@@ -231,6 +232,17 @@ describe("/users/info", () => {
       let res = await exec();
       expect(res.status).toBe(400);
     });
+    it("Should return 400 if array length is 0 or > 16", async () => {
+      values.membership = [];
+      let res = await exec();
+      expect(res.status).toBe(400);
+
+      values.membership = new Array(17).fill(
+        new mongoose.Types.ObjectId().toString()
+      );
+      res = await exec();
+      expect(res.status).toBe(400);
+    });
     it("Should return 500 if an error occured during the update", async () => {
       jest.spyOn(User.prototype, "save").mockRejectedValue(new Error());
       const res = await exec();
@@ -248,7 +260,10 @@ describe("/users/info", () => {
         ],
       };
       const user = new User(mockUser);
-      user.membership = new Map([[values.membership[0], true], [values.membership[1], true]]);
+      user.membership = new Map([
+        [values.membership[0], true],
+        [values.membership[1], true],
+      ]);
       await user.save();
     });
     const exec = async () => {
@@ -288,6 +303,17 @@ describe("/users/info", () => {
     it("Should return 400 if value in not valid", async () => {
       values.membership = "invalid_membership";
       let res = await exec();
+      expect(res.status).toBe(400);
+    });
+    it("Should return if array length is 0 or > 16", async () => {
+      values.membership = [];
+      let res = await exec();
+      expect(res.status).toBe(400);
+
+      values.membership = new Array(17).fill(
+        new mongoose.Types.ObjectId().toString()
+      );
+      res = await exec();
       expect(res.status).toBe(400);
     });
     it("Should return 500 if an error occured during the update", async () => {
@@ -459,6 +485,29 @@ describe("/users/info", () => {
       let res = await exec();
       expect(res.status).toBe(400);
     });
+    it("Should return 400 if array length is 0 or > 16", async () => {
+      values.items = [];
+      let res = await exec();
+      expect(res.status).toBe(400);
+
+      values.items = new Array(17).fill({
+        id: new mongoose.Types.ObjectId().toString(),
+        select: {
+          method: "unit",
+          units: "unit",
+          quantity: 5,
+        },
+      });
+      res = await exec();
+      expect(res.status).toBe(400);
+    });
+    it("Should return 400 if max items per user is exceeded", async () => {
+      values.membership = new Array(15).fill(
+        new mongoose.Types.ObjectId().toString()
+      );
+      const res = await exec();
+      expect(res.status).toBe(400);
+    });
     it("Should return 500 if an error occured during the update", async () => {
       jest.spyOn(User.prototype, "save").mockRejectedValue(new Error());
       const res = await exec();
@@ -555,6 +604,22 @@ describe("/users/info", () => {
       let res = await exec();
       expect(res.status).toBe(400);
     });
+    it("Should return 400 if array length is 0 or > 16", async () => {
+      values.items = [];
+      let res = await exec();
+      expect(res.status).toBe(400);
+
+      values.items = new Array(17).fill({
+        id: new mongoose.Types.ObjectId().toString(),
+        select: {
+          method: "unit",
+          units: "unit",
+          quantity: 5,
+        },
+      });
+      res = await exec();
+      expect(res.status).toBe(400);
+    });
     it("Should return 500 if an error occured during the update", async () => {
       jest.spyOn(User.prototype, "save").mockRejectedValue(new Error());
       const res = await exec();
@@ -610,10 +675,6 @@ describe("/users/info", () => {
       values = {};
       let res = await exec();
       expect(res.status).toBe(400);
-
-      values = { items: [] };
-      res = await exec();
-      expect(res.status).toBe(200);
     });
     it("Should return 401 if token is not provided", async () => {
       const res = await request(server)
@@ -636,6 +697,17 @@ describe("/users/info", () => {
     it("Should return 400 if value in not valid", async () => {
       values.items = "invalid_items";
       let res = await exec();
+      expect(res.status).toBe(400);
+    });
+    it("Should return 400 if array length is 0 or > 16", async () => {
+      values.items = [];
+      let res = await exec();
+      expect(res.status).toBe(400);
+
+      values.items = new Array(17).fill(
+        new mongoose.Types.ObjectId().toString()
+      );
+      res = await exec();
       expect(res.status).toBe(400);
     });
     it("Should return 500 if an error occured during the update", async () => {
@@ -706,10 +778,12 @@ describe("/users/info", () => {
       const user = await User.findOne({ uid: uid });
       if (user) {
         user.filters.searchFilters.categories = new Map([["Produce", true]]);
-        user.filters.searchFilters.stores = new Map([[values.searchFilters.stores[0], true]]);
-        user.filters.basketFilters.filteredStores = new Map([[
-          values.basketFilters.filteredStores[0], true
-        ]]);
+        user.filters.searchFilters.stores = new Map([
+          [values.searchFilters.stores[0], true],
+        ]);
+        user.filters.basketFilters.filteredStores = new Map([
+          [values.basketFilters.filteredStores[0], true],
+        ]);
         await user.save();
       }
       const res = await exec();
@@ -773,6 +847,27 @@ describe("/users/info", () => {
       expect(res.status).toBe(400);
       values.basketFilters.maxStores = 4;
     });
+    it("Should return 400 if array length is > 32 or number of existing categories", async () => {
+      values.searchFilters.categories = new Array(categories.size + 1).fill(
+        "Produce"
+      );
+      let res = await exec();
+      expect(res.status).toBe(400);
+      values.searchFilters.categories = ["Produce"];
+
+      values.searchFilters.stores = new Array(33).fill(
+        new mongoose.Types.ObjectId().toString()
+      );
+      res = await exec();
+      expect(res.status).toBe(400);
+      values.searchFilters.stores = [new mongoose.Types.ObjectId().toString()];
+
+      values.basketFilters.filteredStores = new Array(33).fill(
+        new mongoose.Types.ObjectId().toString()
+      );
+      res = await exec();
+      expect(res.status).toBe(400);
+    });
     it("Should return 500 if an error occured during the update", async () => {
       jest.spyOn(User.prototype, "save").mockRejectedValue(new Error());
       const res = await exec();
@@ -792,7 +887,10 @@ describe("/users/info", () => {
       const user = new User(mockUser);
       user.filters.searchFilters.categories.set(values.categories[0], true);
       user.filters.searchFilters.stores.set(values.stores[0], true);
-      user.filters.basketFilters.filteredStores.set(values.filteredStores[0], true);
+      user.filters.basketFilters.filteredStores.set(
+        values.filteredStores[0],
+        true
+      );
       user.filters.basketFilters.maxStores = values.maxStores;
       await user.save();
     });

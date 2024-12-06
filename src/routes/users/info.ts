@@ -1,4 +1,3 @@
-import mongoose from "mongoose";
 import express, { Response } from "express";
 import { UserRequest } from "../../interface/UserRequestProps";
 import userBasicInfoModifVal from "../../validation/users/userBasicInfoModifVal";
@@ -129,15 +128,18 @@ router.post("/membership/me", async (req: UserRequest, res: Response) => {
   // Validating body
   if (!membership || !Array.isArray(membership))
     return res.status(400).send("Membership is required");
+  if (membership.length === 0 || membership.length > 16)
+    return res
+      .status(400)
+      .send("Membership list length must be between 1 and 16");
   for (const mem of membership) {
-    if (!mongoose.Types.ObjectId.isValid(mem))
+    if (typeof mem !== "string")
       return res.status(400).send("Membership must be an array of strings");
   }
 
   // Modifying user -- Using set to avoid duplicates
   for (const mem of membership) {
-    if (!user.membership.has(mem))
-      user.membership.set(mem, true);
+    if (!user.membership.has(mem)) user.membership.set(mem, true);
   }
 
   // Saving to DB
@@ -177,8 +179,13 @@ router.delete("/membership/me", async (req: UserRequest, res: Response) => {
   // Validating body
   if (!membership || !Array.isArray(membership))
     return res.status(400).send("Membership is required");
+  if (membership.length === 0 || membership.length > 16)
+    return res
+      .status(400)
+      .send("Membership list length must be between 1 and 16");
+
   for (const mem of membership) {
-    if (typeof mem !== 'string')
+    if (typeof mem !== "string")
       return res.status(400).send("Membership must be an array of strings");
   }
 
@@ -186,7 +193,7 @@ router.delete("/membership/me", async (req: UserRequest, res: Response) => {
   for (const mem of membership) {
     user.membership.delete(mem);
   }
-  
+
   // Saving to DB
   try {
     await user.save();
@@ -275,13 +282,13 @@ router.post("/items/me", async (req: UserRequest, res: Response) => {
   // Validating body
   const { error } = userItemsPostVal(req.body);
   if (error) return res.status(400).send(error.details[0].message);
+  if(req.body.items.length + user.membership.size > 16)
+    return res.status(400).send("Max items per user is 16");
 
   // Modifying user
   const { items } = req.body;
   for (const item of items) {
-    if (!user.items.has(item.id))
-      user.items.set(item.id, item.select);
-      
+    if (!user.items.has(item.id)) user.items.set(item.id, item.select);
   }
 
   // Saving to DB
@@ -331,8 +338,7 @@ router.put("/items/me", async (req: UserRequest, res: Response) => {
   // Modifying user
   const { items } = req.body;
   for (const item of items) {
-    if (user.items.has(item.id))
-      user.items.set(item.id, item.select);
+    if (user.items.has(item.id)) user.items.set(item.id, item.select);
   }
 
   // Saving to DB

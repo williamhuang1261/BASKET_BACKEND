@@ -1,5 +1,4 @@
-const config = require('config');
-
+import config from 'config'
 /**
  * @description Verifies that JWT private key is defined in config
  * @throws {Error} If jwtPrivateKey is not defined in config

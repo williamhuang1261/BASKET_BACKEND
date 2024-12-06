@@ -9,12 +9,6 @@ describe('userItemsDelVal', () => {
     expect(res.error).toBeUndefined();
   });
 
-  test('should validate empty items array', () => {
-    const body = { items: [] };
-    const res = userItemsDelVal(body);
-    expect(res.error).toBeUndefined();
-  });
-
   test('should reject missing items array', () => {
     const body = {};
     const res = userItemsDelVal(body);

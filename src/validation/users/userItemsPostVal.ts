@@ -21,7 +21,7 @@ const userItemsPostVal = (body:any) => {
         select: Joi.object({
           method: Joi.string().valid("weight", "unit").required(),
           units: Joi.string().valid(...Array.from(allUnitsType)).required(),
-          quantity: Joi.number().positive().required()
+          quantity: Joi.number().positive().min(1).max(16).required()
         }).required()
       })
     ).min(1).required()

@@ -1,6 +1,6 @@
-const winston = require('winston');
-const mongoose = require('mongoose');
-const config = require('config');
+import winston from 'winston'
+import mongoose from 'mongoose'
+import config from 'config'
 
 /**
  * @description Establishes MongoDB connection using config settings
@@ -8,7 +8,11 @@ const config = require('config');
  * dbConnection();
  */
 const dbConnection = () => {
-  const db = config.get('db');
+  const db:string = config.get('db');
+  if (!db){
+    throw new Error('FATAL ERROR: db is not defined.');
+  }
+
   mongoose.connect(db)
   .then(() => winston.info(`Connected to ${db}...`));
 }

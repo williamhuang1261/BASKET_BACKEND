@@ -17,17 +17,18 @@ import categories from "../../data/data";
  * @see {@link https://joi.dev/api/?v=17.4.0#objectobject-schema} for more information
  */
 const userFiltersPostVal = (body: any) => {
+  const maxCategories = categories.size;
   const schema = Joi.object({
     searchFilters: Joi.object({
       distance: Joi.object({
         amount: Joi.number().positive().required(),
         units: Joi.string().valid("km", "mi").required(),
       }),
-      categories: Joi.array().items(Joi.string().valid(... Array.from(categories))),
-      stores: Joi.array().items(Joi.string().valid()),
+      categories: Joi.array().items(Joi.string().valid(... Array.from(categories))).max(maxCategories),
+      stores: Joi.array().items(Joi.string()).max(32),
     }),
     basketFilters: Joi.object({
-      filteredStores: Joi.array().items(Joi.string()),
+      filteredStores: Joi.array().items(Joi.string()).max(32),
       maxStores: Joi.number().allow(null).positive(),
     }),
   });

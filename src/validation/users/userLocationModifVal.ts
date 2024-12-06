@@ -13,7 +13,16 @@ import Joi from "joi";
 const userLocationModifVal = (body: any) => {
   if (body.type || body.coordinates || body.formattedAddress) {
     if (!body.country || !body.coordinates || !body.formattedAddress)
-      return { error: { details: [{ message: "Missing required fields" }] } };
+      return {
+        error: {
+          details: [
+            {
+              message:
+                "Missing location fields - type, coordinates and formattedAddress are required together",
+            },
+          ],
+        },
+      };
   }
 
   const schema = Joi.object({

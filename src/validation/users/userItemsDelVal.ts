@@ -9,7 +9,7 @@ import Joi from "joi";
  */
 const userItemsDelVal = (body: any) => {
   const schema = Joi.object({
-    items: Joi.array().items(Joi.string()).required()
+    items: Joi.array().items(Joi.string()).min(1).max(16).required()
   });
   return schema.validate(body);
 }
