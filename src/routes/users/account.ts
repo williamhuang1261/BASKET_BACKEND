@@ -1,6 +1,5 @@
 import express, { Response } from "express";
 import { UserRequest } from "../../interface/UserRequestProps";
-import User from "../../models/users";
 
 const router = express.Router();
 

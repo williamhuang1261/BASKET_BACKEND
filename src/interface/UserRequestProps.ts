@@ -1,5 +1,5 @@
 import { Request } from "express";
-import UserProps from "./UserProps.js";
+import UserProps from "./UserProps";
 import mongoose from "mongoose";
 
 interface UserRequest extends Request {

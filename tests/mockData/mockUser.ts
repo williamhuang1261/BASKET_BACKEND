@@ -33,7 +33,7 @@ const mockUser: UserProps = {
     ],
   ]),
   filters: {
-    searchFilters: {
+    searchPreferences: {
       distance: {
         amount: 10,
         units: "km",

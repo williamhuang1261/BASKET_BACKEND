@@ -44,7 +44,7 @@ import {
  *   - units: string (required, must be one of the valid units)
  *   - quantity: number (required)
  * - filters: object (required)
- *   - searchFilters: object (required)
+ *   - searchPreferences: object (required)
  *     - distance: object (required)
  *       - amount: number (required)
  *       - units: string (required, must be one of the valid distance units)
@@ -107,26 +107,23 @@ const userCreationValidation = (user: any) => {
         .valid(...Array.from(distanceUnitsType))
         .required(),
     }).required(),
-    categories: Joi.object().pattern(
-      Joi.string(),
-      Joi.boolean().valid(true)
-    ).required(),
-    stores: Joi.object().pattern(
-      Joi.string(),
-      Joi.boolean().valid(true)
-    ).required(),
+    categories: Joi.object()
+      .pattern(Joi.string(), Joi.boolean().valid(true))
+      .required(),
+    stores: Joi.object()
+      .pattern(Joi.string(), Joi.boolean().valid(true))
+      .required(),
   });
 
   const basketFiltersSchema = Joi.object({
-    filteredStores: Joi.object().pattern(
-      Joi.string(),
-      Joi.boolean().valid(true)
-    ).required(),
+    filteredStores: Joi.object()
+      .pattern(Joi.string(), Joi.boolean().valid(true))
+      .required(),
     maxStores: Joi.number().allow(null).required(),
   });
 
   const filtersSchema = Joi.object({
-    searchFilters: searchFiltersSchema.required(),
+    searchPreferences: searchFiltersSchema.required(),
     basketFilters: basketFiltersSchema.required(),
   });
 
@@ -138,15 +135,11 @@ const userCreationValidation = (user: any) => {
     account: accountSchema.required(),
     supplierInfo: supplierInfoSchema.optional(),
     adminInfo: adminInfoSchema.optional(),
-    membership: Joi.object().pattern(
-      Joi.string(),
-      Joi.boolean().valid(true)
-    ).required(),
+    membership: Joi.object()
+      .pattern(Joi.string(), Joi.boolean().valid(true))
+      .required(),
     preferences: preferencesSchema.required(),
-    items: Joi.object().pattern(
-      Joi.string(),
-      itemSchema
-    ).required(),
+    items: Joi.object().pattern(Joi.string(), itemSchema).required(),
     filters: filtersSchema.required(),
   });
 

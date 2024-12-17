@@ -1,4 +1,4 @@
-const bcrypt = require("bcrypt");
+import bcrypt from "bcrypt";
 
 // TODO: Adjust types for user and body
 async function checkAuthPassword(user: any, body: any) {

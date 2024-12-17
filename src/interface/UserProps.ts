@@ -1,4 +1,3 @@
-import mongoose from "mongoose";
 import {
   weightUnitsType,
   distanceUnitsType,
@@ -49,7 +48,7 @@ interface Item {
 }
 
 type Categories = typeof categories extends Set<infer T> ? T : never;
-interface SearchFilters {
+interface SearchPreferences {
   distance: {
     amount: number;
     units: DistanceUnit;
@@ -64,7 +63,7 @@ interface BasketFilters {
 }
 
 interface Filters {
-  searchFilters: SearchFilters;
+  searchPreferences: SearchPreferences;
   basketFilters: BasketFilters;
 }
 

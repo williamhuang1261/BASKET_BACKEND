@@ -1,5 +1,5 @@
 import express, { Application } from "express";
-import users_router from '../routes/users/users_routes'
+import users_router from "../routes/users/users_routes";
 import error from "../middleware/error";
 
 /**

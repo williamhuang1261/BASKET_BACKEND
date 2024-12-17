@@ -1,8 +1,8 @@
-import express, { Response } from "express";
-import { UserRequest } from "../../interface/UserRequestProps";
-import isLoggedIn from "../../middleware/isLoggedIn";
+// import express, { Response } from "express";
+// import { UserRequest } from "../../interface/UserRequestProps";
+// import isLoggedIn from "../../middleware/isLoggedIn";
 
-const router = express.Router();
+// const router = express.Router();
 
 // // TODO Handle all new informations that were added to users
 
@@ -199,4 +199,4 @@ const router = express.Router();
 //   }
 // );
 
-export default router;
+// export default router;

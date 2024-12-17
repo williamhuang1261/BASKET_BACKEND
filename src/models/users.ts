@@ -4,8 +4,7 @@ import {
   weightUnitsType,
 } from "../data/units";
 import mongoose from "mongoose";
-import categories from "../data/data";
-import UserProps from "../interface/UserProps.js";
+import UserProps from "../interface/UserProps";
 
 const userSchema = new mongoose.Schema<UserProps>({
   // TODO Create an MongoDB index for uid
@@ -119,7 +118,7 @@ const userSchema = new mongoose.Schema<UserProps>({
 
   // Filters info
   filters: {
-    searchFilters: {
+    searchPreferences: {
       distance: {
         amount: {
           type: Number,

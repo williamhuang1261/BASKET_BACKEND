@@ -27,7 +27,7 @@ const createNewUser = async (decoded: DecodedIdToken) => {
     },
     items: new Map(),
     filters: {
-      searchFilters: {
+      searchPreferences: {
         // Adjust according to country
         distance: {
           amount: 10,
@@ -46,11 +46,11 @@ const createNewUser = async (decoded: DecodedIdToken) => {
 
   // Verifying the validity of the user
   const { error } = userCreationValidation(userPackage);
-  if (error) return null
+  if (error) return null;
 
   // Creating the new user
   const user = new User(userPackage);
-  
+
   try {
     await user.save();
     return user;

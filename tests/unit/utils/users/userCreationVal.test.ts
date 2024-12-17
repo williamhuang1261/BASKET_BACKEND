@@ -1,7 +1,8 @@
+import UserProps from '../../../../src/interface/UserProps';
 import userCreationValidation from '../../../../src/validation/users/userCreationVal'
 
 describe('userCreationValidation', () => {
-  const validUser = {
+  const validUser: UserProps = {
     uid: 'user123',
     name: 'John Doe',
     email: 'john@example.com',
@@ -23,7 +24,7 @@ describe('userCreationValidation', () => {
     },
     items: new Map(),
     filters: {
-      searchFilters: {
+      searchPreferences: {
         distance: {
           amount: 10,
           units: 'km'
@@ -115,8 +116,8 @@ describe('userCreationValidation', () => {
       ...validUser,
       filters: {
         ...validUser.filters,
-        searchFilters: {
-          ...validUser.filters.searchFilters,
+        searchPreferences: {
+          ...validUser.filters.searchPreferences,
           distance: {
             amount: 10,
             units: 'invalid'
@@ -133,8 +134,8 @@ describe('userCreationValidation', () => {
       ...validUser,
       filters: {
         ...validUser.filters,
-        searchFilters: {
-          ...validUser.filters.searchFilters,
+        searchPreferences: {
+          ...validUser.filters.searchPreferences,
           distance: {
             amount: -10,
             units: 'km'
@@ -151,8 +152,8 @@ describe('userCreationValidation', () => {
       ...validUser,
       filters: {
         ...validUser.filters,
-        searchFilters: {
-          ...validUser.filters.searchFilters,
+        searchPreferences: {
+          ...validUser.filters.searchPreferences,
           distance: {
             amount: 0,
             units: 'km'
@@ -182,7 +183,7 @@ describe('userCreationValidation', () => {
       },
       items: new Map(),
       filters: {
-        searchFilters: {
+        searchPreferences: {
           distance: {
             amount: 10,
             units: 'km'
