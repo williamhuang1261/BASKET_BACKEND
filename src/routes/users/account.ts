@@ -11,8 +11,9 @@ const router = express.Router();
  * @desc User signup/login endpoint that returns user data
  * @param {UserRequest} req - Request with user object from OAuth authentication
  * @param {Response} res - Standard express response object
- * @returns {Promise<Response>} - Response object with user data
+ * @mutates {Response} res - The response object is mutated with user data
  * @example
+ * 
  * // Response
  * {
  *   "message": "User is logged in",

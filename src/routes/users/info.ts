@@ -20,9 +20,65 @@ import {
   valSearchPreferencesStoresRemove,
 } from "../../validation/users/userInfoPutVal.js";
 
+/**
+ * Router for handling user information updates
+ * @module UserInfoRouter
+ */
 const router = express.Router();
 
-
+/**
+ * @route PUT /api/users/me
+ * @desc Update authenticated user's information
+ * @param {UserRequest} req - Request with user object and update data
+ * @param {Response} res - Standard express response object
+ * @returns {Promise<void>} - Response with success/failure message
+ * @example
+ * // Request Body
+ * {
+ *   "name": string?,
+ *   "email": string?,
+ *   "location": object?,
+ *   "membership": {
+ *     "add": string[]?,
+ *     "remove": string[]?
+ *   }?,
+ *   "preferences": {
+ *     "weightUnits": string?,
+ *     "distUnits": string?,
+ *     "language": string?
+ *   }?,
+ *   "items": {
+ *     "add": Array<{id: string, select: boolean}>?,
+ *     "remove": string[]?,
+ *     "update": Array<{id: string, select: boolean}>?
+ *   }?,
+ *   "filters": {
+ *     "searchPreferences": {
+ *       "distance": number?,
+ *       "categories": { "add": string[]?, "remove": string[]? }?,
+ *       "stores": { "add": string[]?, "remove": string[]? }?
+ *     }?,
+ *     "basketFilters": {
+ *       "filteredStores": { "add": string[]?, "remove": string[]? }?,
+ *       "maxStores": number?
+ *     }?
+ *   }?
+ * }
+ * 
+ * // Success Response
+ * {
+ *   "message": "User updated"
+ * }
+ * 
+ * // Error Response
+ * {
+ *   "message": "Some fields failed validation",
+ *   "errors": [{
+ *     "message": string,
+ *     "failedObject": object
+ *   }]
+ * }
+ */
 router.put("/me", async (req: UserRequest, res: Response) => {
   let user = req.user!;
   let errors: {

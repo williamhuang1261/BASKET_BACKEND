@@ -7,7 +7,7 @@ import winston from 'winston'
  * @param {Request} req - Express request object
  * @param {Response} res - Express response object
  * @param {NextFunction} next - Express next middleware function
- * @returns {Response} Response object with 500 status and error message
+ * @mutates {Response} Response object with 500 status and error message
  * @description Logs the error using Winston logger and sends a generic error response
  */
 const error = (err: Error, req: Request, res: Response, next: NextFunction) => {

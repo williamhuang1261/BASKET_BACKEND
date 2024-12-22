@@ -10,7 +10,8 @@ import createNewUser from "../utils/users/createNewUser.js";
  * @param {UserRequest} req - Express request object with custom user property
  * @param {Response} res - Express response object
  * @param {NextFunction} next - Express next middleware function
- * @returns {Promise<void>} Calls next() if authentication successful, sends error response otherwise
+ * @mutates {Response} Calls next() if authentication successful, attaches error
+ *   message if authentication fails
  * @throws {401} If token is missing or invalid
  * @throws {500} If new user creation fails
  * @example
