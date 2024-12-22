@@ -3,7 +3,7 @@ import {
   weightUnitsType,
   distanceUnitsType,
   allUnitsType,
-} from "../../data/units";
+} from "../../data/units.js";
 
 /**
  * Validates the user creation data using Joi schemas.

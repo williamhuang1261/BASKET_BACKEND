@@ -3,19 +3,19 @@
  * @module index
  */
 
-import express, { Application } from "express";
+import express from "express";
 import config from "config";
 import fs from "fs";
 import https, { ServerOptions } from "https";
-import keyVerif from "./startup/config";
-import dbConnection from "./startup/db";
-import initFirebase from "./startup/initFirebase";
-import logging from "./startup/logging";
-import routes from "./startup/routes";
+import keyVerif from "./startup/config.js";
+import dbConnection from "./startup/db.js";
+import initFirebase from "./startup/initFirebase.js";
+import logging from "./startup/logging.js";
+import routes from "./startup/routes.js";
 import { Server } from "http";
 
 /** Express application instance */
-const app: Application = express();
+const app = express();
 
 /** Initialize application components */
 logging();
@@ -45,6 +45,7 @@ if (process.env.NODE_ENV == "test") {
   });
 } else if (
   process.env.NODE_ENV == "development" &&
+  process.env.NODE_TLS_REJECT_UNAUTHORIZED &&
   process.env.NODE_TLS_REJECT_UNAUTHORIZED == "0"
 ) {
   server = https.createServer(options, app).listen(port as number, host, () => {

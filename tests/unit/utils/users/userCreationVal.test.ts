@@ -1,5 +1,6 @@
 import UserProps from '../../../../src/interface/UserProps';
 import userCreationValidation from '../../../../src/validation/users/userCreationVal'
+import {describe, it, expect} from 'vitest'
 
 describe('userCreationValidation', () => {
   const validUser: UserProps = {

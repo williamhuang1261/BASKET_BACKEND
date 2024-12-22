@@ -5,6 +5,7 @@ import config from "config";
 import mongoose from "mongoose";
 import mockUser from "../../../mockData/mockUser";
 import request from "supertest";
+import { describe, beforeAll, beforeEach, afterAll, it, expect, vi, afterEach } from "vitest";
 
 describe("/users/info", () => {
   const uid: string = config.get("uid");
@@ -19,17 +20,6 @@ describe("/users/info", () => {
       console.error("Couldn't start server", e);
     }
   });
-  beforeEach(async () => {
-    try {
-      await User.deleteMany({});
-    } catch (e) {
-      console.error("Couldn't delete users or couldn't create new user", e);
-    }
-    token = config.get("user_jwt_id");
-  });
-  afterEach(async () => {
-    jest.restoreAllMocks();
-  });
   afterAll(async () => {
     try {
       if (server) await server.close();
@@ -41,6 +31,13 @@ describe("/users/info", () => {
   describe("PUT /me", () => {
     let values: any;
     beforeEach(async () => {
+      try {
+        await User.deleteMany({});
+        token = config.get("user_jwt_id");
+      } catch (e) {
+        console.error("Couldn't delete users or couldn't create new user", e);
+      }
+
       let user = new User(mockUser);
       user.filters.searchPreferences.categories.set("Produce", true);
       user.filters.searchPreferences.stores.set("Store1", true);
@@ -121,6 +118,17 @@ describe("/users/info", () => {
         },
       };
     });
+    afterEach(async () => {
+      try {
+
+        vi.resetAllMocks();
+        await User.deleteMany({});
+
+      }
+      catch (e) {
+        console.error("Couldn't reset mocks", e);
+      }
+    });
     const exec = async () => {
       return request(server)
         .put("/users/info/me")
@@ -159,8 +167,6 @@ describe("/users/info", () => {
         expect(user.filters.basketFilters.filteredStores.has(values.filters.basketFilters.filteredStores.add[0])).toBe(true);
         expect(user.filters.basketFilters.filteredStores.has(values.filters.basketFilters.filteredStores.remove[0])).toBe(false);
         expect(user.filters.basketFilters.maxStores).toBe(values.filters.basketFilters.maxStores);
-
-
       }
     });
     it('Should return 200 even if some values aren\'t supported', async () => {
@@ -254,7 +260,7 @@ describe("/users/info", () => {
     });
     it('Should return 400 if items removing validation failed', async () => {
       // Should have array of strings
-      values.items.remove = "invalid"; 
+      values.items.remove = "invalid";
       const res = await exec();
       expect(res.status).toBe(400);
     });
@@ -313,7 +319,7 @@ describe("/users/info", () => {
       expect(res.status).toBe(400);
     });
     it('Should return 500 if user update failed', async () => {
-      jest.spyOn(User.prototype, 'save').mockRejectedValue(new Error());
+      vi.spyOn(User.prototype, 'save').mockRejectedValue(new Error());
       const res = await exec();
       expect(res.status).toBe(500);
     });

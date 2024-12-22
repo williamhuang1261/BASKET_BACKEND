@@ -1,7 +1,7 @@
 import { DecodedIdToken } from "firebase-admin/auth";
-import User from "../../models/users";
-import UserProps from "../../interface/UserProps";
-import userCreationValidation from "../../validation/users/userCreationVal";
+import User from "../../models/users.js";
+import UserProps from "../../interface/UserProps.js";
+import userCreationValidation from "../../validation/users/userCreationVal.js";
 
 // Creating a new user helper function
 const createNewUser = async (decoded: DecodedIdToken) => {

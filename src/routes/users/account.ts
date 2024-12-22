@@ -1,5 +1,8 @@
 import express, { Response } from "express";
-import { UserRequest } from "../../interface/UserRequestProps";
+import { UserRequest } from "../../interface/UserRequestProps.js";
+import isLoggedIn from "../../middleware/isLoggedIn.js";
+import getAuthFirebase from "../../utils/users/getAuthFirebase.js";
+import User from "../../models/users.js";
 
 const router = express.Router();
 
@@ -24,9 +27,9 @@ const router = express.Router();
  *   }
  * }
  */
-router.post("/oauth", async (req: UserRequest, res: Response) => {
+router.post("/oauth", isLoggedIn, async (req: UserRequest, res: Response) => {
   const user = req.user!;
-  return res.status(200).send({
+  res.status(200).send({
     message: "User is logged in",
     user: {
       name: user.name ? user.name : null,
@@ -38,6 +41,7 @@ router.post("/oauth", async (req: UserRequest, res: Response) => {
       filters: user.filters,
     },
   });
+  return
 });
 
 /**
@@ -60,15 +64,28 @@ router.post("/oauth", async (req: UserRequest, res: Response) => {
  * }
  */
 router.delete('/me', async (req: UserRequest, res: Response) => {
-  const user = req.user!;
+  // Validating existence of token
+  const idToken = req.header('x-auth-token');
+  if (!idToken) {
+    res.status(401).send('User is not properly logged in');
+    return
+  }
+
+  // Validating token
+  const decoded = await getAuthFirebase(idToken);
+  if (!decoded) {
+    res.status(401).send('Tampered/Invalid token');
+    return
+  }
 
   // Deleting user
   try {
-    await user.deleteOne();
-    return res.status(200).send("Deletion successful");
-  } catch {
-    return res.status(500).send('Deletion failed')
+    await User.deleteOne({uid: decoded.uid});
+    res.status(200).send("Deletion successful");
+  } catch (e){
+    res.status(500).send('Deletion failed');
   }
+  return
 });
 
 export default router;

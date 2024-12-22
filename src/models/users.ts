@@ -1,10 +1,10 @@
+import mongoose from "mongoose";
 import {
   allUnitsType,
   distanceUnitsType,
   weightUnitsType,
-} from "../data/units";
-import mongoose from "mongoose";
-import UserProps from "../interface/UserProps";
+} from "../data/units.js";
+import UserProps from "../interface/UserProps.js";
 
 const userSchema = new mongoose.Schema<UserProps>({
   // TODO Create an MongoDB index for uid

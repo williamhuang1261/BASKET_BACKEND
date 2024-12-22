@@ -4,6 +4,7 @@ import mockUser from "../../../mockData/mockUser";
 import config from "config";
 import request from "supertest";
 import https from "https";
+import { describe, it, beforeAll, afterAll, beforeEach, expect } from "vitest";
 
 describe("/users/account", () => {
   let server: Server | https.Server;
@@ -20,17 +21,6 @@ describe("/users/account", () => {
     }
   });
 
-  beforeEach(async () => {
-    try {
-      await User.deleteMany({});
-      const user = new User(mockUser);
-      await user.save();
-    } catch (e){
-      console.error("Couldn't delete users or couldn't create new user");
-    }
-    token = config.get("user_jwt_id");
-  });
-
   afterAll(async () => {
     try {
       if (server) await server.close();
@@ -40,12 +30,21 @@ describe("/users/account", () => {
   });
 
   describe('POST /oauth', () => {
+    beforeEach(async () => {
+      try {
+        await User.deleteMany({});
+        const user = new User(mockUser);
+        await user.save();
+      } catch (e){
+        console.error("Couldn't delete users or couldn't create new user");
+      }
+      token = config.get("user_jwt_id");
+    });
     const exec = async () => {
       return await request(server)
         .post("/users/account/oauth")
         .set("x-auth-token", token);
     };
-  
     it("Should return 401 if token is not valid", async () => {
       token = "invalid_token";
       const res = await exec();
@@ -64,6 +63,16 @@ describe("/users/account", () => {
   })
 
   describe('DELETE /me', () => {
+    beforeEach(async () => {
+      try {
+        await User.deleteMany({});
+        const user = new User(mockUser);
+        await user.save();
+      } catch (e){
+        console.error("Couldn't delete users or couldn't create new user");
+      }
+      token = config.get("user_jwt_id");
+    });
     const exec = async () => {
       return await request(server)
         .delete("/users/account/me")

@@ -5,8 +5,12 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "test": "jest --watchAll --verbose --detectOpenHandles",
-    "build": "tsc"
+    "test": "vitest watch",
+    "build": "rimraf dist && npx tsc",
+    "prestart": "npm run build",
+    "start": "nodemon dist/index.js",
+    "predev": "npm run build",
+    "dev": "npx tsc -w & nodemon dist/index.js"
   },
   "keywords": [],
   "author": "",
@@ -19,7 +23,6 @@
     "express-async-errors": "^3.1.1",
     "firebase-admin": "^13.0.1",
     "fs": "^0.0.1-security",
-    "jest": "^29.7.0",
     "joi": "^17.12.2",
     "joi-objectid": "^4.0.2",
     "jsonwebtoken": "^9.0.2",
@@ -34,16 +37,20 @@
     "@jest/globals": "^29.7.0",
     "@types/bcrypt": "^5.0.2",
     "@types/config": "^3.3.5",
-    "@types/jest": "^29.5.14",
+    "@types/express": "^5.0.0",
     "@types/node": "^22.9.2",
     "@types/node-geocoder": "^4.2.6",
     "@types/nodemailer": "^6.4.17",
     "@types/supertest": "^6.0.2",
+    "concurrently": "^9.1.0",
+    "copyfiles": "^2.4.1",
     "eslint": "^9.15.0",
     "nodemon": "^3.1.7",
+    "rimraf": "^6.0.1",
     "supertest": "^6.3.4",
     "ts-jest": "^29.2.5",
     "ts-node": "^10.9.2",
-    "typescript": "^5.7.2"
+    "typescript": "^5.7.2",
+    "vitest": "^2.1.8"
   }
 }

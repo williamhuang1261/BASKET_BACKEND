@@ -1,9 +1,12 @@
-import { NextFunction, Request, Response } from "express";
-import { UserRequest } from "../interface/UserRequestProps";
+import { NextFunction, Response } from "express";
+import { UserRequest } from "../interface/UserRequestProps.js";
 
 const isAdmin = (req: UserRequest, res: Response, next: NextFunction) => {
   // Testing if the user is an admin
-  if (!req.user!.account.isAdmin) return res.status(403).send("Access denied");
+  if (!req.user!.account.isAdmin){
+    res.status(403).send("Access denied");
+    return
+  }
   next();
 };
 

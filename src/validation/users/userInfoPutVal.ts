@@ -3,7 +3,7 @@ import {
   allUnitsType,
   distanceUnitsType,
   weightUnitsType,
-} from "../../data/units";
+} from "../../data/units.js";
 
 export const valName = (body: any) => {
   return Joi.string().min(3).max(32).required().validate(body);

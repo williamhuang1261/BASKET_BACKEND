@@ -1,5 +1,5 @@
 import admin from "firebase-admin";
-import serviceAccount from "../../config/projectorangetestphase-firebase-adminsdk-c3wa1-f80a214a50.json"
+import serviceAccount from "../../config/projectorangetestphase-firebase-adminsdk-c3wa1-f80a214a50.json" assert { type: "json" };
 /**
  * @description Initializes Firebase Admin SDK with service account credentials
  * @example

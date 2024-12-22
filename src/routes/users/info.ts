@@ -1,5 +1,5 @@
-import express, { Response } from "express";
-import { UserRequest } from "../../interface/UserRequestProps";
+import express, {  Response } from "express";
+import { UserRequest } from "../../interface/UserRequestProps.js";
 import {
   valBasketFiltersFilteredStoresAdd,
   valBasketFiltersFilteredStoresRemove,
@@ -18,9 +18,10 @@ import {
   valSearchPreferencesDistance,
   valSearchPreferencesStoresAdd,
   valSearchPreferencesStoresRemove,
-} from "../../validation/users/userInfoPutVal";
+} from "../../validation/users/userInfoPutVal.js";
 
 const router = express.Router();
+
 
 router.put("/me", async (req: UserRequest, res: Response) => {
   let user = req.user!;
@@ -322,15 +323,17 @@ router.put("/me", async (req: UserRequest, res: Response) => {
   try {
     await user.save();
   } catch (e) {
-    return res.status(500).send("Internal Server Error");
+    res.status(500).send("Internal Server Error");
+    return
   }
 
   // Sending response
-  if (errors.length > 0)
-    return res
-      .status(400)
-      .send({ message: "Some fields failed validation", errors });
-  return res.status(200).send({ message: "User updated" });
+  if (errors.length > 0){
+    res.status(400).send({ message: "Some fields failed validation", errors });
+    return
+  }
+  res.status(200).send({ message: "User updated" });
+  return
 });
 
 export default router;

@@ -1,6 +1,7 @@
 import config from "config";
 import getAuthFirebase from "../../../src/utils/users/getAuthFirebase";
 import initFirebase from "../../../src/startup/initFirebase";
+import {describe, beforeAll, it, expect} from 'vitest'
 
 // Testing getAuthFirebase, only verifies if the token is valid
 describe("getAuthFirebase", () => {
@@ -19,8 +20,5 @@ describe("getAuthFirebase", () => {
     token = "invalid-token";
     const res = await exec();
     expect(res).toBeNull();
-  });
-  it("Should fail gracefully if the server was unable to connect with firebase", async () => {
-
   });
 });

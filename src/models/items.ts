@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
-import { allUnitsType } from "../data/units";
-import categories from "../data/data";
+import { allUnitsType } from "../data/units.js";
+import categories from "../data/data.js";
 
 // Refactoring because an item may have multiple brands
 const itemSchema = new mongoose.Schema({

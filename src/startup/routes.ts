@@ -1,6 +1,6 @@
 import express, { Application } from "express";
-import users_router from "../routes/users/users_routes";
-import error from "../middleware/error";
+import users_router from "../routes/users/users_routes.js";
+import error from "../middleware/error.js";
 
 /**
  * @description Initializes all application routes and middleware

@@ -13,6 +13,7 @@ import winston from 'winston'
 const error = (err: Error, req: Request, res: Response, next: NextFunction) => {
   winston.error(err.message, err);
   res.status(500).send("Something failed");
+  return
 };
 //error
 //warn

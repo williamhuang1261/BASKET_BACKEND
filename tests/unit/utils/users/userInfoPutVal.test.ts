@@ -18,6 +18,7 @@ import {
   valSearchPreferencesStoresAdd,
   valSearchPreferencesStoresRemove,
 } from "../../../../src/validation/users/userInfoPutVal";
+import { describe, it, expect, beforeEach} from "vitest";
 
 describe("userInfoPutValidation", () => {
 
