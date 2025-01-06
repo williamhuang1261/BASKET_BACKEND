@@ -13,18 +13,43 @@ const router = express.Router();
  * @param {Response} res - Standard express response object
  * @mutates {Response} res - The response object is mutated with user data
  * @example
- * 
  * // Response
  * {
  *   "message": "User is logged in",
  *   "user": {
  *     "name": string | null,
  *     "email": string | null,
- *     "location": object,
- *     "membership": string[],
- *     "preferences": object,
- *     "items": array,
- *     "filters": object
+ *     "location": {
+ *       "country": string,
+ *       "type": "Point",
+ *       "coordinates": [number, number],
+ *       "formattedAddress": string
+ *     },
+ *     "membership": string[],  // Array of membership IDs
+ *     "preferences": {
+ *       "weightUnits": "kg" | "lbs",
+ *       "distUnits": "km" | "mi",
+ *       "language": string
+ *     },
+ *     "items": Array<[string, {
+ *       method: "weight" | "unit",
+ *       units: string,
+ *       quantity: number
+ *     }]>
+ *     "filters": {
+ *       "searchPreferences": {
+ *         "distance": {
+ *           "amount": number,
+ *           "units": string
+ *         },
+ *         "categories": string[],
+ *         "stores": string[]
+ *       },
+ *       "basketFilters": {
+ *         "filteredStores": string[],
+ *         "maxStores": number | null
+ *       }
+ *     }
  *   }
  * }
  */
@@ -36,13 +61,27 @@ router.post("/oauth", isLoggedIn, async (req: UserRequest, res: Response) => {
       name: user.name ? user.name : null,
       email: user.email ? user.email : null,
       location: user.location,
-      membership: user.membership,
+      membership: Array.from(user.membership.keys()),
       preferences: user.preferences,
-      items: user.items,
-      filters: user.filters,
+      items: Array.from(user.items),
+      filters: {
+        searchPreferences: {
+          distance: user.filters.searchPreferences.distance,
+          categories: Array.from(
+            user.filters.searchPreferences.categories.keys()
+          ),
+          stores: Array.from(user.filters.searchPreferences.stores.keys()),
+        },
+        basketFilters: {
+          filteredStores: Array.from(
+            user.filters.basketFilters.filteredStores.keys()
+          ),
+          maxStores: user.filters.basketFilters.maxStores,
+        },
+      },
     },
   });
-  return
+  return;
 });
 
 /**
@@ -57,36 +96,36 @@ router.post("/oauth", isLoggedIn, async (req: UserRequest, res: Response) => {
  *   "message": "Deletion successful"
  *   "status": 200
  * }
- * 
+ *
  * // Error Response
  * {
  *   "message": "Deletion failed"
  *   "status": 500
  * }
  */
-router.delete('/me', async (req: UserRequest, res: Response) => {
+router.delete("/me", async (req: UserRequest, res: Response) => {
   // Validating existence of token
-  const idToken = req.header('x-auth-token');
+  const idToken = req.header("x-auth-token");
   if (!idToken) {
-    res.status(401).send('User is not properly logged in');
-    return
+    res.status(401).send({ message: "User is not properly logged in" });
+    return;
   }
 
   // Validating token
   const decoded = await getAuthFirebase(idToken);
   if (!decoded) {
-    res.status(401).send('Tampered/Invalid token');
-    return
+    res.status(401).send({ message: "Tampered/Invalid token" });
+    return;
   }
 
   // Deleting user
   try {
-    await User.deleteOne({uid: decoded.uid});
-    res.status(200).send("Deletion successful");
-  } catch (e){
-    res.status(500).send('Deletion failed');
+    await User.deleteOne({ uid: decoded.uid });
+    res.status(200).send({ message: "Deletion successful" });
+  } catch (e) {
+    res.status(500).send({ message: "Deletion failed" });
   }
-  return
+  return;
 });
 
 export default router;

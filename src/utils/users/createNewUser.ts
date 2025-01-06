@@ -13,6 +13,9 @@ const createNewUser = async (decoded: DecodedIdToken) => {
     location: {
       // TODO Adjust the country with the website's request
       country: "Canada",
+      type: 'Point',
+      coordinates: [-79.3832, 43.6532],
+      formattedAddress: "Toronto, ON, Canada",
     },
     account: {
       isSupplier: false,

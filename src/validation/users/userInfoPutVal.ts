@@ -4,6 +4,7 @@ import {
   distanceUnitsType,
   weightUnitsType,
 } from "../../data/units.js";
+import categories from "../../data/data.js";
 
 export const valName = (body: any) => {
   return Joi.string().min(3).max(32).required().validate(body);
@@ -39,34 +40,12 @@ export const valLocation = (body: any) => {
   return locationSchema.validate(body);
 };
 
-export const valMembershipAdd = (body: any, currNum: number) => {
-  if (!body?.length) {
-    return { error: { details: [{ message: "Membership is undefined" }] } };
-  }
-  if (currNum + body.length > 32) {
-    return {
-      error: {
-        details: [
-          {
-            message: "Cannot have more than 32 memberships",
-          },
-        ],
-      },
-    };
-  }
-  return Joi.array()
-    .items(Joi.string().max(32))
+export const valMembership = (body: any) => {
+  const membershipSchema = Joi.array()
+    .items(Joi.string().max(128))
     .max(32)
-    .required()
-    .validate(body);
-};
-
-export const valMembershipRemove = (body: any) => {
-  return Joi.array()
-    .items(Joi.string().max(32))
-    .max(32)
-    .required()
-    .validate(body);
+    .required();
+  return membershipSchema.validate(body);
 };
 
 export const valPreferences = (body: any) => {
@@ -112,7 +91,11 @@ export const valItemsAdd = (body: any, currNum: number) => {
 };
 
 export const valItemsRemove = (body: any) => {
-  return Joi.array().items(Joi.string().max(32)).max(32).required().validate(body);
+  return Joi.array()
+    .items(Joi.string().max(32))
+    .max(32)
+    .required()
+    .validate(body);
 };
 
 export const valItemsUpdate = (body: any) => {
@@ -135,73 +118,33 @@ export const valSearchPreferencesDistance = (body: any) => {
     units: Joi.string()
       .valid(...Array.from(distanceUnitsType))
       .required(),
-  }).required().validate(body);
+  })
+    .required()
+    .validate(body);
 };
 
-export const valSearchPreferencesCategoriesAdd = (body: any, currNum: number) => {
-  if (!body?.length) {
-    return { error: { details: [{ message: "Categories is undefined" }] } };
-  }
-  if (currNum + body.length > 32) {
-    return {
-      error: {
-        details: [
-          {
-            message: "Cannot have more than 32 categories",
-          },
-        ],
-      },
-    };
-  }
-  return Joi.array().items(Joi.string().max(32)).max(32).required().validate(body);
+export const valSearchPreferencesCategories = (body: any) => {
+  return Joi.array()
+    .items(Joi.string().max(128).valid(...Array.from(categories)))
+    .max(32)
+    .required()
+    .validate(body);
 };
 
-export const valSearchPreferencesCategoriesRemove = (body: any) => {
-  return Joi.array().items(Joi.string().max(32)).max(32).required().validate(body);
+export const valSearchPreferencesStores = (body: any) => {
+  return Joi.array()
+    .items(Joi.string().max(128))
+    .max(32)
+    .required()
+    .validate(body);
 };
 
-export const valSearchPreferencesStoresAdd = (body: any, currNum: number) => {
-  if (!body?.length) {
-    return { error: { details: [{ message: "Stores is undefined" }] } };
-  }
-  if (currNum + body.length > 32) {
-    return {
-      error: {
-        details: [
-          {
-            message: "Cannot have more than 32 stores",
-          },
-        ],
-      },
-    };
-  }
-  return Joi.array().items(Joi.string().max(32)).max(32).required().validate(body);
-};
-
-export const valSearchPreferencesStoresRemove = (body: any) => {
-  return Joi.array().items(Joi.string().max(32)).max(32).required().validate(body);
-};
-
-export const valBasketFiltersFilteredStoresAdd = (body: any, currNum: number) => {
-  if (!body?.length) {
-    return { error: { details: [{ message: "Stores is undefined" }] } };
-  }
-  if (currNum + body.length > 32) {
-    return {
-      error: {
-        details: [
-          {
-            message: "Cannot have more than 32 stores",
-          },
-        ],
-      },
-    };
-  }
-  return Joi.array().items(Joi.string().max(32)).max(32).required().validate(body);
-};
-
-export const valBasketFiltersFilteredStoresRemove = (body: any) => {
-  return Joi.array().items(Joi.string().max(32)).max(32).required().validate(body);
+export const valBasketFiltersFilteredStores = (body: any) => {
+  return Joi.array()
+    .items(Joi.string().max(128))
+    .max(32)
+    .required()
+    .validate(body);
 };
 
 export const valBasketFiltersMaxStores = (body: any) => {

@@ -53,7 +53,7 @@ interface SearchPreferences {
     amount: number;
     units: DistanceUnit;
   };
-  categories: Map<string, true>;
+  categories: Map<Categories, true>;
   stores: Map<string, true>;
 }
 

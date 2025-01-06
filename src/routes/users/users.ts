@@ -4,7 +4,6 @@
 
 // const router = express.Router();
 
-// // TODO Handle all new informations that were added to users
 
 // router.get("/", isLoggedIn, isAdmin, async (req: UserRequest, res: Response) => {
 //   //Testing if admin has good password

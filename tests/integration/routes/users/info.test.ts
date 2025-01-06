@@ -48,9 +48,6 @@ describe("/users/info", () => {
           quantity: 10,
       });
       await user.save();
-      const catKeysArr = Array.from(user.filters.searchPreferences.categories.keys());
-      const storeKeysArr = Array.from(user.filters.searchPreferences.stores.keys());
-      const filteredStoreKeysArr = Array.from(user.filters.basketFilters.filteredStores.keys());
       const itemsKeysArr = Array.from(user.items.keys());
       values = {
         name: "new_name",
@@ -61,10 +58,7 @@ describe("/users/info", () => {
           coordinates: [0, 0],
           formattedAddress: "formatted address",
         },
-        membership: {
-          add: ['new_membership'],
-          remove: [catKeysArr[0]],
-        },
+        membership: ['new_membership'],
         preferences: {
           weightUnits: "kg",
           distUnits: "km",
@@ -99,20 +93,11 @@ describe("/users/info", () => {
               amount: 10,
               units: "km",
             },
-            categories: {
-              add: ["Dairy"],
-              remove: ["Produce"],
-            },
-            stores: {
-              add: [new mongoose.Types.ObjectId().toString()],
-              remove: [storeKeysArr[0]],
-            },
+            categories: ['Dairy'],
+            stores: [new mongoose.Types.ObjectId().toString()],
           },
           basketFilters: {
-            filteredStores: {
-              add: [new mongoose.Types.ObjectId().toString()],
-              remove: [filteredStoreKeysArr[0]],
-            },
+            filteredStores: [new mongoose.Types.ObjectId().toString()],
             maxStores: 5,
           },
         },
@@ -149,7 +134,6 @@ describe("/users/info", () => {
         expect(user.location).toMatchObject(values.location);
 
         expect(user.membership.has("new_membership")).toBe(true);
-        expect(user.membership.has(values.membership.remove[0])).toBe(false);
 
         expect(user.preferences).toMatchObject(values.preferences);
 
@@ -161,11 +145,8 @@ describe("/users/info", () => {
 
         expect(user.filters.searchPreferences.distance).toMatchObject(values.filters.searchPreferences.distance);
         expect(user.filters.searchPreferences.categories.has("Dairy")).toBe(true);
-        expect(user.filters.searchPreferences.categories.has('Produce')).toBe(false);
-        expect(user.filters.searchPreferences.stores.has(values.filters.searchPreferences.stores.add[0])).toBe(true);
-        expect(user.filters.searchPreferences.stores.has(values.filters.searchPreferences.stores.remove[0])).toBe(false);
-        expect(user.filters.basketFilters.filteredStores.has(values.filters.basketFilters.filteredStores.add[0])).toBe(true);
-        expect(user.filters.basketFilters.filteredStores.has(values.filters.basketFilters.filteredStores.remove[0])).toBe(false);
+        expect(user.filters.searchPreferences.stores.has(values.filters.searchPreferences.stores[0])).toBe(true);
+        expect(user.filters.basketFilters.filteredStores.has(values.filters.basketFilters.filteredStores[0])).toBe(true);
         expect(user.filters.basketFilters.maxStores).toBe(values.filters.basketFilters.maxStores);
       }
     });
@@ -234,15 +215,9 @@ describe("/users/info", () => {
       const res = await exec();
       expect(res.status).toBe(400);
     });
-    it('Should return 400 if membership adding validation failed', async () => {
+    it('Should return 400 if membership validation failed', async () => {
       // Should have array of strings
-      values.membership.add = "invalid"; 
-      const res = await exec();
-      expect(res.status).toBe(400);
-    });
-    it('Should return 400 if membership removing validation failed', async () => {
-      // Should have array of strings
-      values.membership.remove = "invalid"; 
+      values.membership = "invalid"; 
       const res = await exec();
       expect(res.status).toBe(400);
     });
@@ -270,45 +245,27 @@ describe("/users/info", () => {
       const res = await exec();
       expect(res.status).toBe(400);
     });
+    it('Should return 400 if searchPreferences categories validation failed', async () => {
+      // Should have array of strings
+      values.filters.searchPreferences.categories = "invalid"; 
+      const res = await exec();
+      expect(res.status).toBe(400);
+    });
+    it('Should return 400 if searchPreferences stores validation failed', async () => {
+      // Should have array of strings
+      values.filters.searchPreferences.stores = "invalid"; 
+      const res = await exec();
+      expect(res.status).toBe(400);
+    });
     it('Should return 400 if searchPreferences distance validation failed', async () => {
       // Should have distance object format
       values.filters.searchPreferences.distance = "invalid"; 
       const res = await exec();
       expect(res.status).toBe(400);
     });
-    it('Should return 400 if searchPreferences categories adding validation failed', async () => {
+    it('Should return 400 if basketFilters filteredStores validation failed', async () => {
       // Should have array of strings
-      values.filters.searchPreferences.categories.add = "invalid"; 
-      const res = await exec();
-      expect(res.status).toBe(400);
-    });
-    it('Should return 400 if searchPreferences categories removing validation failed', async () => {
-      // Should have array of strings
-      values.filters.searchPreferences.categories.remove = "invalid"; 
-      const res = await exec();
-      expect(res.status).toBe(400);
-    });
-    it('Should return 400 if searchPreferences stores adding validation failed', async () => {
-      // Should have array of strings
-      values.filters.searchPreferences.stores.add = "invalid"; 
-      const res = await exec();
-      expect(res.status).toBe(400);
-    });
-    it('Should return 400 if searchPreferences stores removing validation failed', async () => {
-      // Should have array of strings
-      values.filters.searchPreferences.stores.remove = "invalid"; 
-      const res = await exec();
-      expect(res.status).toBe(400);
-    });
-    it('Should return 400 if basketFilters filteredStores adding validation failed', async () => {
-      // Should have array of strings
-      values.filters.basketFilters.filteredStores.add = "invalid"; 
-      const res = await exec();
-      expect(res.status).toBe(400);
-    });
-    it('Should return 400 if basketFilters filteredStores removing validation failed', async () => {
-      // Should have array of strings
-      values.filters.basketFilters.filteredStores.remove = "invalid"; 
+      values.filters.basketFilters.filteredStores = "invalid"; 
       const res = await exec();
       expect(res.status).toBe(400);
     });

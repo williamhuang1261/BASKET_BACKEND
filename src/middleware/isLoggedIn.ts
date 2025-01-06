@@ -31,14 +31,14 @@ const isLoggedIn = async (
   //Validating existence of token
   const idToken = req.header("x-auth-token");
   if (!idToken){
-    res.status(401).send("User is not properly logged in");
+    res.status(401).send({message: "User is not properly logged in"});
     return
   }
 
   //Validating token
   const decoded = await getAuthFirebase(idToken);
   if (!decoded){
-    res.status(401).send("Tampered/Invalid token");
+    res.status(401).send({message: "Tampered/Invalid token"});
     return
   }
 
@@ -48,7 +48,7 @@ const isLoggedIn = async (
     // Creating new User
     const newUser = await createNewUser(decoded);
     if (!newUser){
-      res.status(500).send("Error creating new user");
+      res.status(500).send({message: "Error creating new user"});
       return
     }
 

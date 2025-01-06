@@ -1,27 +1,22 @@
 import mongoose from "mongoose";
 import {
-  valBasketFiltersFilteredStoresAdd,
-  valBasketFiltersFilteredStoresRemove,
+  valBasketFiltersFilteredStores,
   valBasketFiltersMaxStores,
   valEmail,
   valItemsAdd,
   valItemsRemove,
   valItemsUpdate,
   valLocation,
-  valMembershipAdd,
-  valMembershipRemove,
+  valMembership,
   valName,
   valPreferences,
-  valSearchPreferencesCategoriesAdd,
-  valSearchPreferencesCategoriesRemove,
+  valSearchPreferencesCategories,
   valSearchPreferencesDistance,
-  valSearchPreferencesStoresAdd,
-  valSearchPreferencesStoresRemove,
+  valSearchPreferencesStores,
 } from "../../../../src/validation/users/userInfoPutVal";
-import { describe, it, expect, beforeEach} from "vitest";
+import { describe, it, expect, beforeEach } from "vitest";
 
 describe("userInfoPutValidation", () => {
-
   describe("valName", () => {
     let values: any;
     beforeEach(() => {
@@ -248,27 +243,37 @@ describe("userInfoPutValidation", () => {
     });
   });
 
-  describe("valMembershipAdd", () => {
+  describe("valMembership", () => {
     let values: any;
-    let currNum: number;
     beforeEach(() => {
-      values = [new mongoose.Types.ObjectId(), new mongoose.Types.ObjectId()];
-      currNum = 0;
+      values = ["Membership1", "Membership2"];
     });
     const exec = () => {
-      return valMembershipAdd(values, currNum);
+      return valMembership(values);
     };
-    it("Should return an error if the number of total memberships exceeds 32", () => {
-      currNum = 31;
-      const res = exec();
+    it("Should return an error if membership is not an array", () => {
+      values = 123;
+      let res = exec();
+      expect(res.error).toBeDefined();
+
+      values = true;
+      res = exec();
+      expect(res.error).toBeDefined();
+
+      values = { a: "a" };
+      res = exec();
+      expect(res.error).toBeDefined();
+
+      values = "a";
+      res = exec();
       expect(res.error).toBeDefined();
     });
-    it("Should return an error if the number of memberships provided exceeds 32", () => {
-      values = new Array(34).fill(new mongoose.Types.ObjectId());
-      const res = exec();
+    it("Should return an error if membership length is more than 32", () => {
+      values = new Array(34).fill("Membership1");
+      let res = exec();
       expect(res.error).toBeDefined();
     });
-    it("Should return an error if the values are not an array of strings", () => {
+    it("Should return an error if membership is not an array of strings", () => {
       values = [123, 456];
       let res = exec();
       expect(res.error).toBeDefined();
@@ -284,73 +289,15 @@ describe("userInfoPutValidation", () => {
       values = [["a"], ["b"]];
       res = exec();
       expect(res.error).toBeDefined();
-
-      values = [undefined, undefined];
-      res = exec();
-      expect(res.error).toBeDefined();
-
-      values = [null, null];
-      res = exec();
-      expect(res.error).toBeDefined();
     });
-    it("Should return an error if strings are longer than 32 characters", () => {
-      values = [new Array(34).join("a"), new Array(34).join("b")];
-      const res = exec();
-      expect(res.error).toBeDefined();
-    });
-    it("Should return an error if nothing was provided", () => {
-      values = undefined;
-      const res = exec();
-      expect(res.error).toBeDefined();
-    });
-  });
-
-  describe("valMembershipRemove", () => {
-    let values: any;
-    beforeEach(() => {
-      values = [new mongoose.Types.ObjectId(), new mongoose.Types.ObjectId()];
-    });
-    const exec = () => {
-      return valMembershipRemove(values);
-    };
-    it("Should return an error if the number of memberships exceeds 32", () => {
-      values = new Array(33).fill(new mongoose.Types.ObjectId());
-      const res = exec();
-      expect(res.error).toBeDefined();
-    });
-    it("Should return an error if string length is more than 32 characters", () => {
-      values = [new Array(34).join("a"), new Array(34).join("b")];
-      const res = exec();
-      expect(res.error).toBeDefined();
-    });
-    it("Should return an error if the values are not an array of strings", () => {
-      values = [123, 456];
+    it("Should return an error if string length is more than 128 characters", () => {
+      values = new Array(130).join("a");
       let res = exec();
       expect(res.error).toBeDefined();
-
-      values = [true, false];
-      res = exec();
-      expect(res.error).toBeDefined();
-
-      values = [{ a: "a" }, { b: "b" }];
-      res = exec();
-      expect(res.error).toBeDefined();
-
-      values = [["a"], ["b"]];
-      res = exec();
-      expect(res.error).toBeDefined();
-
-      values = [undefined, undefined];
-      res = exec();
-      expect(res.error).toBeDefined();
-
-      values = [null, null];
-      res = exec();
-      expect(res.error).toBeDefined();
     });
     it("Should return an error if nothing was provided", () => {
       values = undefined;
-      const res = exec();
+      let res = exec();
       expect(res.error).toBeDefined();
     });
   });
@@ -442,7 +389,7 @@ describe("userInfoPutValidation", () => {
 
   describe("valItemsAdd", () => {
     let values: any;
-    let currNum: number
+    let currNum: number;
     beforeEach(() => {
       values = [
         {
@@ -467,7 +414,7 @@ describe("userInfoPutValidation", () => {
     const exec = () => {
       return valItemsAdd(values, currNum);
     };
-    it('Should return an error if more than 32 items are provided', () => {
+    it("Should return an error if more than 32 items are provided", () => {
       values = new Array(34).fill({
         id: new mongoose.Types.ObjectId(),
         select: {
@@ -479,12 +426,12 @@ describe("userInfoPutValidation", () => {
       let res = exec();
       expect(res.error).toBeDefined();
     });
-    it('Should return an error if the total number of items exceeds 32', () => {
+    it("Should return an error if the total number of items exceeds 32", () => {
       currNum = 31;
       let res = exec();
       expect(res.error).toBeDefined();
     });
-    it('Should return an error if id is not a string', () => {
+    it("Should return an error if id is not a string", () => {
       values[0].id = 123;
       let res = exec();
       expect(res.error).toBeDefined();
@@ -509,12 +456,12 @@ describe("userInfoPutValidation", () => {
       res = exec();
       expect(res.error).toBeDefined();
     });
-    it('Should return an error if id is more than 32 characters', () => {
+    it("Should return an error if id is more than 32 characters", () => {
       values[0].id = new Array(34).join("a");
       const res = exec();
       expect(res.error).toBeDefined();
     });
-    it('Should return an error if select.method is invalid', () => {
+    it("Should return an error if select.method is invalid", () => {
       values[0].select.method = "invalid";
       let res = exec();
       expect(res.error).toBeDefined();
@@ -531,7 +478,7 @@ describe("userInfoPutValidation", () => {
       res = exec();
       expect(res.error).toBeDefined();
 
-      values[0].select.method = undefined
+      values[0].select.method = undefined;
       res = exec();
       expect(res.error).toBeDefined();
 
@@ -539,7 +486,7 @@ describe("userInfoPutValidation", () => {
       res = exec();
       expect(res.error).toBeDefined();
     });
-    it('Should return an error if select.units is invalid', () => {
+    it("Should return an error if select.units is invalid", () => {
       values[0].select.units = "invalid";
       let res = exec();
       expect(res.error).toBeDefined();
@@ -556,7 +503,7 @@ describe("userInfoPutValidation", () => {
       res = exec();
       expect(res.error).toBeDefined();
 
-      values[0].select.units = undefined
+      values[0].select.units = undefined;
       res = exec();
       expect(res.error).toBeDefined();
 
@@ -564,12 +511,12 @@ describe("userInfoPutValidation", () => {
       res = exec();
       expect(res.error).toBeDefined();
     });
-    it('Should return an error if select.quantity is invalid', () => {
+    it("Should return an error if select.quantity is invalid", () => {
       values[0].select.quantity = "invalid";
       let res = exec();
       expect(res.error).toBeDefined();
 
-      values[0].select.quantity = 0
+      values[0].select.quantity = 0;
       res = exec();
       expect(res.error).toBeDefined();
 
@@ -585,7 +532,7 @@ describe("userInfoPutValidation", () => {
       res = exec();
       expect(res.error).toBeDefined();
 
-      values[0].select.quantity = undefined
+      values[0].select.quantity = undefined;
       res = exec();
       expect(res.error).toBeDefined();
 
@@ -593,7 +540,7 @@ describe("userInfoPutValidation", () => {
       res = exec();
       expect(res.error).toBeDefined();
     });
-    it('Should return an error if items is not an array', () => {
+    it("Should return an error if items is not an array", () => {
       values = 123;
       let res = exec();
       expect(res.error).toBeDefined();
@@ -610,7 +557,7 @@ describe("userInfoPutValidation", () => {
       res = exec();
       expect(res.error).toBeDefined();
     });
-    it('Should return an error if items length is more than 32', () => {
+    it("Should return an error if items length is more than 32", () => {
       values = new Array(34).fill({
         id: new mongoose.Types.ObjectId(),
         select: {
@@ -622,7 +569,7 @@ describe("userInfoPutValidation", () => {
       let res = exec();
       expect(res.error).toBeDefined();
     });
-    it('Should return an error if nothing was provided', () => {
+    it("Should return an error if nothing was provided", () => {
       values = undefined;
       let res = exec();
       expect(res.error).toBeDefined();
@@ -704,7 +651,7 @@ describe("userInfoPutValidation", () => {
     const exec = () => {
       return valItemsUpdate(values);
     };
-    it('Should return an error if more than 32 items are provided', () => {
+    it("Should return an error if more than 32 items are provided", () => {
       values = new Array(34).fill({
         id: new mongoose.Types.ObjectId(),
         select: {
@@ -716,7 +663,7 @@ describe("userInfoPutValidation", () => {
       let res = exec();
       expect(res.error).toBeDefined();
     });
-    it('Should return an error if id is not a string', () => {
+    it("Should return an error if id is not a string", () => {
       values[0].id = 123;
       let res = exec();
       expect(res.error).toBeDefined();
@@ -737,12 +684,12 @@ describe("userInfoPutValidation", () => {
       res = exec();
       expect(res.error).toBeDefined();
     });
-    it('Should return an error if id is more than 32 characters', () => {
+    it("Should return an error if id is more than 32 characters", () => {
       values[0].id = new Array(34).join("a");
       const res = exec();
       expect(res.error).toBeDefined();
     });
-    it('Should return an error if select.method is invalid', () => {
+    it("Should return an error if select.method is invalid", () => {
       values[0].select.method = "invalid";
       let res = exec();
       expect(res.error).toBeDefined();
@@ -759,7 +706,7 @@ describe("userInfoPutValidation", () => {
       res = exec();
       expect(res.error).toBeDefined();
 
-      values[0].select.method = undefined
+      values[0].select.method = undefined;
       res = exec();
       expect(res.error).toBeDefined();
 
@@ -767,7 +714,7 @@ describe("userInfoPutValidation", () => {
       res = exec();
       expect(res.error).toBeDefined();
     });
-    it('Should return an error if select.units is invalid', () => {
+    it("Should return an error if select.units is invalid", () => {
       values[0].select.units = "invalid";
       let res = exec();
       expect(res.error).toBeDefined();
@@ -784,7 +731,7 @@ describe("userInfoPutValidation", () => {
       res = exec();
       expect(res.error).toBeDefined();
 
-      values[0].select.units = undefined
+      values[0].select.units = undefined;
       res = exec();
       expect(res.error).toBeDefined();
 
@@ -792,7 +739,7 @@ describe("userInfoPutValidation", () => {
       res = exec();
       expect(res.error).toBeDefined();
     });
-    it('Should return an error if select.quantity is invalid', () => {
+    it("Should return an error if select.quantity is invalid", () => {
       values[0].select.quantity = "invalid";
       let res = exec();
       expect(res.error).toBeDefined();
@@ -809,7 +756,7 @@ describe("userInfoPutValidation", () => {
       res = exec();
       expect(res.error).toBeDefined();
 
-      values[0].select.quantity = undefined
+      values[0].select.quantity = undefined;
       res = exec();
       expect(res.error).toBeDefined();
 
@@ -817,7 +764,7 @@ describe("userInfoPutValidation", () => {
       res = exec();
       expect(res.error).toBeDefined();
     });
-    it('Should return an error if items is not an array', () => {
+    it("Should return an error if items is not an array", () => {
       values = 123;
       let res = exec();
       expect(res.error).toBeDefined();
@@ -834,7 +781,7 @@ describe("userInfoPutValidation", () => {
       res = exec();
       expect(res.error).toBeDefined();
     });
-    it('Should return an error if items length is more than 32', () => {
+    it("Should return an error if items length is more than 32", () => {
       values = new Array(34).fill({
         id: new mongoose.Types.ObjectId(),
         select: {
@@ -846,15 +793,138 @@ describe("userInfoPutValidation", () => {
       let res = exec();
       expect(res.error).toBeDefined();
     });
-    it('Should return an error if nothing was provided', () => {
+    it("Should return an error if nothing was provided", () => {
       values = undefined;
       let res = exec();
       expect(res.error).toBeDefined();
     });
   });
 
-  describe('valSearchPreferencesDistance', () => {
-    let values:any;
+  describe("valSearchPreferencesCategories", () => {
+    let values: any;
+    beforeEach(() => {
+      values = ["Dairy", "Produce"];
+    });
+    const exec = () => {
+      return valSearchPreferencesCategories(values);
+    };
+    it("Should return an error if categories is not an array", () => {
+      values = 123;
+      let res = exec();
+      expect(res.error).toBeDefined();
+
+      values = true;
+      res = exec();
+      expect(res.error).toBeDefined();
+
+      values = { a: "a" };
+      res = exec();
+      expect(res.error).toBeDefined();
+
+      values = "a";
+      res = exec();
+      expect(res.error).toBeDefined();
+    });
+    it("Should return an error if categories length is more than 32", () => {
+      values = new Array(34).fill("category1");
+      let res = exec();
+      expect(res.error).toBeDefined();
+    });
+    it("Should return an error if categories is not an array of strings", () => {
+      values = [123, 456];
+      let res = exec();
+      expect(res.error).toBeDefined();
+
+      values = [true, false];
+      res = exec();
+      expect(res.error).toBeDefined();
+
+      values = [{ a: "a" }, { b: "b" }];
+      res = exec();
+      expect(res.error).toBeDefined();
+
+      values = [["a"], ["b"]];
+      res = exec();
+      expect(res.error).toBeDefined();
+    });
+    it("Should return an error if string length is more than 128 characters", () => {
+      values = new Array(130).join("a");
+      let res = exec();
+      expect(res.error).toBeDefined();
+    });
+    it("Should return an error if categories are not valid", () => {
+      values = ["invalid"];
+      let res = exec();
+      expect(res.error).toBeDefined();
+    });
+    it("Should return an error if nothing was provided", () => {
+      values = undefined;
+      let res = exec();
+      expect(res.error).toBeDefined();
+    });
+  });
+
+  describe("valSearchPreferencesStores", () => {
+    let values: any;
+    beforeEach(() => {
+      values = ["Store1", "Store2"];
+    });
+    const exec = () => {
+      return valSearchPreferencesStores(values);
+    };
+    it("Should return an error if stores is not an array", () => {
+      values = 123;
+      let res = exec();
+      expect(res.error).toBeDefined();
+
+      values = true;
+      res = exec();
+      expect(res.error).toBeDefined();
+
+      values = { a: "a" };
+      res = exec();
+      expect(res.error).toBeDefined();
+
+      values = "a";
+      res = exec();
+      expect(res.error).toBeDefined();
+    });
+    it("Should return an error if stores length is more than 32", () => {
+      values = new Array(34).fill("Store1");
+      let res = exec();
+      expect(res.error).toBeDefined();
+    });
+    it("Should return an error if stores is not an array of strings", () => {
+      values = [123, 456];
+      let res = exec();
+      expect(res.error).toBeDefined();
+
+      values = [true, false];
+      res = exec();
+      expect(res.error).toBeDefined();
+
+      values = [{ a: "a" }, { b: "b" }];
+      res = exec();
+      expect(res.error).toBeDefined();
+
+      values = [["a"], ["b"]];
+      res = exec();
+      expect(res.error).toBeDefined();
+    });
+    it("Should return an error if string length is more than 128 characters", () => {
+      values = new Array(130).join("a");
+      let res = exec();
+      expect(res.error).toBeDefined();
+    });
+    it("Should return an error if nothing was provided", () => {
+      values = undefined;
+      let res = exec();
+      expect(res.error).toBeDefined();
+    });
+  });
+
+  describe("valSearchPreferencesDistance", () => {
+    let values: any;
     beforeEach(() => {
       values = {
         amount: 10,
@@ -863,8 +933,8 @@ describe("userInfoPutValidation", () => {
     });
     const exec = () => {
       return valSearchPreferencesDistance(values);
-    }
-    it('Should return an error if amount is invalid', () => {
+    };
+    it("Should return an error if amount is invalid", () => {
       values.amount = "invalid";
       let res = exec();
       expect(res.error).toBeDefined();
@@ -893,7 +963,7 @@ describe("userInfoPutValidation", () => {
       res = exec();
       expect(res.error).toBeDefined();
     });
-    it('Should return an error if units is invalid', () => {
+    it("Should return an error if units is invalid", () => {
       values.units = "invalid";
       let res = exec();
       expect(res.error).toBeDefined();
@@ -914,39 +984,44 @@ describe("userInfoPutValidation", () => {
       res = exec();
       expect(res.error).toBeDefined();
     });
-    it('Should return an error if nothing was provided', () => {
+    it("Should return an error if nothing was provided", () => {
       values = undefined;
       let res = exec();
       expect(res.error).toBeDefined();
     });
   });
 
-  describe('valSearchPreferencesCategoriesAdd', () => {
+  describe("valBasketFiltersFilteredStores", () => {
     let values: any;
-    let currNum: number;
     beforeEach(() => {
-      values = [new mongoose.Types.ObjectId(), new mongoose.Types.ObjectId()];
-      currNum = 0;
+      values = ["Store1", "Store2"];
     });
     const exec = () => {
-      return valSearchPreferencesCategoriesAdd(values, currNum);
+      return valBasketFiltersFilteredStores(values);
     };
-    it("Should return an error if the number of provided categories exceeds 32", () => {
-      values = new Array(33).fill(new mongoose.Types.ObjectId());
-      const res = exec();
+    it("Should return an error if stores is not an array", () => {
+      values = 123;
+      let res = exec();
+      expect(res.error).toBeDefined();
+
+      values = true;
+      res = exec();
+      expect(res.error).toBeDefined();
+
+      values = { a: "a" };
+      res = exec();
+      expect(res.error).toBeDefined();
+
+      values = "a";
+      res = exec();
       expect(res.error).toBeDefined();
     });
-    it("Should return an error if the number of total categories exceeds 32", () => {
-      currNum = 31;
-      const res = exec();
+    it("Should return an error if stores length is more than 32", () => {
+      values = new Array(34).fill("Store1");
+      let res = exec();
       expect(res.error).toBeDefined();
     });
-    it("Should return an error if string length is more than 32 characters", () => {
-      values = [new Array(34).join("a"), new Array(34).join("b")];
-      const res = exec();
-      expect(res.error).toBeDefined();
-    });
-    it("Should return an error if the values are not an array of strings", () => {
+    it("Should return an error if stores is not an array of strings", () => {
       values = [123, 456];
       let res = exec();
       expect(res.error).toBeDefined();
@@ -962,287 +1037,20 @@ describe("userInfoPutValidation", () => {
       values = [["a"], ["b"]];
       res = exec();
       expect(res.error).toBeDefined();
-
-      values = [undefined, undefined]
-      res = exec();
-      expect(res.error).toBeDefined();
-
-      values = [null, null];
-      res = exec();
+    });
+    it("Should return an error if string length is more than 128 characters", () => {
+      values = new Array(130).join("a");
+      let res = exec();
       expect(res.error).toBeDefined();
     });
     it("Should return an error if nothing was provided", () => {
       values = undefined;
-      const res = exec();
-      expect(res.error).toBeDefined();
-    });
-  });
-
-  describe('valSearchPreferencesCategoriesRemove', () => {
-    let values:any;
-    beforeEach(() => {
-      values = [new mongoose.Types.ObjectId(), new mongoose.Types.ObjectId()];
-    });
-    const exec = () => {
-      return valSearchPreferencesCategoriesRemove(values);
-    };
-    it('Should return an error if the number of categories exceeds 32', () => {
-      values = new Array(33).fill(new mongoose.Types.ObjectId());
-      const res = exec();
-      expect(res.error).toBeDefined();
-    });
-    it('Should return an error if string length is more than 32 characters', () => {
-      values = [new Array(34).join("a"), new Array(34).join("b")];
-      const res = exec();
-      expect(res.error).toBeDefined();
-    });
-    it('Should return an error if the values are not an array of strings', () => {
-      values = [123, 456];
       let res = exec();
       expect(res.error).toBeDefined();
-
-      values = [true, false];
-      res = exec();
-      expect(res.error).toBeDefined();
-
-      values = [{ a: "a" }, { b: "b" }];
-      res = exec();
-      expect(res.error).toBeDefined();
-
-      values = [["a"], ["b"]];
-      res = exec();
-      expect(res.error).toBeDefined();
-
-      values = [undefined, undefined];
-      res = exec();
-      expect(res.error).toBeDefined();
-
-      values = [null, null];
-      res = exec();
-      expect(res.error).toBeDefined();
-    });
-    it('Should return an error if nothing was provided', () => {
-      values = undefined;
-      const res = exec();
-      expect(res.error).toBeDefined();
     });
   });
 
-  describe('valSearchPreferencesStoresAdd', () => {
-    let values: any;
-    let currNum: number;
-    beforeEach(() => {
-      values = [new mongoose.Types.ObjectId(), new mongoose.Types.ObjectId()];
-      currNum = 0;
-    });
-    const exec = () => {
-      return valSearchPreferencesStoresAdd(values, currNum);
-    };
-    it("Should return an error if the number of provided stores exceeds 32", () => {
-      values = new Array(33).fill(new mongoose.Types.ObjectId());
-      const res = exec();
-      expect(res.error).toBeDefined();
-    });
-    it("Should return an error if the number of total stores exceeds 32", () => {
-      currNum = 31;
-      const res = exec();
-      expect(res.error).toBeDefined();
-    });
-    it("Should return an error if string length is more than 32 characters", () => {
-      values = [new Array(34).join("a"), new Array(34).join("b")];
-      const res = exec();
-      expect(res.error).toBeDefined();
-    });
-    it("Should return an error if the values are not an array of strings", () => {
-      values = [123, 456];
-      let res = exec();
-      expect(res.error).toBeDefined();
-
-      values = [true, false];
-      res = exec();
-      expect(res.error).toBeDefined();
-
-      values = [{ a: "a" }, { b: "b" }];
-      res = exec();
-      expect(res.error).toBeDefined();
-
-      values = [["a"], ["b"]];
-      res = exec();
-      expect(res.error).toBeDefined();
-
-      values = [undefined, undefined]
-      res = exec();
-      expect(res.error).toBeDefined();
-
-      values = [null, null];
-      res = exec();
-      expect(res.error).toBeDefined();
-    });
-    it("Should return an error if nothing was provided", () => {
-      values = undefined;
-      const res = exec();
-      expect(res.error).toBeDefined();
-    });
-  });
-
-  describe('valSearchPreferencesStoresRemove', () => {
-    let values:any;
-    beforeEach(() => {
-      values = [new mongoose.Types.ObjectId(), new mongoose.Types.ObjectId()];
-    });
-    const exec = () => {
-      return valSearchPreferencesStoresRemove(values);
-    };
-    it('Should return an error if the number of stores exceeds 32', () => {
-      values = new Array(33).fill(new mongoose.Types.ObjectId());
-      const res = exec();
-      expect(res.error).toBeDefined();
-    });
-    it('Should return an error if string length is more than 32 characters', () => {
-      values = [new Array(34).join("a"), new Array(34).join("b")];
-      const res = exec();
-      expect(res.error).toBeDefined();
-    });
-    it('Should return an error if the values are not an array of strings', () => {
-      values = [123, 456];
-      let res = exec();
-      expect(res.error).toBeDefined();
-
-      values = [true, false];
-      res = exec();
-      expect(res.error).toBeDefined();
-
-      values = [{ a: "a" }, { b: "b" }];
-      res = exec();
-      expect(res.error).toBeDefined();
-
-      values = [["a"], ["b"]];
-      res = exec();
-      expect(res.error).toBeDefined();
-
-      values = [undefined, undefined];
-      res = exec();
-      expect(res.error).toBeDefined();
-
-      values = [null, null];
-      res = exec();
-      expect(res.error).toBeDefined();
-    });
-    it('Should return an error if nothing was provided', () => {
-      values = undefined;
-      const res = exec();
-      expect(res.error).toBeDefined();
-    });
-  });
-
-  describe('valBasketFiltersFilteredStoresAdd', () => {
-    let values: any;
-    let currNum: number;
-    beforeEach(() => {
-      values = [new mongoose.Types.ObjectId(), new mongoose.Types.ObjectId()];
-      currNum = 0;
-    });
-    const exec = () => {
-      return valBasketFiltersFilteredStoresAdd(values, currNum);
-    };
-    it("Should return an error if the number of provided stores exceeds 32", () => {
-      values = new Array(33).fill(new mongoose.Types.ObjectId());
-      const res = exec();
-      expect(res.error).toBeDefined();
-    });
-    it("Should return an error if the number of total stores exceeds 32", () => {
-      currNum = 31;
-      const res = exec();
-      expect(res.error).toBeDefined();
-    });
-    it("Should return an error if string length is more than 32 characters", () => {
-      values = [new Array(34).join("a"), new Array(34).join("b")];
-      const res = exec();
-      expect(res.error).toBeDefined();
-    });
-    it("Should return an error if the values are not an array of strings", () => {
-      values = [123, 456];
-      let res = exec();
-      expect(res.error).toBeDefined();
-
-      values = [true, false];
-      res = exec();
-      expect(res.error).toBeDefined();
-
-      values = [{ a: "a" }, { b: "b" }];
-      res = exec();
-      expect(res.error).toBeDefined();
-
-      values = [["a"], ["b"]];
-      res = exec();
-      expect(res.error).toBeDefined();
-
-      values = [undefined, undefined]
-      res = exec();
-      expect(res.error).toBeDefined();
-
-      values = [null, null];
-      res = exec();
-      expect(res.error).toBeDefined();
-    });
-    it("Should return an error if nothing was provided", () => {
-      values = undefined;
-      const res = exec();
-      expect(res.error).toBeDefined();
-    });
-  });
-
-  describe('valBasketFiltersFilteredStoresRemove', () => {
-    let values:any;
-    beforeEach(() => {
-      values = [new mongoose.Types.ObjectId(), new mongoose.Types.ObjectId()];
-    });
-    const exec = () => {
-      return valBasketFiltersFilteredStoresRemove(values);
-    };
-    it('Should return an error if the number of stores exceeds 32', () => {
-      values = new Array(33).fill(new mongoose.Types.ObjectId());
-      const res = exec();
-      expect(res.error).toBeDefined();
-    });
-    it('Should return an error if string length is more than 32 characters', () => {
-      values = [new Array(34).join("a"), new Array(34).join("b")];
-      const res = exec();
-      expect(res.error).toBeDefined();
-    });
-    it('Should return an error if the values are not an array of strings', () => {
-      values = [123, 456];
-      let res = exec();
-      expect(res.error).toBeDefined();
-
-      values = [true, false];
-      res = exec();
-      expect(res.error).toBeDefined();
-
-      values = [{ a: "a" }, { b: "b" }];
-      res = exec();
-      expect(res.error).toBeDefined();
-
-      values = [["a"], ["b"]];
-      res = exec();
-      expect(res.error).toBeDefined();
-
-      values = [undefined, undefined];
-      res = exec();
-      expect(res.error).toBeDefined();
-
-      values = [null, null];
-      res = exec();
-      expect(res.error).toBeDefined();
-    });
-    it('Should return an error if nothing was provided', () => {
-      values = undefined;
-      const res = exec();
-      expect(res.error).toBeDefined();
-    });
-  });
-
-  describe('valBasketFiltersMaxStores', () => {
+  describe("valBasketFiltersMaxStores", () => {
     let values: any;
     beforeEach(() => {
       values = 10;
@@ -1250,7 +1058,7 @@ describe("userInfoPutValidation", () => {
     const exec = () => {
       return valBasketFiltersMaxStores(values);
     };
-    it('Should return an error if amount is invalid', () => {
+    it("Should return an error if amount is invalid", () => {
       values = "invalid";
       let res = exec();
       expect(res.error).toBeDefined();
@@ -1275,12 +1083,12 @@ describe("userInfoPutValidation", () => {
       res = exec();
       expect(res.error).toBeDefined();
     });
-    it('Should not return an error if value is null', () => {
+    it("Should not return an error if value is null", () => {
       values = null;
       let res = exec();
       expect(res.error).toBeUndefined();
     });
-    it('Should return an error if nothing was provided', () => {
+    it("Should return an error if nothing was provided", () => {
       values = undefined;
       let res = exec();
       expect(res.error).toBeDefined();

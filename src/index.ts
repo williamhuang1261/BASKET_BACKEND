@@ -19,10 +19,10 @@ const app = express();
 
 /** Initialize application components */
 logging();
-routes(app);
 keyVerif();
 dbConnection();
 initFirebase();
+routes(app);
 
 /** Server configuration */
 const port: string | number = process.env.PORT || 3001;

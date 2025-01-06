@@ -7,11 +7,11 @@ import {
 import UserProps from "../interface/UserProps.js";
 
 const userSchema = new mongoose.Schema<UserProps>({
-  // TODO Create an MongoDB index for uid
   uid: {
     type: String,
     required: true,
     unique: true,
+    index: true
   },
   // Basic info
   name: {

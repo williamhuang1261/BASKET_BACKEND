@@ -1,23 +1,19 @@
-import express, {  Response } from "express";
+import express, { Response } from "express";
 import { UserRequest } from "../../interface/UserRequestProps.js";
 import {
-  valBasketFiltersFilteredStoresAdd,
-  valBasketFiltersFilteredStoresRemove,
+  valBasketFiltersFilteredStores,
   valBasketFiltersMaxStores,
   valEmail,
   valItemsAdd,
   valItemsRemove,
   valItemsUpdate,
   valLocation,
-  valMembershipAdd,
-  valMembershipRemove,
+  valMembership,
   valName,
   valPreferences,
-  valSearchPreferencesCategoriesAdd,
-  valSearchPreferencesCategoriesRemove,
+  valSearchPreferencesCategories,
   valSearchPreferencesDistance,
-  valSearchPreferencesStoresAdd,
-  valSearchPreferencesStoresRemove,
+  valSearchPreferencesStores,
 } from "../../validation/users/userInfoPutVal.js";
 
 /**
@@ -38,10 +34,7 @@ const router = express.Router();
  *   "name": string?,
  *   "email": string?,
  *   "location": object?,
- *   "membership": {
- *     "add": string[]?,
- *     "remove": string[]?
- *   }?,
+ *   "membership": string[]?,
  *   "preferences": {
  *     "weightUnits": string?,
  *     "distUnits": string?,
@@ -55,21 +48,21 @@ const router = express.Router();
  *   "filters": {
  *     "searchPreferences": {
  *       "distance": number?,
- *       "categories": { "add": string[]?, "remove": string[]? }?,
- *       "stores": { "add": string[]?, "remove": string[]? }?
+ *       "categories": string[]?,
+ *       "stores": string[]?
  *     }?,
  *     "basketFilters": {
- *       "filteredStores": { "add": string[]?, "remove": string[]? }?,
+ *       "filteredStores": string[]?,
  *       "maxStores": number?
  *     }?
  *   }?
  * }
- * 
+ *
  * // Success Response
  * {
  *   "message": "User updated"
  * }
- * 
+ *
  * // Error Response
  * {
  *   "message": "Some fields failed validation",
@@ -124,32 +117,16 @@ router.put("/me", async (req: UserRequest, res: Response) => {
 
   // Validating membership
   if (membership) {
-    const { add, remove } = membership;
-    if (remove) {
-      const { error } = valMembershipRemove(remove);
-      if (error)
-        errors.push({
-          message: error.details[0].message,
-          failedObject: { membership: { remove } },
-        });
-      else {
-        for (const mem of remove) {
-          user.membership.delete(mem);
-        }
-      }
-    }
-    if (add) {
-      const { error } = valMembershipAdd(add, user.membership.size);
-      if (error)
-        errors.push({
-          message: error.details[0].message,
-          failedObject: { membership: { add } },
-        });
-      else {
-        for (const mem of add) {
-          if (!user.membership.has(mem)) user.membership.set(mem, true);
-        }
-      }
+    const { error } = valMembership(membership);
+    if (error)
+      errors.push({
+        message: error.details[0].message,
+        failedObject: { membership },
+      });
+    else {
+      user.membership = new Map(
+        (membership as string[]).map((mem) => [mem, true])
+      );
     }
   }
 
@@ -233,134 +210,45 @@ router.put("/me", async (req: UserRequest, res: Response) => {
         }
       }
       if (categories) {
-        if (categories.remove) {
-          const { error } = valSearchPreferencesCategoriesRemove(
-            categories.remove
+        const { error } = valSearchPreferencesCategories(categories);
+        if (error)
+          errors.push({
+            message: error.details[0].message,
+            failedObject: { filters: { searchPreferences: { categories } } },
+          });
+        else {
+          user.filters.searchPreferences.categories = new Map(
+            (categories as string[]).map((cat) => [cat, true])
           );
-          if (error)
-            errors.push({
-              message: error.details[0].message,
-              failedObject: {
-                filters: {
-                  searchPreferences: {
-                    categories: { remove: categories.remove },
-                  },
-                },
-              },
-            });
-          else {
-            for (const cat of categories.remove) {
-              user.filters.searchPreferences.categories.delete(cat);
-            }
-          }
-        }
-        if (categories.add) {
-          const { error } = valSearchPreferencesCategoriesAdd(
-            categories.add,
-            categories.size
-          );
-          if (error)
-            errors.push({
-              message: error.details[0].message,
-              failedObject: {
-                filters: {
-                  searchPreferences: { categories: { add: categories.add } },
-                },
-              },
-            });
-          else {
-            for (const cat of categories.add) {
-              if (!user.filters.searchPreferences.categories.has(cat))
-                user.filters.searchPreferences.categories.set(cat, true);
-            }
-          }
         }
       }
       if (stores) {
-        if (stores.remove) {
-          const { error } = valSearchPreferencesStoresRemove(stores.remove);
-          if (error)
-            errors.push({
-              message: error.details[0].message,
-              failedObject: {
-                filters: {
-                  searchPreferences: { stores: { remove: stores.remove } },
-                },
-              },
-            });
-          else {
-            for (const store of stores.remove) {
-              user.filters.searchPreferences.stores.delete(store);
-            }
-          }
-        }
-        if (stores.add) {
-          const { error } = valSearchPreferencesStoresAdd(
-            stores.add,
-            stores.size
+        const { error } = valSearchPreferencesStores(stores);
+        if (error)
+          errors.push({
+            message: error.details[0].message,
+            failedObject: { filters: { searchPreferences: { stores } } },
+          });
+        else {
+          user.filters.searchPreferences.stores = new Map(
+            (stores as string[]).map((store) => [store, true])
           );
-          if (error)
-            errors.push({
-              message: error.details[0].message,
-              failedObject: {
-                filters: { searchPreferences: { stores: { add: stores.add } } },
-              },
-            });
-          else {
-            for (const store of stores.add) {
-              if (!user.filters.searchPreferences.stores.has(store))
-                user.filters.searchPreferences.stores.set(store, true);
-            }
-          }
         }
       }
     }
     if (basketFilters) {
       const { filteredStores, maxStores } = basketFilters;
       if (filteredStores) {
-        if (filteredStores.remove) {
-          const { error } = valBasketFiltersFilteredStoresRemove(
-            filteredStores.remove
+        const { error } = valBasketFiltersFilteredStores(filteredStores);
+        if (error)
+          errors.push({
+            message: error.details[0].message,
+            failedObject: { filters: { basketFilters: { filteredStores } } },
+          });
+        else {
+          user.filters.basketFilters.filteredStores = new Map(
+            (filteredStores as string[]).map((store) => [store, true])
           );
-          if (error)
-            errors.push({
-              message: error.details[0].message,
-              failedObject: {
-                filters: {
-                  basketFilters: {
-                    filteredStores: { remove: filteredStores.remove },
-                  },
-                },
-              },
-            });
-          else {
-            for (const store of filteredStores.remove) {
-              user.filters.basketFilters.filteredStores.delete(store);
-            }
-          }
-        }
-        if (filteredStores.add) {
-          const { error } = valBasketFiltersFilteredStoresAdd(
-            filteredStores.add,
-            filteredStores.size
-          );
-          if (error)
-            errors.push({
-              message: error.details[0].message,
-              failedObject: {
-                filters: {
-                  basketFilters: {
-                    filteredStores: { add: filteredStores.add },
-                  },
-                },
-              },
-            });
-          else {
-            for (const store of filteredStores.add) {
-              if (!user.filters.basketFilters.filteredStores.has(store))
-                user.filters.basketFilters.filteredStores.set(store, true);
-            }
-          }
         }
       }
       if (maxStores) {
@@ -370,7 +258,9 @@ router.put("/me", async (req: UserRequest, res: Response) => {
             message: error.details[0].message,
             failedObject: { filters: { basketFilters: { maxStores } } },
           });
-        else user.filters.basketFilters.maxStores = maxStores;
+        else {
+          user.filters.basketFilters.maxStores = maxStores;
+        }
       }
     }
   }
@@ -379,17 +269,17 @@ router.put("/me", async (req: UserRequest, res: Response) => {
   try {
     await user.save();
   } catch (e) {
-    res.status(500).send("Internal Server Error");
-    return
+    res.status(500).send({message:"Internal Server Error"});
+    return;
   }
 
   // Sending response
-  if (errors.length > 0){
+  if (errors.length > 0) {
     res.status(400).send({ message: "Some fields failed validation", errors });
-    return
+    return;
   }
   res.status(200).send({ message: "User updated" });
-  return
+  return;
 });
 
 export default router;

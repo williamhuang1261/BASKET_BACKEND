@@ -1,6 +1,5 @@
 import bcrypt from "bcrypt";
 
-// TODO: Adjust types for user and body
 async function checkAuthPassword(user: any, body: any) {
   const checkPassword = async (passwordType: string, metaType: string) => {
     const validPassword = await bcrypt.compare(
