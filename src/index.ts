@@ -37,16 +37,16 @@ const options: ServerOptions = {
 /** Server instance that will be either HTTP or HTTPS based on environment */
 let server: https.Server | Server;
 
-if (process.env.NODE_ENV == "test") {
+if (process.env.NODE_ENV === "test") {
   server = app.listen(port, () => {
     console.log(
       `Running in ${process.env.NODE_ENV} mode. Listening on http://localhost:${port}`
     );
   });
 } else if (
-  process.env.NODE_ENV == "development" &&
+  process.env.NODE_ENV === "development" &&
   process.env.NODE_TLS_REJECT_UNAUTHORIZED &&
-  process.env.NODE_TLS_REJECT_UNAUTHORIZED == "0"
+  process.env.NODE_TLS_REJECT_UNAUTHORIZED === "0"
 ) {
   server = https.createServer(options, app).listen(port as number, host, () => {
     console.log(

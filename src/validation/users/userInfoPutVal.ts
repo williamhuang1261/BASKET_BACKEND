@@ -1,9 +1,5 @@
 import Joi from "joi";
-import {
-  allUnitsType,
-  distanceUnitsType,
-  weightUnitsType,
-} from "../../data/units.js";
+import { allUnits, distanceUnits, weightUnits } from "../../data/units.js";
 import categories from "../../data/data.js";
 
 export const valName = (body: any) => {
@@ -51,10 +47,10 @@ export const valMembership = (body: any) => {
 export const valPreferences = (body: any) => {
   const preferencesSchema = Joi.object({
     weightUnits: Joi.string()
-      .valid(...Array.from(weightUnitsType))
+      .valid(...Array.from(weightUnits))
       .optional(),
     distUnits: Joi.string()
-      .valid(...Array.from(distanceUnitsType))
+      .valid(...Array.from(distanceUnits))
       .optional(),
     language: Joi.string().valid("en", "fr").optional(),
   }).required();
@@ -82,7 +78,7 @@ export const valItemsAdd = (body: any, currNum: number) => {
     select: Joi.object({
       method: Joi.string().valid("weight", "unit").required(),
       units: Joi.string()
-        .valid(...Array.from(allUnitsType))
+        .valid(...Array.from(allUnits))
         .required(),
       quantity: Joi.number().positive().required(),
     }).required(),
@@ -104,7 +100,7 @@ export const valItemsUpdate = (body: any) => {
     select: Joi.object({
       method: Joi.string().valid("weight", "unit").required(),
       units: Joi.string()
-        .valid(...Array.from(allUnitsType))
+        .valid(...Array.from(allUnits))
         .required(),
       quantity: Joi.number().positive().required(),
     }).required(),
@@ -116,7 +112,7 @@ export const valSearchPreferencesDistance = (body: any) => {
   return Joi.object({
     amount: Joi.number().positive().required(),
     units: Joi.string()
-      .valid(...Array.from(distanceUnitsType))
+      .valid(...Array.from(distanceUnits))
       .required(),
   })
     .required()
@@ -125,7 +121,11 @@ export const valSearchPreferencesDistance = (body: any) => {
 
 export const valSearchPreferencesCategories = (body: any) => {
   return Joi.array()
-    .items(Joi.string().max(128).valid(...Array.from(categories)))
+    .items(
+      Joi.string()
+        .max(128)
+        .valid(...Array.from(categories))
+    )
     .max(32)
     .required()
     .validate(body);

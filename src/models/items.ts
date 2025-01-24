@@ -1,21 +1,20 @@
 import mongoose from "mongoose";
-import { allUnitsType } from "../data/units.js";
+import { allUnits } from "../data/units.js";
 import categories from "../data/data.js";
+import { ItemProps } from "../interface/ItemProps.js";
 
 // Refactoring because an item may have multiple brands
-const itemSchema = new mongoose.Schema({
+const itemSchema = new mongoose.Schema<ItemProps>({
   name: {
     fr: {
       type: String,
       minlength: 3,
       maxlength: 250,
-      required: true,
     },
     en: {
       type: String,
       minlength: 3,
       maxlength: 250,
-      required: true,
     },
     size: {
       type: String,
@@ -36,15 +35,15 @@ const itemSchema = new mongoose.Schema({
   },
   amount: {
     isApprox: Boolean,
-    meas: {
+    method: {
       type: String,
       enum: ["weight", "volume", "unit"],
     },
     units: {
       type: String,
-      enum: allUnitsType,
+      enum: allUnits,
     },
-    quantity: Number,
+    count: Number,
   },
   description: {
     en: String,
@@ -57,12 +56,12 @@ const itemSchema = new mongoose.Schema({
         minLength: 3,
         maxLength: 50,
       },
+      brand: {
+        type: String,
+        minlength: 1,
+        maxlength: 250,
+      },
       pricing: {
-        brand: {
-          type: String,
-          minlength: 1,
-          maxlength: 250,
-        },
         normal: {
           type: Number,
           default: -1.0,
@@ -83,17 +82,19 @@ const itemSchema = new mongoose.Schema({
             Y: Number,
             //Cost
             C: Number,
-            rebatePricing: {
+            method: {
               type: String,
               enum: ["unit", "weight_lb", "weight_kg", "weight_100g"],
             },
-            start: {
-              type: Date,
-              required: true,
-            },
-            end: {
-              type: Date,
-              required: true,
+            timeframe: {
+              start: {
+                type: Date,
+                required: true,
+              },
+              end: {
+                type: Date,
+                required: true,
+              },
             },
             onlyMembers: {
               type: Boolean,
@@ -108,6 +109,7 @@ const itemSchema = new mongoose.Schema({
     {
       type: String,
       enum: categories,
+      default: [],
     },
   ],
   image: {
@@ -117,4 +119,4 @@ const itemSchema = new mongoose.Schema({
 });
 
 const Item = mongoose.model("Item", itemSchema);
-export default Item
+export default Item;

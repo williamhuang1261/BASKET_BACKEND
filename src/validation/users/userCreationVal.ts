@@ -1,9 +1,5 @@
 import Joi from "joi";
-import {
-  weightUnitsType,
-  distanceUnitsType,
-  allUnitsType,
-} from "../../data/units.js";
+import { allUnits, distanceUnits, weightUnits } from "../../data/units.js";
 
 /**
  * Validates the user creation data using Joi schemas.
@@ -84,10 +80,10 @@ const userCreationValidation = (user: any) => {
 
   const preferencesSchema = Joi.object({
     weightUnits: Joi.string()
-      .valid(...Array.from(weightUnitsType))
+      .valid(...Array.from(weightUnits))
       .required(),
     distUnits: Joi.string()
-      .valid(...Array.from(distanceUnitsType))
+      .valid(...Array.from(distanceUnits))
       .required(),
     language: Joi.string().valid("en", "fr").required(),
   });
@@ -95,7 +91,7 @@ const userCreationValidation = (user: any) => {
   const itemSchema = Joi.object({
     method: Joi.string().valid("weight", "unit").required(),
     units: Joi.string()
-      .valid(...Array.from(allUnitsType))
+      .valid(...Array.from(allUnits))
       .required(),
     quantity: Joi.number().required(),
   });
@@ -104,7 +100,7 @@ const userCreationValidation = (user: any) => {
     distance: Joi.object({
       amount: Joi.number().positive().required(),
       units: Joi.string()
-        .valid(...Array.from(distanceUnitsType))
+        .valid(...Array.from(distanceUnits))
         .required(),
     }).required(),
     categories: Joi.object()

@@ -15,6 +15,7 @@ import {
   valSearchPreferencesDistance,
   valSearchPreferencesStores,
 } from "../../validation/users/userInfoPutVal.js";
+import { categoriesType } from "../../data/data.js";
 
 /**
  * Router for handling user information updates
@@ -218,7 +219,7 @@ router.put("/me", async (req: UserRequest, res: Response) => {
           });
         else {
           user.filters.searchPreferences.categories = new Map(
-            (categories as string[]).map((cat) => [cat, true])
+            (categories as categoriesType[]).map((cat) => [cat, true])
           );
         }
       }
@@ -269,7 +270,7 @@ router.put("/me", async (req: UserRequest, res: Response) => {
   try {
     await user.save();
   } catch (e) {
-    res.status(500).send({message:"Internal Server Error"});
+    res.status(500).send({ message: "Internal Server Error" });
     return;
   }
 

@@ -8,4 +8,4 @@ interface UserRequest extends Request {
 } | null;
 }
 
-export { UserRequest }
+export type { UserRequest }

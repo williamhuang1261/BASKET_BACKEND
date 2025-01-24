@@ -1,17 +1,13 @@
 import mongoose from "mongoose";
-import {
-  allUnitsType,
-  distanceUnitsType,
-  weightUnitsType,
-} from "../data/units.js";
 import UserProps from "../interface/UserProps.js";
+import { allUnits, distanceUnits, weightUnits } from "../data/units.js";
 
 const userSchema = new mongoose.Schema<UserProps>({
   uid: {
     type: String,
     required: true,
     unique: true,
-    index: true
+    index: true,
   },
   // Basic info
   name: {
@@ -82,12 +78,12 @@ const userSchema = new mongoose.Schema<UserProps>({
   preferences: {
     weightUnits: {
       type: String,
-      enum: Array.from(weightUnitsType),
+      enum: Array.from(weightUnits),
       default: "kg",
     },
     distUnits: {
       type: String,
-      enum: Array.from(distanceUnitsType),
+      enum: Array.from(distanceUnits),
       default: "km",
     },
     language: {
@@ -107,7 +103,7 @@ const userSchema = new mongoose.Schema<UserProps>({
       },
       units: {
         type: String,
-        enum: Array.from(allUnitsType),
+        enum: Array.from(allUnits),
       },
       quantity: {
         type: Number,
@@ -126,7 +122,7 @@ const userSchema = new mongoose.Schema<UserProps>({
         },
         units: {
           type: String,
-          enum: Array.from(distanceUnitsType),
+          enum: Array.from(distanceUnits),
           default: "km",
         },
       },

@@ -1,9 +1,5 @@
-import {
-  weightUnitsType,
-  distanceUnitsType,
-  allUnitsType,
-} from "../data/units.js";
-import categories from "../data/data.js";
+import { categoriesType } from "../data/data.js";
+import { allUnitsType, distanceUnitsType, weightUnitsType } from "../data/units.js";
 
 interface Location {
   country: "Canada" | "USA";
@@ -32,28 +28,23 @@ interface AdminInfo {
   adminDelete: string;
 }
 
-type WeightUnit = typeof weightUnitsType extends Set<infer T> ? T : never;
-type DistanceUnit = typeof distanceUnitsType extends Set<infer T> ? T : never;
 interface Preferences {
-  weightUnits: WeightUnit;
-  distUnits: DistanceUnit;
+  weightUnits: weightUnitsType;
+  distUnits: distanceUnitsType;
   language: "en" | "fr";
 }
 
-type AllUnits = typeof allUnitsType extends Set<infer T> ? T : never;
 interface Item {
   method: "weight" | "unit";
-  units: AllUnits;
+  units: allUnitsType;
   quantity: number;
 }
-
-type Categories = typeof categories extends Set<infer T> ? T : never;
 interface SearchPreferences {
   distance: {
     amount: number;
-    units: DistanceUnit;
+    units: distanceUnitsType;
   };
-  categories: Map<Categories, true>;
+  categories: Map<categoriesType, true>;
   stores: Map<string, true>;
 }
 
