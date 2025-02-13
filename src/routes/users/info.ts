@@ -15,7 +15,7 @@ import {
   valSearchPreferencesDistance,
   valSearchPreferencesStores,
 } from "../../validation/users/userInfoPutVal.js";
-import { categoriesType } from "../../data/data.js";
+import { categoriesType } from "../../data/categories.js";
 
 /**
  * Router for handling user information updates

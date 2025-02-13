@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 import { allUnits } from "../data/units.js";
-import categories from "../data/data.js";
+import categories from "../data/categories.js";
 import { ItemProps } from "../interface/ItemProps.js";
 
 // Refactoring because an item may have multiple brands
@@ -22,16 +22,18 @@ const itemSchema = new mongoose.Schema<ItemProps>({
     },
   },
   ref: {
-    standard: {
-      type: String,
-      enum: ["PLU", "UPC", "EAN"],
-      required: true,
+    type: {
+      standard: {
+        type: String,
+        enum: ["PLU", "UPC", "EAN"],
+        required: true,
+      },
+      code: {
+        type: String,
+        required: true,
+      },
     },
-    code: {
-      type: String,
-      unique: true,
-      required: true,
-    },
+    index: true
   },
   amount: {
     isApprox: Boolean,
@@ -41,7 +43,7 @@ const itemSchema = new mongoose.Schema<ItemProps>({
     },
     units: {
       type: String,
-      enum: allUnits,
+      enum: Array.from(allUnits),
     },
     count: Number,
   },
@@ -108,12 +110,16 @@ const itemSchema = new mongoose.Schema<ItemProps>({
   categories: [
     {
       type: String,
-      enum: categories,
+      enum: Array.from(categories),
       default: [],
     },
   ],
   image: {
     type: Buffer,
+    required: true,
+  },
+  embeddings: {
+    type: [Number],
     required: true,
   },
 });

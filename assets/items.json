@@ -1,0 +1,781 @@
+[
+  {
+    "name": {
+      "en": "Banana",
+      "fr": "Banane"
+    },
+    "ref": {
+      "standard": "PLU",
+      "code": "4011"
+    },
+    "amount": {
+      "isApprox": true,
+      "method": "weight",
+      "units": "kg",
+      "count": 1
+    },
+    "description": {
+      "en": "Fresh yellow bananas",
+      "fr": "Bananes jaunes fraîches"
+    },
+    "suppliers": [
+      {
+        "supplier": "provigo",
+        "brand": "Dole",
+        "pricing": {
+          "normal": 2.99,
+          "method": "weight_kg"
+        }
+      },
+      {
+        "supplier": "metro",
+        "brand": "Chiquita",
+        "pricing": {
+          "normal": 3.29,
+          "method": "weight_kg"
+        }
+      }
+    ],
+    "categories": ["Produce"]
+  },
+  {
+    "name": {
+      "en": "Milk 2%",
+      "fr": "Lait 2%"
+    },
+    "ref": {
+      "standard": "UPC",
+      "code": "055872144233"
+    },
+    "amount": {
+      "isApprox": false,
+      "method": "volume",
+      "units": "L",
+      "count": 2
+    },
+    "suppliers": [
+      {
+        "supplier": "iga",
+        "brand": "Natrel",
+        "pricing": {
+          "normal": 4.99,
+          "method": "unit"
+        }
+      }
+    ],
+    "categories": ["Dairy", "Beverages"]
+  },
+  {
+    "name": {
+      "en": "White Bread",
+      "fr": "Pain Blanc"
+    },
+    "ref": {
+      "standard": "UPC",
+      "code": "055872144255"
+    },
+    "amount": {
+      "isApprox": false,
+      "method": "weight",
+      "units": "g",
+      "count": 675
+    },
+    "suppliers": [
+      {
+        "supplier": "metro",
+        "brand": "D'Italiano",
+        "pricing": {
+          "normal": 3.99,
+          "method": "unit",
+          "limited": [
+            {
+              "typeOfRebate": "buyXgetYforC",
+              "X": 2,
+              "Y": 2,
+              "C": 5.0,
+              "method": "unit",
+              "timeframe": {
+                "start": "2023-12-01T00:00:00.000Z",
+                "end": "2023-12-07T23:59:59.999Z"
+              },
+              "onlyMembers": true
+            }
+          ]
+        }
+      }
+    ],
+    "categories": ["Bakery"]
+  },
+  {
+    "name": {
+      "en": "Chicken Breast",
+      "fr": "Poitrine de Poulet"
+    },
+    "ref": {
+      "standard": "PLU",
+      "code": "2457"
+    },
+    "amount": {
+      "isApprox": true,
+      "method": "weight",
+      "units": "kg",
+      "count": 1
+    },
+    "suppliers": [
+      {
+        "supplier": "metro",
+        "brand": "Selection",
+        "pricing": {
+          "normal": 13.99,
+          "method": "weight_kg",
+          "limited": [
+            {
+              "typeOfRebate": "C",
+              "C": 11.99,
+              "method": "weight_kg",
+              "timeframe": {
+                "start": 1701388800000,
+                "end": 1701907199000
+              },
+              "onlyMembers": false
+            }
+          ]
+        }
+      }
+    ],
+    "categories": ["Meat and Poultry"]
+  },
+  {
+    "name": {
+      "en": "Red Bell Pepper",
+      "fr": "Poivron Rouge"
+    },
+    "ref": {
+      "standard": "PLU",
+      "code": "4088"
+    },
+    "amount": {
+      "isApprox": false,
+      "method": "unit",
+      "units": "unit",
+      "count": 1
+    },
+    "suppliers": [
+      {
+        "supplier": "provigo",
+        "brand": "Generic",
+        "pricing": {
+          "normal": 1.49,
+          "method": "unit",
+          "limited": [
+            {
+              "typeOfRebate": "buyXgetYforC",
+              "X": 3,
+              "Y": 3,
+              "C": 3.0,
+              "method": "unit",
+              "timeframe": {
+                "start": 1701388800000,
+                "end": 1701907199000
+              },
+              "onlyMembers": true
+            }
+          ]
+        }
+      }
+    ],
+    "categories": ["Produce"]
+  },
+  {
+    "name": {
+      "en": "Organic Pasta Sauce",
+      "fr": "Sauce pour Pâtes Bio"
+    },
+    "ref": {
+      "standard": "UPC",
+      "code": "055872144299"
+    },
+    "amount": {
+      "isApprox": false,
+      "method": "volume",
+      "units": "mL",
+      "count": 650
+    },
+    "suppliers": [
+      {
+        "supplier": "metro",
+        "brand": "Selection Bio",
+        "pricing": {
+          "normal": 4.99,
+          "method": "unit"
+        }
+      }
+    ],
+    "categories": ["Pasta Sauce", "Bio"]
+  },
+  {
+    "name": {
+      "en": "Greek Yogurt",
+      "fr": "Yogourt Grec"
+    },
+    "ref": {
+      "standard": "UPC",
+      "code": "055872144277"
+    },
+    "amount": {
+      "isApprox": false,
+      "method": "volume",
+      "units": "g",
+      "count": 750
+    },
+    "suppliers": [
+      {
+        "supplier": "iga",
+        "brand": "Oikos",
+        "pricing": {
+          "normal": 5.99,
+          "method": "unit",
+          "limited": [
+            {
+              "typeOfRebate": "buyXgetYforC",
+              "X": 2,
+              "Y": 2,
+              "C": 8.0,
+              "method": "unit",
+              "timeframe": {
+                "start": 1701388800000,
+                "end": 1701907199000
+              },
+              "onlyMembers": true
+            }
+          ]
+        }
+      }
+    ],
+    "categories": ["Dairy"]
+  },
+  {
+    "name": {
+      "en": "Frozen Pizza",
+      "fr": "Pizza Surgelée"
+    },
+    "ref": {
+      "standard": "UPC",
+      "code": "055872144288"
+    },
+    "amount": {
+      "isApprox": false,
+      "method": "weight",
+      "units": "g",
+      "count": 800
+    },
+    "suppliers": [
+      {
+        "supplier": "provigo",
+        "brand": "Delissio",
+        "pricing": {
+          "normal": 8.99,
+          "method": "unit"
+        }
+      }
+    ],
+    "categories": ["Frozen Foods"]
+  },
+  {
+    "name": {
+      "en": "Baby Bananas",
+      "fr": "Petites Bananes"
+    },
+    "ref": {
+      "standard": "PLU",
+      "code": "4234"
+    },
+    "amount": {
+      "isApprox": true,
+      "method": "weight",
+      "units": "kg",
+      "count": 1
+    },
+    "description": {
+      "en": "Sweet mini bananas",
+      "fr": "Mini bananes sucrées"
+    },
+    "suppliers": [
+      {
+        "supplier": "metro",
+        "brand": "Generic",
+        "pricing": {
+          "normal": 4.99,
+          "method": "weight_kg"
+        }
+      }
+    ],
+    "categories": ["Produce"]
+  },
+  {
+    "name": {
+      "en": "Organic Banana Chips",
+      "fr": "Croustilles de Bananes Bio"
+    },
+    "ref": {
+      "standard": "UPC",
+      "code": "055872144311"
+    },
+    "amount": {
+      "isApprox": false,
+      "method": "weight",
+      "units": "g",
+      "count": 150
+    },
+    "description": {
+      "en": "Dried banana chips",
+      "fr": "Croustilles de bananes séchées"
+    },
+    "suppliers": [
+      {
+        "supplier": "provigo",
+        "brand": "Selection Bio",
+        "pricing": {
+          "normal": 5.99,
+          "method": "unit"
+        }
+      }
+    ],
+    "categories": ["Snacks", "Bio"]
+  },
+  {
+    "name": {
+      "en": "Banana Bread",
+      "fr": "Pain aux Bananes"
+    },
+    "ref": {
+      "standard": "UPC",
+      "code": "055872144322"
+    },
+    "amount": {
+      "isApprox": false,
+      "method": "weight",
+      "units": "g",
+      "count": 400
+    },
+    "suppliers": [
+      {
+        "supplier": "iga",
+        "brand": "Compliments",
+        "pricing": {
+          "normal": 4.99,
+          "method": "unit"
+        }
+      }
+    ],
+    "categories": ["Bakery"]
+  },
+  {
+    "name": {
+      "en": "Frozen Banana Slices",
+      "fr": "Tranches de Bananes Surgelées"
+    },
+    "ref": {
+      "standard": "UPC",
+      "code": "055872144333"
+    },
+    "amount": {
+      "isApprox": false,
+      "method": "weight",
+      "units": "g",
+      "count": 600
+    },
+    "suppliers": [
+      {
+        "supplier": "metro",
+        "brand": "Selection",
+        "pricing": {
+          "normal": 6.99,
+          "method": "unit"
+        }
+      }
+    ],
+    "categories": ["Frozen Foods"]
+  },
+  {
+    "name": {
+      "en": "Banana Yogurt",
+      "fr": "Yogourt à la Banane"
+    },
+    "ref": {
+      "standard": "UPC",
+      "code": "055872144344"
+    },
+    "amount": {
+      "isApprox": false,
+      "method": "volume",
+      "units": "g",
+      "count": 650
+    },
+    "suppliers": [
+      {
+        "supplier": "iga",
+        "brand": "Activia",
+        "pricing": {
+          "normal": 5.49,
+          "method": "unit"
+        }
+      }
+    ],
+    "categories": ["Dairy"]
+  },
+  {
+    "name": {
+      "en": "Banana Protein Bar",
+      "fr": "Barre Protéinée à la Banane"
+    },
+    "ref": {
+      "standard": "UPC",
+      "code": "055872144355"
+    },
+    "amount": {
+      "isApprox": false,
+      "method": "weight",
+      "units": "g",
+      "count": 50
+    },
+    "suppliers": [
+      {
+        "supplier": "provigo",
+        "brand": "Clif Bar",
+        "pricing": {
+          "normal": 2.99,
+          "method": "unit",
+          "limited": [
+            {
+              "typeOfRebate": "buyXgetYforC",
+              "X": 6,
+              "Y": 6,
+              "C": 12.0,
+              "method": "unit",
+              "timeframe": {
+                "start": 1701388800000,
+                "end": 1701907199000
+              },
+              "onlyMembers": true
+            }
+          ]
+        }
+      }
+    ],
+    "categories": ["Snack Bars", "Health Foods"]
+  },
+  {
+    "name": {
+      "en": "Organic Banana Baby Food",
+      "fr": "Purée de Bananes Bio pour Bébé"
+    },
+    "ref": {
+      "standard": "UPC",
+      "code": "055872144366"
+    },
+    "amount": {
+      "isApprox": false,
+      "method": "volume",
+      "units": "mL",
+      "count": 128
+    },
+    "suppliers": [
+      {
+        "supplier": "metro",
+        "brand": "Gerber",
+        "pricing": {
+          "normal": 1.49,
+          "method": "unit"
+        }
+      }
+    ],
+    "categories": ["Baby Care", "Bio"]
+  },
+  {
+    "name": {
+      "en": "Banana Breakfast Cereal",
+      "fr": "Céréales à la Banane"
+    },
+    "ref": {
+      "standard": "UPC",
+      "code": "055872144377"
+    },
+    "amount": {
+      "isApprox": false,
+      "method": "weight",
+      "units": "g",
+      "count": 400
+    },
+    "suppliers": [
+      {
+        "supplier": "iga",
+        "brand": "Cheerios",
+        "pricing": {
+          "normal": 6.99,
+          "method": "unit"
+        }
+      }
+    ],
+    "categories": ["Cereal and Breakfast Foods"]
+  },
+  {
+    "name": {
+      "en": "Banana Cake Mix",
+      "fr": "Mélange à Gâteau à la Banane"
+    },
+    "ref": {
+      "standard": "UPC",
+      "code": "055872144388"
+    },
+    "amount": {
+      "isApprox": false,
+      "method": "weight",
+      "units": "g",
+      "count": 500
+    },
+    "suppliers": [
+      {
+        "supplier": "metro",
+        "brand": "Betty Crocker",
+        "pricing": {
+          "normal": 4.29,
+          "method": "unit"
+        }
+      }
+    ],
+    "categories": ["Baking Supplies"]
+  },
+  {
+    "name": {
+      "en": "Banana Flavored Milk",
+      "fr": "Lait à la Banane"
+    },
+    "ref": {
+      "standard": "UPC",
+      "code": "055872144399"
+    },
+    "amount": {
+      "isApprox": false,
+      "method": "volume",
+      "units": "mL",
+      "count": 750
+    },
+    "suppliers": [
+      {
+        "supplier": "provigo",
+        "brand": "Nesquik",
+        "pricing": {
+          "normal": 4.99,
+          "method": "unit"
+        }
+      }
+    ],
+    "categories": ["Beverages", "Dairy"]
+  },
+  {
+    "name": {
+      "en": "Plantain Chips",
+      "fr": "Croustilles de Plantain"
+    },
+    "ref": {
+      "standard": "UPC",
+      "code": "055872144400"
+    },
+    "amount": {
+      "isApprox": false,
+      "method": "weight",
+      "units": "g",
+      "count": 150
+    },
+    "suppliers": [
+      {
+        "supplier": "metro",
+        "brand": "Goya",
+        "pricing": {
+          "normal": 3.99,
+          "method": "unit"
+        }
+      }
+    ],
+    "categories": ["Snacks", "International Foods"]
+  },
+  {
+    "name": {
+      "en": "Dried Baby Bananas",
+      "fr": "Petites Bananes Séchées"
+    },
+    "ref": {
+      "standard": "UPC",
+      "code": "055872144411"
+    },
+    "amount": {
+      "isApprox": false,
+      "method": "weight",
+      "units": "g",
+      "count": 100
+    },
+    "suppliers": [
+      {
+        "supplier": "iga",
+        "brand": "Sun-Maid",
+        "pricing": {
+          "normal": 4.49,
+          "method": "unit"
+        }
+      }
+    ],
+    "categories": ["Snacks", "Health Foods"]
+  },
+  {
+    "name": {
+      "en": "Banana Extract",
+      "fr": "Extrait de Banane"
+    },
+    "ref": {
+      "standard": "UPC",
+      "code": "055872144422"
+    },
+    "amount": {
+      "isApprox": false,
+      "method": "volume",
+      "units": "mL",
+      "count": 60
+    },
+    "suppliers": [
+      {
+        "supplier": "provigo",
+        "brand": "McCormick",
+        "pricing": {
+          "normal": 5.99,
+          "method": "unit"
+        }
+      }
+    ],
+    "categories": ["Baking Supplies"]
+  },
+  {
+    "name": {
+      "en": "Organic Bananas",
+      "fr": "Bananes Biologiques"
+    },
+    "ref": {
+      "standard": "PLU",
+      "code": "94011"
+    },
+    "amount": {
+      "isApprox": true,
+      "method": "weight",
+      "units": "kg",
+      "count": 1
+    },
+    "description": {
+      "en": "Organic yellow bananas",
+      "fr": "Bananes jaunes biologiques"
+    },
+    "suppliers": [
+      {
+        "supplier": "metro",
+        "brand": "Bio",
+        "pricing": {
+          "normal": 3.99,
+          "method": "weight_kg"
+        }
+      }
+    ],
+    "categories": ["Produce", "Bio"]
+  },
+  {
+    "name": {
+      "en": "Red Bananas",
+      "fr": "Bananes Rouges"
+    },
+    "ref": {
+      "standard": "PLU",
+      "code": "4236"
+    },
+    "amount": {
+      "isApprox": true,
+      "method": "weight",
+      "units": "kg",
+      "count": 1
+    },
+    "description": {
+      "en": "Sweet red bananas",
+      "fr": "Bananes rouges sucrées"
+    },
+    "suppliers": [
+      {
+        "supplier": "provigo",
+        "brand": "Exotic Selection",
+        "pricing": {
+          "normal": 5.99,
+          "method": "weight_kg"
+        }
+      }
+    ],
+    "categories": ["Produce"]
+  },
+  {
+    "name": {
+      "en": "Plantains",
+      "fr": "Plantains"
+    },
+    "ref": {
+      "standard": "PLU",
+      "code": "4235"
+    },
+    "amount": {
+      "isApprox": true,
+      "method": "weight",
+      "units": "kg",
+      "count": 1
+    },
+    "description": {
+      "en": "Cooking bananas",
+      "fr": "Bananes à cuire"
+    },
+    "suppliers": [
+      {
+        "supplier": "iga",
+        "brand": "Generic",
+        "pricing": {
+          "normal": 3.49,
+          "method": "weight_kg"
+        }
+      }
+    ],
+    "categories": ["Produce", "International Foods"]
+  },
+  {
+    "name": {
+      "en": "Organic Red Bananas",
+      "fr": "Bananes Rouges Biologiques"
+    },
+    "ref": {
+      "standard": "PLU",
+      "code": "94236"
+    },
+    "amount": {
+      "isApprox": true,
+      "method": "weight",
+      "units": "kg",
+      "count": 1
+    },
+    "description": {
+      "en": "Organic red bananas",
+      "fr": "Bananes rouges biologiques"
+    },
+    "suppliers": [
+      {
+        "supplier": "metro",
+        "brand": "Bio",
+        "pricing": {
+          "normal": 6.99,
+          "method": "weight_kg"
+        }
+      }
+    ],
+    "categories": ["Produce", "Bio"]
+  }
+]

@@ -6,13 +6,13 @@
 import express from "express";
 import config from "config";
 import fs from "fs";
+import { Server } from "http";
 import https, { ServerOptions } from "https";
 import keyVerif from "./startup/config.js";
 import dbConnection from "./startup/db.js";
 import initFirebase from "./startup/initFirebase.js";
 import logging from "./startup/logging.js";
 import routes from "./startup/routes.js";
-import { Server } from "http";
 
 /** Express application instance */
 const app = express();
@@ -21,7 +21,8 @@ const app = express();
 logging();
 keyVerif();
 dbConnection();
-initFirebase();
+await initFirebase();
+import "./startup/initGoogleAi.js";
 routes(app);
 
 /** Server configuration */
@@ -54,10 +55,15 @@ if (process.env.NODE_ENV === "test") {
     );
   });
 } else {
-  throw new Error(
-    `NODE_ENV is set to ${process.env.NODE_ENV}. Please set it to either "test" or "development"
-    and NODE_TLS_REJECT_UNAUTHORIZED is ${process.env.NODE_TLS_REJECT_UNAUTHORIZED} to 0 if you want to run in development mode`
+  console.error(
+    "\x1b[31m",
+    `\n---NODE_ENV: ${process.env.NODE_ENV}---\n
+    Please set NODE_ENV to "test" or "development"\n
+    \n---NODE_TLS_REJECT_UNAUTHORIZED: ${process.env.NODE_TLS_REJECT_UNAUTHORIZED}---\n
+    Please set NODE_TLS_REJECT_UNAUTHORIZED to 0 for development mode\n`,
+    "\x1b[0m"
   );
+  throw new Error("Invalid environment settings");
 }
 
 /** Export server instance for testing purposes */

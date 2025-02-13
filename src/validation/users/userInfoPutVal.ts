@@ -1,6 +1,6 @@
 import Joi from "joi";
 import { allUnits, distanceUnits, weightUnits } from "../../data/units.js";
-import categories from "../../data/data.js";
+import categories from "../../data/categories.js";
 
 export const valName = (body: any) => {
   return Joi.string().min(3).max(32).required().validate(body);

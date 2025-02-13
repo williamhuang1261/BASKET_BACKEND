@@ -1,5 +1,9 @@
-import { categoriesType } from "../data/data.js";
-import { allUnitsType, distanceUnitsType, weightUnitsType } from "../data/units.js";
+import { categoriesType } from "../data/categories.js";
+import {
+  allUnitsType,
+  distanceUnitsType,
+  weightUnitsType,
+} from "../data/units.js";
 
 interface Location {
   country: "Canada" | "USA";

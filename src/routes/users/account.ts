@@ -120,7 +120,7 @@ router.delete("/me", async (req: UserRequest, res: Response) => {
 
   // Deleting user
   try {
-    await User.deleteOne({ uid: decoded.uid });
+    await User.findOneAndDelete({ uid: decoded.uid });
     res.status(200).send({ message: "Deletion successful" });
   } catch (e) {
     res.status(500).send({ message: "Deletion failed" });

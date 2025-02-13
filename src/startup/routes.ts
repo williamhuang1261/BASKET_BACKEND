@@ -1,4 +1,5 @@
 import express, { Application } from "express";
+import items_routes from '../routes/items/items_routes.js'
 import users_routes from "../routes/users/users_routes.js";
 import restricted_routes from '../routes/restricted_route.js'
 import error from "../middleware/error.js";
@@ -15,6 +16,7 @@ const routes = (app: Application) => {
   app.use(cors())
   app.use(rateLimiter);
   app.use(express.json());
+  app.use('/items', items_routes)
   app.use("/users", users_routes);
   app.use('/restricted', restricted_routes)
   app.use('/test', test)

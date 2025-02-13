@@ -1,0 +1,753 @@
+[
+  {
+    "name": {
+      "en": "Gala Apple",
+      "fr": "Pomme Gala"
+    },
+    "ref": {
+      "standard": "PLU",
+      "code": "4133"
+    },
+    "amount": {
+      "isApprox": true,
+      "method": "weight",
+      "units": "kg",
+      "count": 1
+    },
+    "description": {
+      "en": "Sweet and crisp Gala apples",
+      "fr": "Pommes Gala sucrées et croquantes"
+    },
+    "suppliers": [
+      {
+        "supplier": "metro",
+        "brand": "Generic",
+        "pricing": {
+          "normal": 3.99,
+          "method": "weight_kg"
+        }
+      }
+    ],
+    "categories": ["Produce"]
+  },
+  {
+    "name": {
+      "en": "Organic Honeycrisp Apple",
+      "fr": "Pomme Honeycrisp Biologique"
+    },
+    "ref": {
+      "standard": "PLU",
+      "code": "94131"
+    },
+    "amount": {
+      "isApprox": true,
+      "method": "weight",
+      "units": "kg",
+      "count": 1
+    },
+    "suppliers": [
+      {
+        "supplier": "provigo",
+        "brand": "Bio",
+        "pricing": {
+          "normal": 6.99,
+          "method": "weight_kg"
+        }
+      }
+    ],
+    "categories": ["Produce", "Bio"]
+  },
+  {
+    "name": {
+      "en": "Apple Juice",
+      "fr": "Jus de Pomme"
+    },
+    "ref": {
+      "standard": "UPC",
+      "code": "055872144501"
+    },
+    "amount": {
+      "isApprox": false,
+      "method": "volume",
+      "units": "L",
+      "count": 1.89
+    },
+    "suppliers": [
+      {
+        "supplier": "iga",
+        "brand": "Oasis",
+        "pricing": {
+          "normal": 3.99,
+          "method": "unit",
+          "limited": [{
+            "typeOfRebate": "buyXgetYforC",
+            "X": 2,
+            "Y": 2,
+            "C": 6.00,
+            "method": "unit",
+            "timeframe": {
+              "start": 1701388800000,
+              "end": 1701907199000
+            },
+            "onlyMembers": true
+          }]
+        }
+      }
+    ],
+    "categories": ["Beverages"]
+  },
+  {
+    "name": {
+      "en": "Apple Cinnamon Oatmeal",
+      "fr": "Gruau Pomme et Cannelle"
+    },
+    "ref": {
+      "standard": "UPC",
+      "code": "055872144502"
+    },
+    "amount": {
+      "isApprox": false,
+      "method": "weight",
+      "units": "g",
+      "count": 430
+    },
+    "suppliers": [
+      {
+        "supplier": "metro",
+        "brand": "Quaker",
+        "pricing": {
+          "normal": 4.99,
+          "method": "unit"
+        }
+      }
+    ],
+    "categories": ["Cereal and Breakfast Foods"]
+  },
+  {
+    "name": {
+      "en": "Apple Sauce",
+      "fr": "Compote de Pommes"
+    },
+    "ref": {
+      "standard": "UPC",
+      "code": "055872144503"
+    },
+    "amount": {
+      "isApprox": false,
+      "method": "volume",
+      "units": "mL",
+      "count": 650
+    },
+    "suppliers": [
+      {
+        "supplier": "provigo",
+        "brand": "Mott's",
+        "pricing": {
+          "normal": 3.49,
+          "method": "unit"
+        }
+      }
+    ],
+    "categories": ["Canned Vegetables and Fruits"]
+  },
+  {
+    "name": {
+      "en": "Apple Pie",
+      "fr": "Tarte aux Pommes"
+    },
+    "ref": {
+      "standard": "UPC",
+      "code": "055872144504"
+    },
+    "amount": {
+      "isApprox": false,
+      "method": "weight",
+      "units": "g",
+      "count": 600
+    },
+    "suppliers": [
+      {
+        "supplier": "iga",
+        "brand": "Selection",
+        "pricing": {
+          "normal": 8.99,
+          "method": "unit"
+        }
+      }
+    ],
+    "categories": ["Bakery"]
+  },
+  {
+    "name": {
+      "en": "Granny Smith Apple",
+      "fr": "Pomme Granny Smith"
+    },
+    "ref": {
+      "standard": "PLU",
+      "code": "4017"
+    },
+    "amount": {
+      "isApprox": true,
+      "method": "weight",
+      "units": "kg",
+      "count": 1
+    },
+    "description": {
+      "en": "Tart and crisp Granny Smith apples",
+      "fr": "Pommes Granny Smith acidulées et croquantes"
+    },
+    "suppliers": [
+      {
+        "supplier": "metro",
+        "brand": "Generic",
+        "pricing": {
+          "normal": 4.99,
+          "method": "weight_kg"
+        }
+      }
+    ],
+    "categories": ["Produce"]
+  },
+  {
+    "name": {
+      "en": "Apple Cider",
+      "fr": "Cidre de Pomme"
+    },
+    "ref": {
+      "standard": "UPC",
+      "code": "055872144505"
+    },
+    "amount": {
+      "isApprox": false,
+      "method": "volume",
+      "units": "L",
+      "count": 1
+    },
+    "suppliers": [
+      {
+        "supplier": "iga",
+        "brand": "Selection",
+        "pricing": {
+          "normal": 5.99,
+          "method": "unit"
+        }
+      }
+    ],
+    "categories": ["Beverages"]
+  },
+  {
+    "name": {
+      "en": "Apple Chips",
+      "fr": "Chips de Pomme"
+    },
+    "ref": {
+      "standard": "UPC",
+      "code": "055872144506"
+    },
+    "amount": {
+      "isApprox": false,
+      "method": "weight",
+      "units": "g",
+      "count": 100
+    },
+    "suppliers": [
+      {
+        "supplier": "provigo",
+        "brand": "Generic",
+        "pricing": {
+          "normal": 2.99,
+          "method": "unit"
+        }
+      }
+    ],
+    "categories": ["Snacks"]
+  },
+  {
+    "name": {
+      "en": "Apple Butter",
+      "fr": "Beurre de Pomme"
+    },
+    "ref": {
+      "standard": "UPC",
+      "code": "055872144507"
+    },
+    "amount": {
+      "isApprox": false,
+      "method": "volume",
+      "units": "mL",
+      "count": 250
+    },
+    "suppliers": [
+      {
+        "supplier": "metro",
+        "brand": "Generic",
+        "pricing": {
+          "normal": 4.49,
+          "method": "unit"
+        }
+      }
+    ],
+    "categories": ["Condiments"]
+  },
+  {
+    "name": {
+      "en": "McIntosh Apple",
+      "fr": "Pomme McIntosh"
+    },
+    "ref": {
+      "standard": "PLU",
+      "code": "4015"
+    },
+    "amount": {
+      "isApprox": true,
+      "method": "weight",
+      "units": "kg",
+      "count": 1
+    },
+    "description": {
+      "en": "Sweet and tender McIntosh apples",
+      "fr": "Pommes McIntosh sucrées et tendres"
+    },
+    "suppliers": [
+      {
+        "supplier": "iga",
+        "brand": "Generic",
+        "pricing": {
+          "normal": 3.79,
+          "method": "weight_kg",
+          "limited": [{
+            "typeOfRebate": "C",
+            "C": 2.99,
+            "method": "weight_kg",
+            "timeframe": {
+              "start": 1701388800000,
+              "end": 1701907199000
+            },
+            "onlyMembers": true
+          }]
+        }
+      }
+    ],
+    "categories": ["Produce"]
+  },
+  {
+    "name": {
+      "en": "Apple Strudel",
+      "fr": "Strudel aux Pommes"
+    },
+    "ref": {
+      "standard": "UPC",
+      "code": "055872144508"
+    },
+    "amount": {
+      "isApprox": false,
+      "method": "weight",
+      "units": "g",
+      "count": 400
+    },
+    "suppliers": [
+      {
+        "supplier": "metro",
+        "brand": "Selection",
+        "pricing": {
+          "normal": 6.99,
+          "method": "unit"
+        }
+      }
+    ],
+    "categories": ["Bakery", "International Foods"]
+  },
+  {
+    "name": {
+      "en": "Apple Cinnamon Tea",
+      "fr": "Thé Pomme et Cannelle"
+    },
+    "ref": {
+      "standard": "UPC",
+      "code": "055872144509"
+    },
+    "amount": {
+      "isApprox": false,
+      "method": "unit",
+      "units": "unit",
+      "count": 20
+    },
+    "description": {
+      "en": "Tea bags with apple and cinnamon flavor",
+      "fr": "Sachets de thé saveur pomme et cannelle"
+    },
+    "suppliers": [
+      {
+        "supplier": "provigo",
+        "brand": "Twinings",
+        "pricing": {
+          "normal": 4.99,
+          "method": "unit"
+        }
+      }
+    ],
+    "categories": ["Beverages"]
+  },
+  {
+    "name": {
+      "en": "Apple Baby Food",
+      "fr": "Purée de Pommes pour Bébé"
+    },
+    "ref": {
+      "standard": "UPC",
+      "code": "055872144510"
+    },
+    "amount": {
+      "isApprox": false,
+      "method": "volume",
+      "units": "mL",
+      "count": 128
+    },
+    "suppliers": [
+      {
+        "supplier": "iga",
+        "brand": "Heinz",
+        "pricing": {
+          "normal": 1.29,
+          "method": "unit",
+          "limited": [{
+            "typeOfRebate": "buyXgetYforC",
+            "X": 10,
+            "Y": 10,
+            "C": 10.00,
+            "method": "unit",
+            "timeframe": {
+              "start": 1701388800000,
+              "end": 1701907199000
+            },
+            "onlyMembers": true
+          }]
+        }
+      }
+    ],
+    "categories": ["Baby Care"]
+  },
+  {
+    "name": {
+      "en": "Apple Cinnamon Granola",
+      "fr": "Granola Pomme et Cannelle"
+    },
+    "ref": {
+      "standard": "UPC",
+      "code": "055872144511"
+    },
+    "amount": {
+      "isApprox": false,
+      "method": "weight",
+      "units": "g",
+      "count": 500
+    },
+    "suppliers": [
+      {
+        "supplier": "metro",
+        "brand": "Nature's Path",
+        "pricing": {
+          "normal": 7.99,
+          "method": "unit"
+        }
+      }
+    ],
+    "categories": ["Cereal and Breakfast Foods", "Health Foods"]
+  },
+  {
+    "name": {
+      "en": "Navel Orange",
+      "fr": "Orange Navel"
+    },
+    "ref": {
+      "standard": "PLU",
+      "code": "4012"
+    },
+    "amount": {
+      "isApprox": true,
+      "method": "weight",
+      "units": "kg",
+      "count": 1
+    },
+    "description": {
+      "en": "Sweet and seedless navel oranges",
+      "fr": "Oranges navel sucrées sans pépins"
+    },
+    "suppliers": [
+      {
+        "supplier": "metro",
+        "brand": "Generic",
+        "pricing": {
+          "normal": 3.49,
+          "method": "weight_kg"
+        }
+      }
+    ],
+    "categories": ["Produce"]
+  },
+  {
+    "name": {
+      "en": "Mandarin Oranges",
+      "fr": "Mandarines"
+    },
+    "ref": {
+      "standard": "PLU",
+      "code": "4019"
+    },
+    "amount": {
+      "isApprox": true,
+      "method": "weight",
+      "units": "kg",
+      "count": 1
+    },
+    "suppliers": [
+      {
+        "supplier": "provigo",
+        "brand": "Cuties",
+        "pricing": {
+          "normal": 5.99,
+          "method": "weight_kg",
+          "limited": [{
+            "typeOfRebate": "C",
+            "C": 4.99,
+            "method": "weight_kg",
+            "timeframe": {
+              "start": 1701388800000,
+              "end": 1701907199000
+            },
+            "onlyMembers": true
+          }]
+        }
+      }
+    ],
+    "categories": ["Produce"]
+  },
+  {
+    "name": {
+      "en": "Orange Juice",
+      "fr": "Jus d'Orange"
+    },
+    "ref": {
+      "standard": "UPC",
+      "code": "055872144512"
+    },
+    "amount": {
+      "isApprox": false,
+      "method": "volume",
+      "units": "L",
+      "count": 1.89
+    },
+    "suppliers": [
+      {
+        "supplier": "iga",
+        "brand": "Tropicana",
+        "pricing": {
+          "normal": 5.99,
+          "method": "unit"
+        }
+      }
+    ],
+    "categories": ["Beverages"]
+  },
+  {
+    "name": {
+      "en": "Canned Mandarin Oranges",
+      "fr": "Mandarines en Conserve"
+    },
+    "ref": {
+      "standard": "UPC",
+      "code": "055872144513"
+    },
+    "amount": {
+      "isApprox": false,
+      "method": "volume",
+      "units": "mL",
+      "count": 284
+    },
+    "suppliers": [
+      {
+        "supplier": "metro",
+        "brand": "Selection",
+        "pricing": {
+          "normal": 2.49,
+          "method": "unit"
+        }
+      }
+    ],
+    "categories": ["Canned Vegetables and Fruits"]
+  },
+  {
+    "name": {
+      "en": "Blood Orange",
+      "fr": "Orange Sanguine"
+    },
+    "ref": {
+      "standard": "PLU",
+      "code": "4381"
+    },
+    "amount": {
+      "isApprox": true,
+      "method": "weight",
+      "units": "kg",
+      "count": 1
+    },
+    "suppliers": [
+      {
+        "supplier": "provigo",
+        "brand": "Generic",
+        "pricing": {
+          "normal": 6.99,
+          "method": "weight_kg"
+        }
+      }
+    ],
+    "categories": ["Produce"]
+  },
+  {
+    "name": {
+      "en": "Orange Marmalade",
+      "fr": "Marmelade d'Orange"
+    },
+    "ref": {
+      "standard": "UPC",
+      "code": "055872144514"
+    },
+    "amount": {
+      "isApprox": false,
+      "method": "volume",
+      "units": "mL",
+      "count": 500
+    },
+    "suppliers": [
+      {
+        "supplier": "iga",
+        "brand": "Smucker's",
+        "pricing": {
+          "normal": 4.99,
+          "method": "unit"
+        }
+      }
+    ],
+    "categories": ["Condiments"]
+  },
+  {
+    "name": {
+      "en": "Orange Cranberry Muffins",
+      "fr": "Muffins Orange et Canneberge"
+    },
+    "ref": {
+      "standard": "UPC",
+      "code": "055872144515"
+    },
+    "amount": {
+      "isApprox": false,
+      "method": "unit",
+      "units": "unit",
+      "count": 6
+    },
+    "suppliers": [
+      {
+        "supplier": "metro",
+        "brand": "Selection",
+        "pricing": {
+          "normal": 5.99,
+          "method": "unit"
+        }
+      }
+    ],
+    "categories": ["Bakery"]
+  },
+  {
+    "name": {
+      "en": "Orange Pekoe Tea",
+      "fr": "Thé Orange Pekoe"
+    },
+    "ref": {
+      "standard": "UPC",
+      "code": "055872144516"
+    },
+    "amount": {
+      "isApprox": false,
+      "method": "unit",
+      "units": "unit",
+      "count": 72
+    },
+    "suppliers": [
+      {
+        "supplier": "provigo",
+        "brand": "Tetley",
+        "pricing": {
+          "normal": 6.99,
+          "method": "unit"
+        }
+      }
+    ],
+    "categories": ["Beverages"]
+  },
+  {
+    "name": {
+      "en": "Orange Flavored Water",
+      "fr": "Eau Aromatisée à l'Orange"
+    },
+    "ref": {
+      "standard": "UPC",
+      "code": "055872144517"
+    },
+    "amount": {
+      "isApprox": false,
+      "method": "volume",
+      "units": "mL",
+      "count": 500
+    },
+    "suppliers": [
+      {
+        "supplier": "iga",
+        "brand": "Perrier",
+        "pricing": {
+          "normal": 2.49,
+          "method": "unit",
+          "limited": [{
+            "typeOfRebate": "buyXgetYforC",
+            "X": 4,
+            "Y": 4,
+            "C": 8.00,
+            "method": "unit",
+            "timeframe": {
+              "start": 1701388800000,
+              "end": 1701907199000
+            },
+            "onlyMembers": true
+          }]
+        }
+      }
+    ],
+    "categories": ["Beverages"]
+  },
+  {
+    "name": {
+      "en": "Orange Vitamin C Gummies",
+      "fr": "Gommes à la Vitamine C Orange"
+    },
+    "ref": {
+      "standard": "UPC",
+      "code": "055872144518"
+    },
+    "amount": {
+      "isApprox": false,
+      "method": "unit",
+      "units": "unit",
+      "count": 90
+    },
+    "suppliers": [
+      {
+        "supplier": "metro",
+        "brand": "Jamieson",
+        "pricing": {
+          "normal": 14.99,
+          "method": "unit"
+        }
+      }
+    ],
+    "categories": ["Health Foods"]
+  }
+]

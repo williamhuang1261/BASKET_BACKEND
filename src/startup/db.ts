@@ -14,7 +14,10 @@ const dbConnection = () => {
   }
 
   mongoose.connect(db)
-  .then(() => winston.info(`Connected to ${db}...`));
+  .then(() => {
+    winston.info(`Connected to ${db}...`)
+  });
+  
 }
 
 export default dbConnection;

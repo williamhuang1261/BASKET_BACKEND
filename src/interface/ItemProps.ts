@@ -1,4 +1,4 @@
-import { categoriesType } from "../data/data.js";
+import { categoriesType } from "../data/categories.js";
 import { allUnitsType } from "../data/units.js";
 
 interface SuppliersProps {
@@ -6,8 +6,8 @@ interface SuppliersProps {
   brand: string;
   pricing: {
     typeOfRebate: "buyXgetYatC" | "buyXgetYforC" | "C";
-    X: number;
-    Y: number;
+    X?: number;
+    Y?: number;
     C: number;
     method: "unit" | "weight_lb" | "weight_kg" | "weight_100g";
     timeframe: {
@@ -41,6 +41,7 @@ interface ItemProps {
   suppliers: SuppliersProps[];
   categories: categoriesType[];
   image: Buffer;
+  embeddings: (number | null | undefined)[]
 }
 
 export type { ItemProps };
