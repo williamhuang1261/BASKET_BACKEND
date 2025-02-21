@@ -1,9 +1,30 @@
 import express, { Request, Response } from "express";
 import Item from "../../models/items.js";
 import valAutocomplete from "../../validation/items/valAutocomplete.js";
+import getAutoCompletePipeline from "../../utils/items/getAutocompletePipeline.js";
 
 const router = express.Router();
 
+/**
+ * Get autocomplete suggestions for item names
+ * @route POST /items/autocomplete
+ * @param {Object} req.body.config - Autocomplete configuration
+ * @param {string} req.body.config.value - Partial search query
+ * @param {string} req.body.config.language - Language for suggestions
+ * @param {number} req.body.config.count - Maximum number of suggestions
+ * @example
+ * // Request body
+ * {
+ *   "config": {
+ *     "value": "ham",
+ *     "language": "en",
+ *     "count": 5
+ *   }
+ * }
+ * @returns {Object} 200 - Autocomplete suggestions
+ * @returns {Object} 400 - Invalid request body
+ * @returns {Object} 500 - Server error
+ */
 router.post("/", async (req: Request, res: Response) => {
   const { error } = valAutocomplete(req.body);
   if (error) {
@@ -22,23 +43,7 @@ router.post("/", async (req: Request, res: Response) => {
     language: string;
     count: number;
   };
-  const pipeline = [
-    {
-      $search: {
-        index: "item_autocomplete_" + language,
-        autocomplete: {
-          query: value,
-          path: "name." + language,
-          fuzzy: { maxEdits: 1, prefixLength: 1, maxExpansions: 30 },
-          tokenOrder: "sequential",
-        },
-        returnStoredSource: true,
-      },
-    },
-    { $limit: count },
-    { $addFields: { suggestion: "$name." + language } },
-    { $unset: ["_id", "name"] },
-  ];
+  const pipeline = getAutoCompletePipeline(value, language, count);
 
   try {
     const suggestions = await Item.aggregate(pipeline);
@@ -47,7 +52,7 @@ router.post("/", async (req: Request, res: Response) => {
   } catch {
     res
       .status(500)
-      .send({ message: "Autocomplete failed to fetch suggestions" });
+      .send({ message: "Failed to fetch autcomplete suggestions suggestions" });
     return;
   }
 });

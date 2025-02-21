@@ -28,7 +28,7 @@ type categoriesType =
   | "Paper and Cleaning Products"
   | "Pet Supplies";
 
-const categories = new Set<categoriesType>([
+const categoriesArray: categoriesType[] = [
   "Produce",
   "Dairy",
   "Meat and Poultry",
@@ -57,7 +57,10 @@ const categories = new Set<categoriesType>([
   "Personal Care",
   "Paper and Cleaning Products",
   "Pet Supplies",
-]);
+];
+
+const categories = new Set<categoriesType>(categoriesArray);
 
 export type { categoriesType };
+export { categoriesArray };
 export default categories;

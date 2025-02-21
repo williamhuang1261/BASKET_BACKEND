@@ -121,7 +121,8 @@ type hybridSearchPipelineType = [
       };
     };
   },
-  { $sort: { score: -1 } }
+  { $sort: { score: -1 } },
+  { $limit: 24 }
 ];
 
 type noVectorPipelineType = [
@@ -132,6 +133,9 @@ type noVectorPipelineType = [
         $meta: "searchScore";
       };
     };
+  },
+  {
+    $limit: 24;
   }
 ];
 

@@ -1,84 +1,24 @@
 import { categoriesType } from "../../data/categories.js";
 import {
-  fullTextSearchObjectType,
-  vectorSearchObjectType,
   hybridSearchPipelineType,
   noVectorPipelineType,
-} from "../../interface/HybridSearchTypes.js";
-import getEmbeddings from "./getEmbeddings.js";
+} from "../../data/interface/HybridSearchTypes.js";
+import getFullTextSearchObject from "./getFullTextSearchObject.js";
+import getVectorSearchObject from "./getVectorSearchObject.js";
 
-const getFullTextSearchObject = (
-  query: string,
-  categories: categoriesType[],
-  language: string
-) => {
-  let res: fullTextSearchObjectType = {
-    $search: {
-      index: "item_search_" + language,
-      compound: {
-        must: [
-          {
-            text: {
-              query: query,
-              path: "name." + language,
-              fuzzy: {
-                maxEdits: 2,
-                prefixLength: 0,
-                maxExpansions: 50,
-              },
-            },
-          },
-        ],
-      },
-    },
-  };
-  if (categories.length > 0) {
-    res = {
-      ...res,
-      ...{
-        compound: {
-          ...res.$search.compound,
-          ...{ filter: [{ in: { path: "categories", value: categories } }] },
-        },
-      },
-    };
-  }
-  return res;
-};
-
-const getVectorSearchObject = async (
-  query: string,
-  categories: categoriesType[],
-  language: string
-) => {
-  const formattedQuery = [
-    `[LANG: ${language.toUpperCase()}] [QUERY: ${query}]`,
-  ];
-
-  let embeddings: ((number | null | undefined)[] | undefined)[] | undefined;
-  try {
-    embeddings = await getEmbeddings(formattedQuery);
-    if (!embeddings) return null;
-  } catch {
-    return null;
-  }
-  const vector = embeddings[0];
-  if (!vector) return null;
-
-  let res: vectorSearchObjectType = {
-    $vectorSearch: {
-      index: "vector_search_index",
-      path: "embeddings",
-      queryVector: vector as number[],
-      numCandidates: 300,
-      limit: 20,
-    },
-  };
-  if (categories.length > 0)
-    res = { ...res, ...{ filter: { categories: { $in: categories } } } };
-  return res;
-};
-
+/**
+ * Generates a hybrid search pipeline combining vector and full-text search
+ * @param {string} query - Search query
+ * @param {categoriesType[]} categories - Categories to filter by
+ * @param {string} language - Search language (en|fr)
+ * @example
+ * // Basic search in English
+ * const pipeline = await getHybridSearchPipeline("hammer", [], "en");
+ *
+ * // Filtered search in French
+ * const pipeline = await getHybridSearchPipeline("marteau", ["tools"], "fr");
+ * @returns {Promise<hybridSearchPipelineType|noVectorPipelineType>} MongoDB aggregation pipeline
+ */
 const getHybridSearchPipeline = async (
   query: string,
   categories: categoriesType[],
@@ -101,6 +41,7 @@ const getHybridSearchPipeline = async (
     const pipeline: noVectorPipelineType = [
       fullTextSearchObject,
       { $addFields: { score: { $meta: "searchScore" } } },
+      { $limit: 24 },
     ];
     return pipeline;
   }
@@ -157,6 +98,9 @@ const getHybridSearchPipeline = async (
     },
     {
       $sort: { score: -1 },
+    },
+    {
+      $limit: 24,
     },
   ];
 
