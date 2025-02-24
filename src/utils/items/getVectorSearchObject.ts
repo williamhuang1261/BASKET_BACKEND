@@ -1,5 +1,5 @@
 import { categoriesType } from "../../data/categories.js";
-import { vectorSearchObjectType } from "../../interface/HybridSearchTypes.js";
+import { vectorSearchObjectType } from "../../data/interface/HybridSearchTypes.js";
 import getEmbeddings from "./getEmbeddings.js";
 
 /**

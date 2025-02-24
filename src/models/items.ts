@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 import { allUnits } from "../data/units.js";
 import categories from "../data/categories.js";
-import { ItemProps } from "../interface/ItemProps.js";
+import { ItemProps } from "../data/interface/ItemProps.js";
 
 // Refactoring because an item may have multiple brands
 const itemSchema = new mongoose.Schema<ItemProps>({

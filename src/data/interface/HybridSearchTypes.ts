@@ -1,4 +1,4 @@
-import { categoriesType } from "../data/categories.js";
+import type { categoriesType } from "../categories.js";
 
 type fullTextSearchObjectType = {
   $search: {

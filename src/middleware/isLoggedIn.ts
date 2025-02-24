@@ -1,8 +1,8 @@
 import { NextFunction, Response } from "express";
-import { UserRequest } from "../interface/UserRequestProps.js";
 import User from "../models/users.js";
 import getAuthFirebase from "../utils/users/getAuthFirebase.js";
 import createNewUser from "../utils/users/createNewUser.js";
+import { UserRequest } from "../data/interface/UserRequestProps.js";
 
 /**
  * @middleware isLoggedIn

@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
-import UserProps from "../interface/UserProps.js";
 import { allUnits, distanceUnits, weightUnits } from "../data/units.js";
+import UserProps from "../data/interface/UserProps.js";
 
 const userSchema = new mongoose.Schema<UserProps>({
   uid: {

@@ -1,5 +1,4 @@
 import express, { Response } from "express";
-import { UserRequest } from "../../interface/UserRequestProps.js";
 import {
   valBasketFiltersFilteredStores,
   valBasketFiltersMaxStores,
@@ -16,6 +15,7 @@ import {
   valSearchPreferencesStores,
 } from "../../validation/users/userInfoPutVal.js";
 import { categoriesType } from "../../data/categories.js";
+import { UserRequest } from "../../data/interface/UserRequestProps.js";
 
 /**
  * Router for handling user information updates

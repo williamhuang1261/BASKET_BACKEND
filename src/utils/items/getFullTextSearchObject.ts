@@ -1,5 +1,5 @@
 import { categoriesType } from "../../data/categories.js";
-import { fullTextSearchObjectType } from "../../interface/HybridSearchTypes.js";
+import type { fullTextSearchObjectType } from "../../data/interface/HybridSearchTypes.js"
 
 /**
  * Creates a full-text search object for MongoDB aggregation

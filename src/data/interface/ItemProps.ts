@@ -1,5 +1,6 @@
-import { categoriesType } from "../data/categories.js";
-import { allUnitsType } from "../data/units.js";
+import type { categoriesType } from "../categories.js";
+import type { allUnitsType } from "../units.js";
+
 
 interface SuppliersProps {
   supplier: string;

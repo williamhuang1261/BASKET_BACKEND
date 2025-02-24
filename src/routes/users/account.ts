@@ -1,8 +1,8 @@
 import express, { Response } from "express";
-import { UserRequest } from "../../interface/UserRequestProps.js";
 import isLoggedIn from "../../middleware/isLoggedIn.js";
 import getAuthFirebase from "../../utils/users/getAuthFirebase.js";
 import User from "../../models/users.js";
+import { UserRequest } from "../../data/interface/UserRequestProps.js";
 
 const router = express.Router();
 
