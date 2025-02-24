@@ -276,7 +276,7 @@ router.put("/me", async (req: UserRequest, res: Response) => {
 
   // Sending response
   if (errors.length > 0) {
-    res.status(400).send({ message: "Some fields failed validation", errors });
+    res.status(400).send({ message: "Some fields failed validation", error: errors });
     return;
   }
   res.status(200).send({ message: "User updated" });

@@ -28,13 +28,19 @@ const router = express.Router();
 router.post("/", async (req: Request, res: Response) => {
   const { error } = valAutocomplete(req.body);
   if (error) {
-    res
-      .status(400)
-      .send({
-        message: "Some fields are invalid",
+    if (error.details[0].context?.key === "value") {
+      res.status(400).send({
+        message: "Autocomplete queries must be between 2 and 20 characters",
         error: error.details[0].message,
       });
-    return;
+      return;
+    } else {
+      res.status(400).send({
+        message: "Some autocomplete parameters are invalid",
+        error: error.details[0].message,
+      });
+      return;
+    }
   }
 
   const { config } = req.body;
@@ -47,7 +53,9 @@ router.post("/", async (req: Request, res: Response) => {
 
   try {
     const suggestions = await Item.aggregate(pipeline);
-    res.status(200).send({message: 'Autocomplete succeeded', data: suggestions});
+    res
+      .status(200)
+      .send({ message: "Autocomplete succeeded", data: suggestions });
     return;
   } catch {
     res
