@@ -55,7 +55,7 @@ router.post("/", async (req: Request, res: Response) => {
     const suggestions = await Item.aggregate(pipeline);
     res
       .status(200)
-      .send({ message: "Autocomplete succeeded", data: suggestions });
+      .send({ message: "Autocomplete succeeded", data: suggestions, time: new Date().toLocaleTimeString()});
     return;
   } catch {
     res

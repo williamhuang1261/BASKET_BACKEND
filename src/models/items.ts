@@ -9,12 +9,12 @@ const itemSchema = new mongoose.Schema<ItemProps>({
     fr: {
       type: String,
       minlength: 3,
-      maxlength: 250,
+      maxlength: 256,
     },
     en: {
       type: String,
       minlength: 3,
-      maxlength: 250,
+      maxlength: 256,
     },
     size: {
       type: String,
@@ -48,8 +48,16 @@ const itemSchema = new mongoose.Schema<ItemProps>({
     count: Number,
   },
   description: {
-    en: String,
-    fr: String,
+    en: {
+      type: String,
+      minlength: 3,
+      maxlength: 512,
+    },
+    fr: {
+      type: String,
+      minlength: 3,
+      maxlength: 768,
+    },
   },
   suppliers: [
     new mongoose.Schema({
