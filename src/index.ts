@@ -8,14 +8,12 @@ import fs from "fs";
 import { Server } from "http";
 import https, { ServerOptions } from "https";
 import routes from "./startup/routes.js";
-import valEnv from "./startup/valEnv.js";
 import startup from "./startup/startup.js";
 
 /** Express application instance */
 const app = express();
 
 /** Initialize application components */
-valEnv();
 await startup();
 routes(app);
 
