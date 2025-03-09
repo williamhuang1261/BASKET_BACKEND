@@ -1,4 +1,3 @@
-import params from "../../../config/googleAi.json" with {type: 'json'}
 import aiplatform from "@google-cloud/aiplatform";
 import { client } from "../../startup/initGoogleAi.js";
 
@@ -23,6 +22,11 @@ import { client } from "../../startup/initGoogleAi.js";
  * // Returns: [[0.234, 0.567, ...]]
  */
 const getEmbeddings = async (values: string[]) => {
+  const params = {
+    projectId: process.env.BASKET_GOOGLEAI_PROJECT_ID,
+    location: process.env.BASKET_GOOGLEAI_LOCATION,
+  }
+
   // Initialize constants
   const task = "RETRIEVAL_QUERY";
   const model = "text-multilingual-embedding-002";

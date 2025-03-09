@@ -8,7 +8,7 @@ import request from "supertest";
 import { describe, beforeAll, beforeEach, afterAll, it, expect, vi, afterEach } from "vitest";
 
 describe("/users/info", () => {
-  const uid: string = config.get("uid");
+  const uid: string = process.env.BASKET_USER_JWT_ID || "";
   let token: string;
   let server: http.Server | https.Server;
   beforeAll(async () => {
@@ -33,7 +33,7 @@ describe("/users/info", () => {
     beforeEach(async () => {
       try {
         await User.deleteMany({});
-        token = config.get("user_jwt_id");
+        token = process.env.BASKET_USER_JWT_ID || "";
       } catch (e) {
         console.error("Couldn't delete users or couldn't create new user", e);
       }

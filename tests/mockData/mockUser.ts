@@ -1,9 +1,8 @@
 import mongoose from "mongoose";
-import UserProps from "../../src/interface/UserProps";
-import config from "config";
+import UserProps from "../../src/data/interface/UserProps";
 
 const mockUser: UserProps = {
-  uid: config.get("uid"),
+  uid: process.env.BASKET_USER_JWT_ID || "",
   name: "John Doe",
   email: "john.doe@example.com",
   location: {

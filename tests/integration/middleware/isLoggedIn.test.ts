@@ -11,7 +11,7 @@ import mockIdToken from "../../mockData/mockIdToken";
 describe("isLoggedIn", () => {
   // Initializing variables
   let server: https.Server | Server;
-  let token: string = config.get("user_jwt_id");
+  let token: string = process.env.BASKET_USER_JWT_ID || "";
   
   // Initializing temporary express app
   const tempApp = express();
@@ -24,13 +24,10 @@ describe("isLoggedIn", () => {
     }
   );
   beforeAll(async () => {
-    try {
       const moduleServer = await import("../../../src/index");
       server = moduleServer.default;
       await server.close();
-    } catch (ex) {
-      console.log(ex);
-    }
+
     await User.deleteMany({});
   });
   afterAll(async () => {

@@ -38,7 +38,7 @@ describe("/users/account", () => {
       } catch (e){
         console.error("Couldn't delete users or couldn't create new user");
       }
-      token = config.get("user_jwt_id");
+      token = process.env.BASKET_USER_JWT_ID || ""
     });
     const exec = async () => {
       return await request(server)
@@ -71,7 +71,7 @@ describe("/users/account", () => {
       } catch (e){
         console.error("Couldn't delete users or couldn't create new user");
       }
-      token = config.get("user_jwt_id");
+      token = process.env.BASKET_USER_JWT_ID || "";
     });
     const exec = async () => {
       return await request(server)

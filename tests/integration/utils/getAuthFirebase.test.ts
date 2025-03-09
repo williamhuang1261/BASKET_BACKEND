@@ -8,7 +8,7 @@ describe("getAuthFirebase", () => {
   beforeAll(() => {
     initFirebase();
   });
-  let token: string = config.get("user_jwt_id");
+  let token: string = process.env.BASKET_USER_JWT_ID || "";
   const exec = async () => {
     return await getAuthFirebase(token);
   };
