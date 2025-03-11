@@ -19,7 +19,7 @@ routes(app);
 
 /** Server configuration */
 const port: string | number = process.env.PORT || 3001;
-const host: string | undefined = process.env.BASKET__SERVER_HOST || undefined
+const host: string | undefined = process.env.BASKET_SERVER_HOST || undefined;
 
 /** HTTPS server options */
 const options: ServerOptions = {
