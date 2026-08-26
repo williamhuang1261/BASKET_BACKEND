@@ -1,7 +1,7 @@
 {
-  "name": "project-orange-backend",
+  "name": "basket-backend",
   "version": "1.0.0",
-  "description": "",
+  "description": "Express + TypeScript API for Basket: bilingual hybrid product search over MongoDB Atlas (vector + full-text) with Firebase-authenticated user preferences.",
   "main": "index.js",
   "type": "module",
   "scripts": {
@@ -12,8 +12,16 @@
     "predev": "npm run build",
     "dev": "node --watch --env-file .dev.env  --watch ./dist/index.js"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": [
+    "express",
+    "typescript",
+    "mongodb",
+    "vector-search",
+    "hybrid-search",
+    "vertex-ai",
+    "firebase"
+  ],
+  "author": "William Huang",
   "license": "ISC",
   "dependencies": {
     "@google-cloud/aiplatform": "^3.34.0",
