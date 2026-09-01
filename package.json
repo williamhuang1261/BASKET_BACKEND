@@ -10,7 +10,9 @@
     "prestart": "npm run build",
     "start": "node --watch dist/index.js",
     "predev": "npm run build",
-    "dev": "node --watch --env-file .dev.env  --watch ./dist/index.js"
+    "dev": "node --watch --env-file .dev.env  --watch ./dist/index.js",
+    "preanalyze:experiment": "npm run build",
+    "analyze:experiment": "node --env-file .dev.env dist/scripts/analyzeExperiment.js"
   },
   "keywords": [
     "express",
