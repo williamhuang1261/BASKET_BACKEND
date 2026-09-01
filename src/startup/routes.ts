@@ -2,6 +2,7 @@ import express, { Application } from "express";
 import items_routes from '../routes/items/items_routes.js'
 import users_routes from "../routes/users/users_routes.js";
 import restricted_routes from '../routes/restricted_route.js'
+import events_routes from '../routes/events.js'
 import error from "../middleware/error.js";
 import test from '../routes/test.js'
 import cors from 'cors'
@@ -19,6 +20,7 @@ const routes = (app: Application) => {
   app.use('/items', items_routes)
   app.use("/users", users_routes);
   app.use('/restricted', restricted_routes)
+  app.use('/events', events_routes)
   app.use('/test', test)
   app.use(error);
 };
