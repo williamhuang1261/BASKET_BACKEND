@@ -13,7 +13,7 @@ solvers](https://github.com/williamhuang1261/BASKET_FRONTEND#the-interesting-par
 — the algorithmic core of the project.
 
 - **Stack** — Node, Express 4, TypeScript 5, MongoDB Atlas (Mongoose), Firebase Admin, Vertex AI
-- **Tests** — Vitest; 125 unit tests run with no credentials, integration tests need a local Mongo
+- **Tests** — Vitest; 138 unit tests run with no credentials, integration tests need a local Mongo
 - **Data** — every product carries English and French names and descriptions
 
 ---
@@ -89,6 +89,31 @@ count, with an `isApprox` flag for items sold loose. That is what lets the clien
 normalise everything to a comparable unit price; a `2 kg` bag and a `4 lb` bag
 have to end up on the same axis before any comparison means anything.
 
+## Experimentation
+
+The frontend's savings-summary screen A/B-tests two ways of framing the same
+savings number (see [BASKET_FRONTEND's "Experimentation"
+section](https://github.com/williamhuang1261/BASKET_FRONTEND#experimentation)
+and [`docs/prd-ab-testing.md`](https://github.com/williamhuang1261/BASKET_FRONTEND/blob/main/docs/prd-ab-testing.md)
+for the hypothesis). This API side logs the events and scores the result.
+
+- `POST /events` validates and persists an event
+  ([`models/experimentEvent.ts`](src/models/experimentEvent.ts)):
+  `experimentId`, `variant` (`A`/`B`), `eventType` (`exposure`/`conversion`),
+  and an anonymous `sessionId`. Same Joi-in-`src/validation`,
+  Mongoose-model conventions as the rest of the API.
+- `npm run analyze:experiment -- <experimentId>`
+  ([`scripts/analyzeExperiment.ts`](src/scripts/analyzeExperiment.ts)) reads
+  the logged events, prints each variant's conversion rate, and, once both
+  variants have at least 30 exposures, a chi-square significance readout
+  ([`utils/chiSquare.ts`](src/utils/chiSquare.ts), unit-tested against a
+  hand-worked 2x2 example). Below that threshold it prints "insufficient
+  data" rather than a number computed from too little to mean anything.
+- **No real production traffic exists yet.** Any conversion rate or
+  significance this prints today comes from seeded or manually-generated
+  test events. It demonstrates the pipeline and the chi-square math, not a
+  real product decision — see `docs/prd-ab-testing.md`.
+
 ## Security
 
 - Firebase ID tokens are verified server-side by `firebase-admin`; the API never
@@ -105,9 +130,10 @@ have to end up on the same axis before any comparison means anything.
 
 ```bash
 npm install
-npx vitest run tests/unit   # 125 tests, no credentials or network needed
+npx vitest run tests/unit   # 138 tests, no credentials or network needed
 npm run build
 npm run dev
+npm run analyze:experiment -- savings-summary-framing   # needs BASKET_DB_CONNECTION_STRING
 ```
 
 `npm test` also runs `tests/integration`, which is a heavier ask: those tests
