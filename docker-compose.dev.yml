@@ -1,0 +1,29 @@
+# Local infrastructure for the search-infrastructure extension.
+# Not used for the API's primary data store (MongoDB Atlas, Firebase) - only
+# for the additive OpenSearch and SQS pieces documented in
+# docs/prd-search-infra-extension.md.
+#
+# Usage: docker compose -f docker-compose.dev.yml up -d
+services:
+  opensearch:
+    image: opensearchproject/opensearch:2.19.1
+    container_name: basket-opensearch-dev
+    environment:
+      - discovery.type=single-node
+      - plugins.security.disabled=true
+      - bootstrap.memory_lock=true
+      - "OPENSEARCH_JAVA_OPTS=-Xms512m -Xmx512m"
+      # Local dev only - the security plugin is disabled above, but the
+      # image's setup script still requires this variable to be set.
+      - OPENSEARCH_INITIAL_ADMIN_PASSWORD=Basket-dev-only-1!
+    ports:
+      - "9200:9200"
+
+  localstack:
+    image: localstack/localstack:3.8
+    container_name: basket-localstack-dev
+    environment:
+      - SERVICES=sqs
+      - DEBUG=0
+    ports:
+      - "4566:4566"

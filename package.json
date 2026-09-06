@@ -12,7 +12,9 @@
     "predev": "npm run build",
     "dev": "node --watch --env-file .dev.env  --watch ./dist/index.js",
     "preanalyze:experiment": "npm run build",
-    "analyze:experiment": "node --env-file .dev.env dist/scripts/analyzeExperiment.js"
+    "analyze:experiment": "node --env-file .dev.env dist/scripts/analyzeExperiment.js",
+    "presearch:benchmark": "npm run build",
+    "search:benchmark": "node dist/search/opensearch/benchmarkSearch.js"
   },
   "keywords": [
     "express",
@@ -27,6 +29,7 @@
   "license": "ISC",
   "dependencies": {
     "@google-cloud/aiplatform": "^3.34.0",
+    "@opensearch-project/opensearch": "^3.6.0",
     "bcrypt": "^5.1.1",
     "cors": "^2.8.5",
     "express": "^4.18.3",
