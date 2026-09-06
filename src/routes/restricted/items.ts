@@ -2,6 +2,7 @@ import express from "express";
 import fs from "fs";
 import Item from "../../models/items.js";
 import getEmbeddings from "../../utils/items/getEmbeddings.js";
+import { enqueueReindex } from "../../queue/reindexProducer.js";
 
 const router = express.Router();
 router.get("/", (req, res) => {
@@ -17,6 +18,7 @@ router.post("/populate", async (req, res) => {
   const absStart = new Date();
   const items = req.body.items;
   const length = items.length;
+  const savedRefCodes: string[] = [];
   for (let i = 0; i < length; i++) {
     const locStart = new Date();
     const exist = await Item.findOne({
@@ -42,6 +44,7 @@ router.post("/populate", async (req, res) => {
       try {
         await newItem.save();
         good += 1;
+        savedRefCodes.push(items[i].ref.code);
       } catch (err) {
         errs.push("Error during save");
         console.error(err);
@@ -51,6 +54,11 @@ router.post("/populate", async (req, res) => {
     times.push(locEnd.getTime() - locStart.getTime());
   }
   const absEnd = new Date();
+
+  // OpenSearch indexing happens off the request path: enqueue and move on.
+  // Best-effort, per enqueueReindex's own contract - a queue failure here
+  // must not fail a MongoDB write that already succeeded.
+  await enqueueReindex(savedRefCodes);
 
   if (errs.length > 0) {
     res.status(400).send({ message: errs.length, errors: errs });

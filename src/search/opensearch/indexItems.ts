@@ -20,6 +20,12 @@ const INDEX_MAPPING = {
       "name.en": { type: "text" },
       "name.fr": { type: "text" },
       categories: { type: "keyword" },
+      // Pinned to EMBEDDING_DIMENSION (128), sized for the local sandbox
+      // benchmark's stand-in vectors. Real Vertex AI embeddings
+      // (text-multilingual-embedding-002, already stored per item in
+      // Mongo) are 768-dimensional - indexing those for real would need
+      // this mapping recreated at 768, a stated gap, not silently patched
+      // over here.
       embeddings: {
         type: "knn_vector",
         dimension: EMBEDDING_DIMENSION,

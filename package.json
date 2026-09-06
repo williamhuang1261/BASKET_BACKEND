@@ -14,7 +14,9 @@
     "preanalyze:experiment": "npm run build",
     "analyze:experiment": "node --env-file .dev.env dist/scripts/analyzeExperiment.js",
     "presearch:benchmark": "npm run build",
-    "search:benchmark": "node dist/search/opensearch/benchmarkSearch.js"
+    "search:benchmark": "node dist/search/opensearch/benchmarkSearch.js",
+    "prequeue:worker": "npm run build",
+    "queue:worker": "node --env-file .dev.env dist/scripts/runReindexWorker.js"
   },
   "keywords": [
     "express",
@@ -28,6 +30,7 @@
   "author": "William Huang",
   "license": "ISC",
   "dependencies": {
+    "@aws-sdk/client-sqs": "^3.1127.0",
     "@google-cloud/aiplatform": "^3.34.0",
     "@opensearch-project/opensearch": "^3.6.0",
     "bcrypt": "^5.1.1",
