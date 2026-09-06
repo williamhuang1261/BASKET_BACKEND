@@ -1,0 +1,20 @@
+[
+  {
+    "supplier": "iga",
+    "name": "IGA Extra Beauport",
+    "lat": 46.8302,
+    "lon": -71.1567
+  },
+  {
+    "supplier": "metro",
+    "name": "Metro Plus Sainte-Foy",
+    "lat": 46.7783,
+    "lon": -71.2856
+  },
+  {
+    "supplier": "provigo",
+    "name": "Provigo Le Marche Charlesbourg",
+    "lat": 46.8460,
+    "lon": -71.2453
+  }
+]
