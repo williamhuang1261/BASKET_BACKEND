@@ -12,8 +12,8 @@ also documents [the store-selection
 solvers](https://github.com/williamhuang1261/BASKET_FRONTEND#the-interesting-part-choosing-which-stores-to-visit)
 — the algorithmic core of the project.
 
-- **Stack** — Node, Express 4, TypeScript 5, MongoDB Atlas (Mongoose), Firebase Admin, Vertex AI
-- **Tests** — Vitest; 138 unit tests run with no credentials, integration tests need a local Mongo
+- **Stack** — Node, Express 4, TypeScript 5, MongoDB Atlas (Mongoose), Firebase Admin, Vertex AI. Additive search-infrastructure pieces: OpenSearch, AWS SQS (via LocalStack locally), Apache Spark (Python) — see [Search infrastructure](#search-infrastructure) below.
+- **Tests** — Vitest; 142 unit tests run with no credentials, integration tests need local Mongo, OpenSearch and/or LocalStack depending on what they cover
 - **Data** — every product carries English and French names and descriptions
 
 ---
@@ -32,6 +32,10 @@ flowchart LR
     S --> M[(MongoDB Atlas<br/>vector + full-text indexes)]
     A --> M
     G --> M
+    G -->|catalog write| Q[SQS reindex queue]
+    Q --> W[reindex worker]
+    W --> O[(OpenSearch<br/>BM25 + kNN index)]
+    Sp[Spark batch job] -.->|offline, not request path| Feat[store_features.json]
 ```
 
 | Path | Purpose | Guard |
@@ -75,6 +79,49 @@ that call can fail or run slow. When it does,
 [`getVectorSearchObject`](src/utils/items/getVectorSearchObject.ts) returns
 `null` and the pipeline drops to full-text only rather than failing the request.
 Search gets worse; it does not go down.
+
+## Search infrastructure
+
+Three additive pieces, built for a posting that named OpenSearch, SQS and
+Spark explicitly. None of them replace the MongoDB Atlas path above — it is
+still what the client actually calls. See
+[`docs/prd-search-infra-extension.md`](../BASKET_FRONTEND/docs/prd-search-infra-extension.md)
+for the full scoping and honesty notes; the short version is below.
+
+**OpenSearch** ([`src/search/opensearch/`](src/search/opensearch)) is a
+second hybrid search backend: BM25 `match` plus a `knn` query, combined in a
+`bool`/`should` clause. `buildQuery.ts` is a pure function, unit-tested with
+no live cluster. `benchmarkSearch.ts` actually indexes the sample catalog
+into a real local OpenSearch container and prints measured latency for
+BM25-only vs. hybrid mode — not a claimed number against Atlas, since this
+project has never had a paid Atlas cluster to test against. Its kNN vectors
+come from `sandboxEmbedding.ts`, a clearly-labelled, dependency-free
+stand-in for the real Vertex AI embeddings `getEmbeddings.ts` already
+computes for MongoDB — no live GCP call needed just to exercise the kNN
+code path.
+
+**SQS** ([`src/queue/`](src/queue)) moves the OpenSearch side of a catalog
+write off the request path. `POST /restricted/items/populate` still writes
+to MongoDB synchronously exactly as before; it now also enqueues a reindex
+message (best-effort — a queue failure is logged, not thrown, so it can
+never fail a write that already succeeded). A separate worker
+(`npm run queue:worker`) consumes the queue and calls the real OpenSearch
+indexing path, reusing each item's Vertex AI embedding already stored in
+MongoDB.
+
+**Spark** ([`analytics/`](analytics), Python) is a batch counterpart to the
+frontend's per-request `computeVisitCostByStore`: a `pyspark` job joins the
+sample catalog against a small store-coordinates dataset and writes
+per-store catalog coverage, average price, cheapest-price share and travel
+distance to `analytics/output/store_features.json`, once, offline, instead
+of recomputing distance for every basket. Run it with
+`cd analytics && pip install -r requirements.txt && python3 precompute_store_features.py`.
+Its Haversine distance is a small, separate Python reimplementation of the
+frontend's TypeScript formula — a batch job in a different runtime doesn't
+share code across that language boundary.
+
+Bring up the local OpenSearch and LocalStack containers with
+`docker compose -f docker-compose.dev.yml up -d`.
 
 ## Data model
 
@@ -130,16 +177,25 @@ for the hypothesis). This API side logs the events and scores the result.
 
 ```bash
 npm install
-npx vitest run tests/unit   # 138 tests, no credentials or network needed
+npx vitest run tests/unit   # 142 tests, no credentials or network needed
 npm run build
 npm run dev
 npm run analyze:experiment -- savings-summary-framing   # needs BASKET_DB_CONNECTION_STRING
+
+# Search infrastructure (all optional, all local):
+docker compose -f docker-compose.dev.yml up -d   # OpenSearch + LocalStack
+npm run search:benchmark                          # needs OpenSearch running
+npx vitest run tests/integration/queue             # needs LocalStack running
+npm run queue:worker                               # needs LocalStack + OpenSearch + Mongo
+cd analytics && pip install -r requirements.txt && python3 precompute_store_features.py
 ```
 
 `npm test` also runs `tests/integration`, which is a heavier ask: those tests
-talk to a real Mongo at `mongodb://localhost:27017/basket_tests` and verify
-Firebase tokens against a real project, so they hang rather than fail if neither
-is present. Run the unit suite above for a quick check of a fresh clone.
+talk to a real Mongo at `mongodb://localhost:27017/basket_tests`, verify
+Firebase tokens against a real project, or (the new `tests/integration/queue`
+suite) a real local LocalStack SQS queue, so they hang or fail rather than
+silently pass if the infra they need isn't present. Run the unit suite above
+for a quick check of a fresh clone.
 
 `npm run dev` needs an environment file and will refuse to start without one —
 [`src/startup/valEnv.ts`](src/startup/valEnv.ts) lists every variable it checks.
@@ -153,6 +209,7 @@ You will need:
 | Firebase | `BASKET_FIREBASE_*` — the eleven fields of a service-account key |
 | Vertex AI | `BASKET_GOOGLEAI_PROJECT_ID`, `BASKET_GOOGLEAI_LOCATION` |
 | Development | `NODE_TLS_REJECT_UNAUTHORIZED=0`, for the local self-signed certificate |
+| Search infra (optional, defaults to localhost) | `OPENSEARCH_NODE` (default `http://localhost:9200`), `AWS_SQS_ENDPOINT` (unset = real AWS, set to `http://localhost:4566` for LocalStack), `AWS_REGION` (default `us-east-1`) |
 
 Search additionally expects two MongoDB Atlas indexes on the `items` collection:
 a vector index named `vector_search_index` over the `embeddings` path, and a
@@ -166,4 +223,5 @@ integration tests use.
 
 A personal project, built and iterated on over about six months. It is not
 deployed publicly — running it needs a Mongo cluster, a Firebase project and a
-GCP project of your own.
+GCP project of your own. The search-infrastructure pieces (OpenSearch, SQS)
+run entirely locally via Docker and need none of that.
