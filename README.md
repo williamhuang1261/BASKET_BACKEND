@@ -160,6 +160,9 @@ for the hypothesis). This API side logs the events and scores the result.
   significance this prints today comes from seeded or manually-generated
   test events. It demonstrates the pipeline and the chi-square math, not a
   real product decision — see `docs/prd-ab-testing.md`.
+- The screen's personas, journey map and wireframes (including a proposed,
+  unimplemented revision) live in the frontend's
+  [`docs/design/`](https://github.com/williamhuang1261/BASKET_FRONTEND/tree/main/docs/design).
 
 ## Security
 
