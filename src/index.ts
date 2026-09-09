@@ -9,6 +9,7 @@ import { Server } from "http";
 import https, { ServerOptions } from "https";
 import routes from "./startup/routes.js";
 import startup from "./startup/startup.js";
+import { createSocketServer } from "./realtime/socketServer.js";
 
 /** Express application instance */
 const app = express();
@@ -50,6 +51,9 @@ if (process.env.NODE_ENV === "test") {
   );
   process.exit(1);
 }
+
+/** Attach the basket-collaboration Socket.IO relay to whichever server started above */
+createSocketServer(server);
 
 /** Export server instance for testing purposes */
 export default server;
