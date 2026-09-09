@@ -12,8 +12,8 @@ also documents [the store-selection
 solvers](https://github.com/williamhuang1261/BASKET_FRONTEND#the-interesting-part-choosing-which-stores-to-visit)
 — the algorithmic core of the project.
 
-- **Stack** — Node, Express 4, TypeScript 5, MongoDB Atlas (Mongoose), Firebase Admin, Vertex AI. Additive search-infrastructure pieces: OpenSearch, AWS SQS (via LocalStack locally), Apache Spark (Python) — see [Search infrastructure](#search-infrastructure) below.
-- **Tests** — Vitest; 142 unit tests run with no credentials, integration tests need local Mongo, OpenSearch and/or LocalStack depending on what they cover
+- **Stack** — Node, Express 4, TypeScript 5, MongoDB Atlas (Mongoose), Firebase Admin, Vertex AI, Socket.IO. Additive search-infrastructure pieces: OpenSearch, AWS SQS (via LocalStack locally), Apache Spark (Python) — see [Search infrastructure](#search-infrastructure) below.
+- **Tests** — Vitest; 142 unit tests run with no credentials, plus a Socket.IO integration suite that needs no external service (see [Real-time collaboration](#real-time-collaboration)); other integration tests need local Mongo, OpenSearch and/or LocalStack depending on what they cover
 - **Data** — every product carries English and French names and descriptions
 
 ---
@@ -163,6 +163,36 @@ for the hypothesis). This API side logs the events and scores the result.
 - The screen's personas, journey map and wireframes (including a proposed,
   unimplemented revision) live in the frontend's
   [`docs/design/`](https://github.com/williamhuang1261/BASKET_FRONTEND/tree/main/docs/design).
+
+## Real-time collaboration
+
+A small Socket.IO relay lets two or more browsers editing the same basket
+page see each other's changes live, via a shareable `?share=<sessionId>`
+link (see the frontend README's
+["Real-time collaboration"](https://github.com/williamhuang1261/BASKET_FRONTEND#real-time-collaboration)
+section and [`docs/prd-collaborative-editing.md`](https://github.com/williamhuang1261/BASKET_FRONTEND/blob/main/docs/prd-collaborative-editing.md)
+for the full scope).
+
+- [`realtime/socketServer.ts`](src/realtime/socketServer.ts) attaches a
+  Socket.IO server to the same HTTP/HTTPS server Express already runs on —
+  no separate process or port.
+- Event contract: a client emits `join-basket` (`{ basketId }`) to join room
+  `basket:${basketId}`; the server broadcasts `presence` (`{ count }`) to
+  everyone in that room on join and disconnect; a client emits
+  `item-changed` (`{ basketId, itemId, action }`) and every other socket in
+  the room (never the sender) receives `item-changed` (`{ itemId, action }`).
+- **No persistence.** Room membership and presence counts live only in
+  Socket.IO's in-memory adapter — a server restart drops every active
+  session, and there is no database table behind any of this.
+- **No conflict resolution.** Two clients changing the same field at the
+  same instant leave whichever `item-changed` the server relays last as the
+  final state — no merge, no lock.
+- Verified with a real local integration test
+  ([`tests/integration/realtime/socketServer.test.ts`](tests/integration/realtime/socketServer.test.ts)):
+  two real `socket.io-client` connections against an in-process server,
+  covering presence counting, item-change relay excluding the sender, and
+  room isolation between different session ids. No Docker needed, unlike
+  the OpenSearch/SQS integration tests above.
 
 ## Security
 
