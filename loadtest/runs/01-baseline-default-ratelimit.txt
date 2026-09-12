@@ -1,0 +1,33 @@
+Command: k6 run loadtest/search.js
+Config: default rateLimiter (windowMs=10000, max=50, global per-IP)
+Stages: 10 VUs (50s) -> 50 VUs (50s) -> 100 VUs (50s) -> ramp-down (15s)
+
+    ✓ autocomplete: 200 or 429
+    ✓ search: 200 or 429
+
+    CUSTOM
+    autocomplete_duration_ms.......: avg=4.03ms   min=62µs   med=1.09ms max=256.74ms p(90)=6.14ms   p(95)=18.19ms 
+    rate_limited_responses.........: 94.72% 14502 out of 15310
+    search_duration_ms.............: avg=12.16ms  min=49µs   med=624µs  max=890.15ms p(90)=3.68ms   p(95)=11.35ms 
+
+    HTTP
+    http_req_duration..............: avg=8.09ms   min=49µs   med=869µs  max=890.15ms p(90)=4.95ms   p(95)=16.65ms 
+      { expected_response:true }...: avg=126.18ms min=3.36ms med=58.9ms max=890.15ms p(90)=256.87ms p(95)=392.17ms
+    http_req_failed................: 94.72% 14502 out of 15310
+    http_reqs......................: 15310  92.708251/s
+
+    EXECUTION
+    iteration_duration.............: avg=1.01s    min=1s     med=1s     max=1.94s    p(90)=1.01s    p(95)=1.04s   
+    iterations.....................: 7655   46.354126/s
+    vus............................: 3      min=1              max=100
+    vus_max........................: 100    min=100            max=100
+
+    NETWORK
+    data_received..................: 60 MB  365 kB/s
+    data_sent......................: 3.5 MB 21 kB/s
+
+
+
+
+running (2m45.1s), 000/100 VUs, 7655 complete and 0 interrupted iterations
+default ✓ [ 100% ] 000/100 VUs  2m45s
