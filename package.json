@@ -16,7 +16,9 @@
     "presearch:benchmark": "npm run build",
     "search:benchmark": "node dist/search/opensearch/benchmarkSearch.js",
     "prequeue:worker": "npm run build",
-    "queue:worker": "node --env-file .dev.env dist/scripts/runReindexWorker.js"
+    "queue:worker": "node --env-file .dev.env dist/scripts/runReindexWorker.js",
+    "preseed:loadtest": "npm run build",
+    "seed:loadtest": "node --env-file loadtest/.loadtest.env dist/scripts/seedLoadTestData.js"
   },
   "keywords": [
     "express",

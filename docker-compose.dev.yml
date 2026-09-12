@@ -27,3 +27,13 @@ services:
       - DEBUG=0
     ports:
       - "4566:4566"
+
+  # Local infrastructure for the loadtest/ extension (see loadtest/README.md).
+  # Not the app's primary MongoDB Atlas - this is MongoDB's own official local
+  # dev image, which bundles mongot so the app's real $search/$vectorSearch
+  # aggregation stages work without a paid Atlas cluster or mocking them out.
+  mongo-atlas-local:
+    image: mongodb/mongodb-atlas-local:8.0
+    container_name: basket-mongo-atlas-local
+    ports:
+      - "27777:27017"
