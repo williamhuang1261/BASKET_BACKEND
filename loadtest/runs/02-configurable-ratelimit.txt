@@ -1,0 +1,35 @@
+Command: BASKET_RATE_LIMIT_MAX=5000 BASKET_RATE_LIMIT_WINDOW_MS=10000 node --env-file loadtest/.loadtest.server.env dist/index.js
+         k6 run loadtest/search.js
+Config: rateLimiter raised via env vars (windowMs=10000, max=5000) so the
+        limiter is no longer the binding constraint
+Stages: 10 VUs (50s) -> 50 VUs (50s) -> 100 VUs (50s) -> ramp-down (15s)
+
+    ✓ autocomplete: 200 or 429
+    ✓ search: 200 or 429
+
+    CUSTOM
+    autocomplete_duration_ms.......: avg=3.81ms   min=639µs    med=2.74ms   max=114.34ms p(90)=6.9ms    p(95)=9.47ms  
+    rate_limited_responses.........: 0.00%  0 out of 13242
+    search_duration_ms.............: avg=172.81ms min=156.24ms med=167.04ms max=794.82ms p(90)=179.66ms p(95)=188.13ms
+
+    HTTP
+    http_req_duration..............: avg=88.31ms  min=639µs    med=135.29ms max=794.82ms p(90)=174.32ms p(95)=179.66ms
+      { expected_response:true }...: avg=88.31ms  min=639µs    med=135.29ms max=794.82ms p(90)=174.32ms p(95)=179.66ms
+    http_req_failed................: 0.00%  0 out of 13242
+    http_reqs......................: 13242  79.754152/s
+
+    EXECUTION
+    iteration_duration.............: avg=1.17s    min=1.15s    med=1.17s    max=1.8s     p(90)=1.18s    p(95)=1.19s   
+    iterations.....................: 6621   39.877076/s
+    vus............................: 1      min=1          max=100
+    vus_max........................: 100    min=100        max=100
+
+    NETWORK
+    data_received..................: 1.1 GB 6.8 MB/s
+    data_sent......................: 3.0 MB 18 kB/s
+
+
+
+
+running (2m46.0s), 000/100 VUs, 6621 complete and 0 interrupted iterations
+default ✓ [ 100% ] 000/100 VUs  2m45s
