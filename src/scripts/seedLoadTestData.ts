@@ -53,6 +53,13 @@ const AUTOCOMPLETE_INDEX_DEFINITION = (language: "en" | "fr") => ({
       },
     },
   },
+  // The route queries with `returnStoredSource: true` (see
+  // getAutocompletePipeline.ts) so it can skip a second lookup against
+  // MongoDB itself. Atlas Search only honours that flag if the index was
+  // told to store the field's source - found by actually running the
+  // query against a real index and reading its real error, not by
+  // guessing from the docs.
+  storedSource: { include: ["name"] },
 });
 
 const waitUntilReady = async (
