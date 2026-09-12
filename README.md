@@ -201,7 +201,9 @@ for the full scope).
 - `isLoggedIn` provisions a user record on first authenticated request, so
   sign-up and first sign-in are the same path.
 - `isAdmin` and `isSupplier` gate catalogue writes behind `/restricted`.
-- Every request passes a rate limiter (50 requests / 10 s) before routing.
+- Every request passes a rate limiter (50 requests / 10 s by default,
+  configurable via `BASKET_RATE_LIMIT_WINDOW_MS`/`BASKET_RATE_LIMIT_MAX` --
+  see [Load testing](#load-testing)) before routing.
 - Request bodies are validated with Joi schemas in
   [`src/validation`](src/validation) before reaching a handler.
 - All configuration is read from the environment. Nothing sensitive is committed.
@@ -251,6 +253,40 @@ full-text index. Without them the search routes will not return results.
 In `development` the server binds HTTPS and reads a local certificate from
 `config/SSL_perms/`; `NODE_ENV=test` serves plain HTTP, which is what the
 integration tests use.
+
+## Load testing
+
+`loadtest/` holds a k6 script against `/items/search` and
+`/items/autocomplete`, and `loadtest/RESULTS.md` writes up two real runs: one
+at the default rate limit (95% of requests were rejected by the limiter
+itself, not the search code) and one with the limiter raised via env var
+(0% rejected, search p95 188ms / autocomplete p95 9.5ms at 100 VUs). See
+`RESULTS.md` for the full numbers and what they mean.
+
+To reproduce:
+
+```bash
+brew install k6
+docker compose -f docker-compose.dev.yml up -d mongo-atlas-local   # MongoDB's
+                                                                     # own local
+                                                                     # image, so
+                                                                     # $search
+                                                                     # runs for real
+cp loadtest/.loadtest.env.example loadtest/.loadtest.env
+npm run seed:loadtest                                # seeds the 25-item catalog
+                                                       # and the 4 search indexes
+cp loadtest/.loadtest.server.env.example loadtest/.loadtest.server.env
+node --env-file loadtest/.loadtest.server.env dist/index.js &
+
+k6 run loadtest/search.js                             # default rate limit
+# or, to see the endpoints' real capacity past the limiter:
+BASKET_RATE_LIMIT_MAX=5000 node --env-file loadtest/.loadtest.server.env dist/index.js &
+k6 run loadtest/search.js
+```
+
+This is a local/manual run, not wired into CI: it needs a dedicated Mongo
+container standing up first, which doesn't fit the project's existing
+lightweight CI workflow. Said here plainly rather than implied.
 
 ## Status
 
